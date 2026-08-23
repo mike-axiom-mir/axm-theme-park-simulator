@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 import {
-  deriveGuestBodyLanguage, GUEST_BODY_LANGUAGE_SCHEMA
+  deriveGuestBodyLanguage, describeGuestBodyLanguage, GUEST_BODY_LANGUAGE_SCHEMA
 } from "../src/presentation/guestBodyLanguage.js";
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
@@ -54,10 +54,28 @@ test("tired and disappointed postures reuse existing simulation thresholds", () 
   assert.equal(neutral.pose, "neutral");
 });
 
-test("expressive renderer remains presentation-only", () => {
+test("human-readable cue is derived from the exact same body-language descriptor", () => {
+  const input = visitor({ state: "queueing", activityRemaining: 48 });
+  const cue = describeGuestBodyLanguage(input);
+  assert.equal(cue.pose, deriveGuestBodyLanguage(input).pose);
+  assert.equal(cue.label, "Impatient");
+  assert.equal(cue.reason, "long queue");
+  assert.equal(cue.strength, 50);
+  assert.ok(Object.isFrozen(cue));
+
+  const neutral = describeGuestBodyLanguage(visitor());
+  assert.equal(neutral.label, "Neutral");
+  assert.equal(neutral.reason, "no urgent posture cue");
+  assert.equal(neutral.strength, 0);
+});
+
+test("expressive renderer remains presentation-only and explains explicit selections", () => {
   const renderer = read("../src/render/expressiveWorldRenderer.js");
   assert.match(renderer, /extends BaseWorldRenderer/);
   assert.match(renderer, /super\.syncVisitors\(time\)/);
+  assert.match(renderer, /super\.selectVisitor\(visitorId\)/);
   assert.match(renderer, /deriveGuestBodyLanguage/);
+  assert.match(renderer, /describeGuestBodyLanguage/);
+  assert.match(renderer, /onWorldMessage/);
   assert.doesNotMatch(renderer, /advanceOneMinute|applyAction|saveToSlot|stateHash/);
 });
