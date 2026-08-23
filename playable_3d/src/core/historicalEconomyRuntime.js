@@ -1,20 +1,32 @@
 import { advanceOneMinuteWithUpgrades, simulateMinutesWithUpgrades } from "./upgradeRuntime.js";
 import { stateHash } from "./random.js";
 import {
-  normalizeHistoricalEconomyState, processHistoricalEconomyAfterTick
+  collectVaultToBank, normalizeHistoricalEconomyState, processHistoricalEconomyAfterTick,
+  weeklyCollectionDue
 } from "./historicalEconomy.js";
 
 function newEventsSince(state, sequence) {
   return (state.eventLog ?? []).filter((entry) => entry.sequence > sequence);
 }
 
+function collectDueVaultBeforeTick(state) {
+  normalizeHistoricalEconomyState(state);
+  const day = state.clock?.day ?? 1;
+  if (!weeklyCollectionDue(state) || state.payments.lastCollectionDay === day) return;
+  collectVaultToBank(state, { reason: "weekly-car" });
+}
+
 /**
  * Final additive economy tick:
  * preserved simulation -> research/growth -> installed upgrades -> historical payments/cash logistics.
  * Historical payments only classify already-committed guest income and never invent duplicate sales.
+ *
+ * The playable day-report flow advances `clock.day` through the startNextDay action,
+ * so a due weekly collection is checked before the first minute of that operating day.
  */
 export function advanceOneMinuteWithHistoricalEconomy(state) {
   normalizeHistoricalEconomyState(state);
+  collectDueVaultBeforeTick(state);
   const eventSequence = state.eventLog?.at(-1)?.sequence ?? 0;
 
   advanceOneMinuteWithUpgrades(state);
