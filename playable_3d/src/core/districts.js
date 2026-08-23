@@ -4,7 +4,8 @@ export const DISTRICT_SCHEMA = "axm.themepark.districts/v1";
 export const DISTRICT_IDS = Object.freeze(["north", "east", "south", "west"]);
 export const DISTRICT_THEME_IDS = Object.freeze([
   "neutral", "garden", "adventure", "storybook", "cartoon", "fantasy",
-  "western", "medieval", "future", "waterfront"
+  "western", "medieval", "halloween", "christmas", "newyear",
+  "future", "robotica", "software", "waterfront"
 ]);
 
 export const DISTRICT_DEFINITIONS = Object.freeze({
@@ -78,12 +79,47 @@ export const DISTRICT_THEMES = Object.freeze({
     signatureTags: ["medieval"],
     preferredTags: ["medieval", "storybook", "adventure", "scenic", "family", "indoor", "thrill", "retail"]
   }),
+  halloween: districtTheme({
+    id: "halloween",
+    label: "Halloween",
+    summary: "Pumpkins, crooked silhouettes, purple fog, haunted lanterns, dark rides and playful spooky-night energy.",
+    signatureTags: ["halloween"],
+    preferredTags: ["halloween", "indoor", "storybook", "thrill", "adventure", "scenic", "food", "retail"]
+  }),
+  christmas: districtTheme({
+    id: "christmas",
+    label: "Christmas",
+    summary: "Evergreens, warm windows, ornaments, candy-stripe details, family rides and winter-market sparkle.",
+    signatureTags: ["christmas"],
+    preferredTags: ["christmas", "family", "storybook", "garden", "food", "retail", "scenic", "care"]
+  }),
+  newyear: districtTheme({
+    id: "newyear",
+    label: "New Year",
+    summary: "Gold-and-silver light architecture, countdown markers, celebration rings and midnight firework motion.",
+    signatureTags: ["newyear"],
+    preferredTags: ["newyear", "future", "scenic", "thrill", "family", "food", "retail"]
+  }),
   future: districtTheme({
     id: "future",
     label: "Future",
     summary: "Clean rings, signal nodes, kinetic rides, indoor worlds and restrained luminous accents.",
     signatureTags: ["future"],
     preferredTags: ["future", "thrill", "indoor", "scenic", "water"]
+  }),
+  robotica: districtTheme({
+    id: "robotica",
+    label: "Robotica",
+    summary: "Physical machines, servo arms, gear rings, industrial lights and playful robotic attraction motion.",
+    signatureTags: ["robotica"],
+    preferredTags: ["robotica", "future", "thrill", "family", "indoor", "scenic", "care"]
+  }),
+  software: districtTheme({
+    id: "software",
+    label: "AI / Software Future",
+    summary: "Data nodes, code glyphs, network lattices, holographic logic and software-world attraction framing.",
+    signatureTags: ["software"],
+    preferredTags: ["software", "future", "indoor", "scenic", "care", "family"]
   }),
   waterfront: districtTheme({
     id: "waterfront",
