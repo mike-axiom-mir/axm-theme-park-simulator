@@ -1,9 +1,8 @@
 /**
  * Stable final-style seam.
  *
- * New presentation-only district styles should extend the current final style
- * renderer and this file should be the only routing seam that needs to move.
- * The state-integrity guard can therefore remain stable while the style stack
- * grows underneath it.
+ * New presentation-only district styles and persistent Legacy style upgrades
+ * should extend underneath this seam. The state-integrity guard therefore stays
+ * stable while the presentation stack grows.
  */
-export { WorldRenderer } from "./gildedStyleWorldRenderer.js";
+export { WorldRenderer } from "./legacyStyleUpgradeWorldRenderer.js";
