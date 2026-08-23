@@ -241,13 +241,14 @@ function applyGuestWeatherGesture(model, visitor, weather, time) {
 /**
  * Presentation-only extension. Authoritative visitor state remains owned by the
  * base renderer's state reference and simulation; this class only alters meshes,
- * bounded management overlays, and explanatory UI output.
+ * bounded management overlays, camera presentation, and explanatory UI output.
  */
 export class WorldRenderer extends BaseWorldRenderer {
   constructor(canvas, callbacks = {}) {
     super(canvas, callbacks);
     this.parkVisionMode = "off";
     this.parkVisionMarkerCount = 0;
+    this.followVisitorId = null;
     this.parkVisionRoot = new THREE.Group();
     this.parkVisionRoot.name = "park-vision-render-only-overlay";
     this.globe.root.add(this.parkVisionRoot);
@@ -266,6 +267,11 @@ export class WorldRenderer extends BaseWorldRenderer {
       marker.visible = false;
       this.parkVisionRoot.add(marker);
       return marker;
+    });
+    addEventListener("keydown", (event) => {
+      if (event.code !== "KeyF" || this.mode !== "manage") return;
+      if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
+      this.toggleSelectedVisitorFollow();
     });
   }
 
@@ -289,20 +295,52 @@ export class WorldRenderer extends BaseWorldRenderer {
   getVisualHealth() {
     return Object.freeze({
       ...super.getVisualHealth(),
-      parkVision: this.getParkVisionStatus()
+      parkVision: this.getParkVisionStatus(),
+      followedGuest: this.followVisitorId
     });
+  }
+
+  toggleSelectedVisitorFollow() {
+    if (!this.selectedVisitorId) {
+      this.followVisitorId = null;
+      this.callbacks.onWorldMessage?.("Select a guest first, then press F to follow them.");
+      return false;
+    }
+    if (this.followVisitorId === this.selectedVisitorId) {
+      this.followVisitorId = null;
+      this.callbacks.onWorldMessage?.("Guest follow released.");
+      return false;
+    }
+    this.followVisitorId = this.selectedVisitorId;
+    this.manage.distance = Math.min(this.manage.distance, 24);
+    this.callbacks.onWorldMessage?.(`Following Guest ${this.followVisitorId.split("-").at(-1)} · press F to release.`);
+    return true;
+  }
+
+  selectEntity(entityId) {
+    if (entityId) this.followVisitorId = null;
+    super.selectEntity(entityId);
+  }
+
+  selectStaff(staffId) {
+    if (staffId) this.followVisitorId = null;
+    super.selectStaff(staffId);
   }
 
   selectVisitor(visitorId) {
     super.selectVisitor(visitorId);
-    if (!visitorId || !this.state) return;
+    if (!visitorId || !this.state) {
+      if (!visitorId) this.followVisitorId = null;
+      return;
+    }
+    if (this.followVisitorId) this.followVisitorId = visitorId;
     const visitor = this.state.visitors.find((item) => item.id === visitorId);
     if (!visitor) return;
     const cue = describeGuestBodyLanguage(visitor);
     const weatherCue = describeGuestWeatherGesture(visitor, this.state.weather);
     const strength = cue.pose === "neutral" ? "" : ` · ${cue.strength}%`;
     const weatherText = weatherCue.gesture === "none" ? "" : ` · Weather: ${weatherCue.label}`;
-    this.callbacks.onWorldMessage?.(`Body language: ${cue.label} · ${cue.reason}${strength}${weatherText}`);
+    this.callbacks.onWorldMessage?.(`Body language: ${cue.label} · ${cue.reason}${strength}${weatherText} · F follows guest`);
   }
 
   syncVisitors(time) {
@@ -313,6 +351,15 @@ export class WorldRenderer extends BaseWorldRenderer {
       if (!model?.visible) continue;
       applyGuestBodyLanguage(model, visitor, time);
       applyGuestWeatherGesture(model, visitor, this.state.weather, time);
+    }
+    if (this.followVisitorId && this.mode === "manage") {
+      const local = this.visitorModels.get(this.followVisitorId)?.userData?.localPosition;
+      if (local) {
+        this.manage.x = local.x;
+        this.manage.z = local.z;
+      } else if (!this.state.visitors.some((visitor) => visitor.id === this.followVisitorId)) {
+        this.followVisitorId = null;
+      }
     }
   }
 
