@@ -3,7 +3,7 @@ import { GRID_SIZE, catalogDefinition, rotatedFootprint } from "./catalog.js";
 export const DISTRICT_SCHEMA = "axm.themepark.districts/v1";
 export const DISTRICT_IDS = Object.freeze(["north", "east", "south", "west"]);
 export const DISTRICT_THEME_IDS = Object.freeze([
-  "neutral", "garden", "adventure", "storybook", "cartoon", "future", "waterfront"
+  "neutral", "garden", "adventure", "storybook", "cartoon", "fantasy", "future", "waterfront"
 ]);
 
 export const DISTRICT_DEFINITIONS = Object.freeze({
@@ -55,6 +55,13 @@ export const DISTRICT_THEMES = Object.freeze({
     summary: "Chunky toy shapes, bright comic accents, exaggerated motion and playful family-arcade energy.",
     signatureTags: ["family"],
     preferredTags: ["family", "thrill", "future", "storybook", "food", "retail", "scenic"]
+  }),
+  fantasy: districtTheme({
+    id: "fantasy",
+    label: "Fantasy",
+    summary: "Enchanted ruins, crystals, floating runes, moonlit growth and magical scenic landmarks.",
+    signatureTags: ["fantasy"],
+    preferredTags: ["fantasy", "scenic", "storybook", "garden", "indoor", "adventure", "water"]
   }),
   future: districtTheme({
     id: "future",
