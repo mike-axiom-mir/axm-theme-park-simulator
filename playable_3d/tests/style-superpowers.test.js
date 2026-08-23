@@ -60,7 +60,12 @@ test("each styled identity has a distinct superpower that can be earned by match
     ["fantasy", "aetherveil", ["lanternmaze", "canalcruise"]],
     ["western", "frontier-rush", ["littleloop", "logdash"]],
     ["medieval", "bannerwake", ["lanternmaze", "canalcruise"]],
+    ["halloween", "hauntfall", ["lanternmaze", "cloudcinema"]],
+    ["christmas", "snowglow", ["littleloop", "twirlcups"]],
+    ["newyear", "countdown-burst", ["starflyers", "sunbeam"]],
     ["future", "pulse-grid", ["tidalturn", "lagoonshow"]],
+    ["robotica", "servo-surge", ["bumpers", "cloudhop"]],
+    ["software", "codewave", ["skysail", "cloudcinema"]],
     ["waterfront", "tidecall", ["canalcruise", "lilypond"]]
   ];
 
@@ -89,6 +94,7 @@ test("style superpowers stay in additive presentation layering and do not leak i
   const fantasyRenderer = read("../src/render/fantasyStyleWorldRenderer.js");
   const westernRenderer = read("../src/render/westernStyleWorldRenderer.js");
   const medievalRenderer = read("../src/render/medievalStyleWorldRenderer.js");
+  const seasonalTechRenderer = read("../src/render/festivalTechStyleWorldRenderer.js");
   const finalStyle = read("../src/render/finalStyleWorldRenderer.js");
   const stateGuard = read("../src/render/stateSafeParkIdentityWorldRenderer.js");
   const simulation = read("../src/core/simulation.js");
@@ -108,7 +114,13 @@ test("style superpowers stay in additive presentation layering and do not leak i
   assert.match(westernRenderer, /western-frontier-rush/);
   assert.match(medievalRenderer, /WesternStyleWorldRenderer/);
   assert.match(medievalRenderer, /medieval-bannerwake/);
-  assert.match(finalStyle, /medievalStyleWorldRenderer/);
+  assert.match(seasonalTechRenderer, /MedievalStyleWorldRenderer/);
+  assert.match(seasonalTechRenderer, /halloween-hauntfall/);
+  assert.match(seasonalTechRenderer, /christmas-snowglow/);
+  assert.match(seasonalTechRenderer, /newyear-countdown-burst/);
+  assert.match(seasonalTechRenderer, /robotica-servo-surge/);
+  assert.match(seasonalTechRenderer, /software-codewave/);
+  assert.match(finalStyle, /festivalTechStyleWorldRenderer/);
   assert.match(stateGuard, /finalStyleWorldRenderer/);
-  assert.doesNotMatch(simulation, /styleSuperpowers|styleSuperpowerPlan|Frontier Rush|Bannerwake|westernStyleWorldRenderer|medievalStyleWorldRenderer/);
+  assert.doesNotMatch(simulation, /styleSuperpowers|styleSuperpowerPlan|Frontier Rush|Bannerwake|Hauntfall|Snowglow|Countdown Burst|Servo Surge|Codewave|festivalTechStyleWorldRenderer/);
 });
