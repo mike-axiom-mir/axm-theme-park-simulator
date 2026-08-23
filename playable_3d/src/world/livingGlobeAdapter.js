@@ -245,7 +245,8 @@ export class LivingGlobeAdapter {
     const daySky = new THREE.Color(weather.type === "rain" ? 0x596777 : 0x7194b5);
     const sky = night.clone().lerp(dawnSky, THREE.MathUtils.clamp(daylight * 2.5, 0, 1))
       .lerp(daySky, daylight);
-    this.scene.background.copy(sky);
+    if (this.scene.background instanceof THREE.Color) this.scene.background.copy(sky);
+    else this.scene.background = sky.clone();
     this.scene.fog?.color.copy(sky);
     return { phase, daylight, sunDirection, sky };
   }

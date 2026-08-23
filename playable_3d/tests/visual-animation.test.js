@@ -1,12 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import * as THREE from "../vendor/three.module.min.js";
 
 import { openingCameraPose, OPENING_CAMERA_FLIGHT_SCHEMA } from "../src/presentation/cameraFlight.js";
 import {
   WEATHER_CLOUD_BUDGET, WEATHER_RAIN_BUDGET, WEATHER_TOTAL_ACTOR_BUDGET,
   weatherActorDescriptor
 } from "../src/render/weatherEffects.js";
+import { LivingGlobeAdapter } from "../src/world/livingGlobeAdapter.js";
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
 
@@ -37,6 +39,16 @@ test("weather actors have deterministic layouts and a hard visual budget", () =>
     assert.ok(first.phase >= 0 && first.phase < 1);
     assert.ok(Object.isFrozen(first));
   }
+});
+
+test("day-night rendering initializes a fresh scene background", () => {
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x7194b5, 75, 245);
+  const globe = new LivingGlobeAdapter(scene, { seed: "fresh-scene-background" });
+  assert.equal(scene.background, null);
+  assert.doesNotThrow(() => globe.updateDayNight(9 * 60 + 17, { type: "bright" }));
+  assert.ok(scene.background instanceof THREE.Color);
+  assert.ok(scene.fog.color instanceof THREE.Color);
 });
 
 test("animated visual systems remain attached to the renderer instead of simulation authority", () => {
