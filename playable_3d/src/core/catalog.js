@@ -1,3 +1,5 @@
+import { WORLD_CONTENT_CATALOG } from "./worldContentCatalog.js";
+
 export const GRID_SIZE = 30;
 export const TILE_SIZE = 2;
 export const PARK_OPEN_MINUTE = 9 * 60;
@@ -117,29 +119,39 @@ export const CATALOG = {
     icon: "═", description: "Rest support that helps families and tired guests stay longer.",
     cost: 65, footprint: [1, 1], capacity: 2, serviceMinutes: 14, need: "rest",
     theme: "neutral", influence: "rest", color: 0x8b5e3c
-  }
+  },
+  ...WORLD_CONTENT_CATALOG
 };
 
-export const BUILD_CATEGORIES = ["Paths", "Rides", "Services", "Scenery"];
+export const BUILD_CATEGORIES = ["Paths", "Rides", "Attractions", "Services", "Stores", "Scenery"];
 
 export const CAMPAIGN_LEVELS = Object.freeze([
   {
     level: 1,
     label: "Local fairground",
     requirement: "Inherited with the park",
-    unlocks: ["path", "queue", "carousel", "spinner", "snacks", "toilets", "tree", "lantern", "fountain", "bench"]
+    unlocks: [
+      "path", "queue", "carousel", "spinner", "twirlcups", "bumpers", "cloudhop",
+      "littleloop", "gardendrift", "acornplay", "snacks", "toilets", "refill",
+      "hellohub", "familynest", "memorymarket", "sugarcloud", "swirlcart", "popcornplanet",
+      "tree", "lantern", "fountain", "bench"
+    ]
   },
   {
     level: 2,
     label: "Neighbourhood favourite",
     requirement: "Welcome 20 guests and hold rating 55",
-    unlocks: ["wheel", "galleon", "drinks"]
+    unlocks: [
+      "wheel", "galleon", "starflyers", "sunbeam", "logdash", "lanternmaze", "skyribbon",
+      "cloudcinema", "tinytown", "drinks", "quietcove", "stash", "wagonwheels", "chargegrove",
+      "toytinker", "parkthreads", "snapshotshop", "nameit"
+    ]
   },
   {
     level: 3,
     label: "Regional adventure",
     requirement: "Welcome 55 guests and hold rating 62",
-    unlocks: ["splash", "haunted"]
+    unlocks: ["splash", "haunted", "rapids", "cometdrop", "skysail", "bubblesub", "firstaid"]
   },
   {
     level: 4,
