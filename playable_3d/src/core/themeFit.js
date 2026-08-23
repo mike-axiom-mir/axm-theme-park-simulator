@@ -33,6 +33,7 @@ export const THEME_TAG_LABELS = Object.freeze({
   adventure: "adventure",
   care: "guest care",
   family: "family",
+  fantasy: "fantasy",
   flexible: "flexible",
   food: "food & drink",
   future: "future",
@@ -46,7 +47,7 @@ export const THEME_TAG_LABELS = Object.freeze({
 });
 
 const TAG_ORDER = Object.freeze([
-  "water", "garden", "adventure", "storybook", "future",
+  "water", "garden", "adventure", "storybook", "fantasy", "future",
   "family", "thrill", "scenic", "indoor", "food", "retail", "care", "flexible"
 ]);
 
@@ -143,8 +144,15 @@ export function themeTagsForDefinition(definition) {
   if (definition?.category === "Services") tags.add("care");
   if (definition?.category === "Scenery") tags.add("scenic");
   if (definition?.kind === "path") tags.add("flexible");
-  if (!tags.size) tags.add("flexible");
 
+  // Fantasy is derived from combinations already present in the catalog rather
+  // than invented as a second content taxonomy. Story + place, or enchanted
+  // nature + adventure, is enough evidence to become a Fantasy anchor.
+  if (tags.has("storybook") && ["scenic", "indoor", "garden", "adventure", "water"]
+    .some((tag) => tags.has(tag))) tags.add("fantasy");
+  if (tags.has("garden") && tags.has("adventure") && tags.has("scenic")) tags.add("fantasy");
+
+  if (!tags.size) tags.add("flexible");
   return Object.freeze(TAG_ORDER.filter((tag) => tags.has(tag)));
 }
 
