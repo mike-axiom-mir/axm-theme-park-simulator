@@ -76,6 +76,7 @@ test("two playful signature anchors unleash Toonburst", () => {
 test("Cartoon rendering stays additive, bounded and outside preserved simulation", () => {
   const cartoonRenderer = read("../src/render/cartoonStyleWorldRenderer.js");
   const fantasyRenderer = read("../src/render/fantasyStyleWorldRenderer.js");
+  const finalStyle = read("../src/render/finalStyleWorldRenderer.js");
   const stateGuard = read("../src/render/stateSafeParkIdentityWorldRenderer.js");
   const simulation = read("../src/core/simulation.js");
 
@@ -85,6 +86,7 @@ test("Cartoon rendering stays additive, bounded and outside preserved simulation
   assert.match(cartoonRenderer, /squash/);
   assert.match(cartoonRenderer, /setQuality/);
   assert.match(fantasyRenderer, /CartoonStyleWorldRenderer/);
-  assert.match(stateGuard, /FantasyStyleWorldRenderer/);
+  assert.match(finalStyle, /medievalStyleWorldRenderer/);
+  assert.match(stateGuard, /finalStyleWorldRenderer/);
   assert.doesNotMatch(simulation, /toonburst|cartoonStyleWorldRenderer|cartoon-style-dressing-root/);
 });
