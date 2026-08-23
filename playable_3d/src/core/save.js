@@ -4,6 +4,7 @@ import { createAdventureState } from "./adventure.js";
 import { normalizeStaffState } from "./staff.js";
 import { normalizeResearchState } from "./research.js";
 import { normalizeUpgradeState } from "./upgrades.js";
+import { normalizeDistrictState } from "./districts.js";
 
 export const SAVE_VERSION = 3;
 const PREFIX = "axm-theme-park-v042-slot-";
@@ -67,6 +68,7 @@ export function migrateState(input) {
   normalizeStaffState(state);
   normalizeResearchState(state);
   normalizeUpgradeState(state);
+  normalizeDistrictState(state);
   if (!state.world.litter.length && legacyLitter > 0) {
     state.world.litter.push({
       id: `litter-${state.world.nextLitterId++}`,
