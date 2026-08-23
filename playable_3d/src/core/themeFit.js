@@ -41,6 +41,7 @@ export const THEME_TAG_LABELS = Object.freeze({
   garden: "garden",
   halloween: "Halloween",
   indoor: "indoor",
+  luxury: "luxury",
   medieval: "medieval",
   newyear: "New Year",
   retail: "retail",
@@ -55,7 +56,7 @@ export const THEME_TAG_LABELS = Object.freeze({
 
 const TAG_ORDER = Object.freeze([
   "water", "garden", "adventure", "western", "medieval", "storybook", "fantasy",
-  "halloween", "christmas", "newyear", "future", "robotica", "software",
+  "halloween", "christmas", "newyear", "future", "robotica", "software", "luxury",
   "family", "thrill", "scenic", "indoor", "food", "retail", "care", "flexible"
 ]);
 
@@ -200,6 +201,19 @@ export function themeTagsForDefinition(definition) {
   // attraction families.
   if (ROBOTICA_FAMILIES.has(definition?.visualFamily)) tags.add("robotica");
   if (SOFTWARE_FAMILIES.has(definition?.visualFamily)) tags.add("software");
+
+  // Gilded Wealth is intentionally broad enough to turn ordinary park functions
+  // into conspicuous luxury. Fit evidence is still selective: premium scenic rides,
+  // showy food/service locations, retail and landmark pieces charge the spectacle.
+  const premiumRide = definition?.kind === "ride"
+    && Number(definition?.comfort) >= 0.86
+    && tags.has("scenic");
+  const premiumHospitality = definition?.kind === "service"
+    && tags.has("scenic")
+    && (tags.has("food") || tags.has("care"));
+  const premiumRetail = tags.has("retail");
+  const premiumLandmark = definition?.influence === "landmark";
+  if (premiumRide || premiumHospitality || premiumRetail || premiumLandmark) tags.add("luxury");
 
   if (!tags.size) tags.add("flexible");
   return Object.freeze(TAG_ORDER.filter((tag) => tags.has(tag)));
