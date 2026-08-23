@@ -4,8 +4,9 @@ import {
   deserializeGame, loadFromSlot, saveToSlot, serializeGame, slotMetadata
 } from "./core/save.js";
 import { stateHash } from "./core/random.js";
-import { WorldRenderer } from "./render/staffAwareWorldRenderer.js";
+import { WorldRenderer } from "./render/contentStudioWorldRenderer.js";
 import { GameInterface } from "./ui/interface.js";
+import { CoasterStudioUI } from "./ui/coasterStudioUI.js";
 import { deriveOpeningSignal } from "./presentation/openingSequence.js";
 
 const canvas = document.getElementById("game-canvas");
@@ -15,7 +16,14 @@ visionButton.type = "button";
 visionButton.textContent = "Vision · Off";
 visionButton.title = "Park Vision: cycle Crowd flow, Queue pressure, Guest needs, and Operations (V)";
 visionButton.setAttribute("aria-pressed", "false");
-document.querySelector(".top-actions")?.prepend(visionButton);
+const studioButton = document.createElement("button");
+studioButton.id = "coaster-studio-button";
+studioButton.type = "button";
+studioButton.textContent = "Coaster Studio";
+studioButton.title = "Design, style, decorate, export, and import custom coaster drafts";
+const topActions = document.querySelector(".top-actions");
+topActions?.prepend(studioButton);
+topActions?.prepend(visionButton);
 
 let state = createNewGame();
 let speed = 1;
@@ -185,6 +193,11 @@ const ui = new GameInterface({
   onTouchInteract: () => world.interactNearby()
 });
 
+const coasterStudio = new CoasterStudioUI({
+  onMessage: (message) => ui.toast(message, "info")
+});
+studioButton.addEventListener("click", () => coasterStudio.open());
+
 function renderParkVisionStatus(status, { announce = false } = {}) {
   visionButton.textContent = `Vision · ${status.label}`;
   visionButton.classList.toggle("primary", status.active);
@@ -203,7 +216,7 @@ function cycleParkVision({ announce = true } = {}) {
 
 visionButton.addEventListener("click", () => cycleParkVision());
 addEventListener("keydown", (event) => {
-  if (event.code !== "KeyV" || world.mode !== "manage") return;
+  if (event.code !== "KeyV" || world.mode !== "manage" || coasterStudio.dialog.open) return;
   if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
   cycleParkVision();
 });
@@ -239,6 +252,7 @@ globalThis.__AXM_GAME__ = Object.freeze({
     crewJobsToday: (state.operations.todayCleanups ?? 0) + (state.operations.todayRepairs ?? 0),
     benchRestsToday: state.operations.todayBenchRests ?? 0,
     opening: ui.openingActive,
+    coasterStudioOpen: coasterStudio.dialog.open,
     visuals: world.getVisualHealth()
   })
 });
@@ -246,7 +260,7 @@ globalThis.__AXM_GAME__ = Object.freeze({
 function gameLoop(now) {
   const delta = Math.min(1000, now - lastTime);
   lastTime = now;
-  if (speed > 0) {
+  if (speed > 0 && !coasterStudio.dialog.open) {
     accumulator += delta * speed;
     const millisecondsPerMinute = 620;
     let safety = 0;
