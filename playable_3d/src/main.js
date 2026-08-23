@@ -8,6 +8,14 @@ import { GameInterface } from "./ui/interface.js";
 import { deriveOpeningSignal } from "./presentation/openingSequence.js";
 
 const canvas = document.getElementById("game-canvas");
+const visionButton = document.createElement("button");
+visionButton.id = "vision-button";
+visionButton.type = "button";
+visionButton.textContent = "Vision · Off";
+visionButton.title = "Park Vision: cycle Crowd flow, Queue pressure, Guest needs, and Operations (V)";
+visionButton.setAttribute("aria-pressed", "false");
+document.querySelector(".top-actions")?.prepend(visionButton);
+
 let state = createNewGame();
 let speed = 1;
 let accumulator = 0;
@@ -170,10 +178,34 @@ const ui = new GameInterface({
   onTouchInteract: () => world.interactNearby()
 });
 
+function renderParkVisionStatus(status, { announce = false } = {}) {
+  visionButton.textContent = `Vision · ${status.label}`;
+  visionButton.classList.toggle("primary", status.active);
+  visionButton.setAttribute("aria-pressed", status.active ? "true" : "false");
+  visionButton.title = status.active
+    ? `Park Vision: ${status.label} · ${status.markerCount} live markers · press V to cycle`
+    : "Park Vision: cycle Crowd flow, Queue pressure, Guest needs, and Operations (V)";
+  if (announce) ui.toast(`Park Vision · ${status.label}${status.active ? ` · ${status.markerCount} live markers` : ""}`, "info");
+}
+
+function cycleParkVision({ announce = true } = {}) {
+  const status = world.cycleParkVision();
+  renderParkVisionStatus(status, { announce });
+  return status;
+}
+
+visionButton.addEventListener("click", () => cycleParkVision());
+addEventListener("keydown", (event) => {
+  if (event.code !== "KeyV" || world.mode !== "manage") return;
+  if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
+  cycleParkVision();
+});
+
 world.setState(state);
 ui.render(state);
 ui.setContinueAvailable(Boolean(guardedStorage(() => slotMetadata(0))));
 ui.setMode("manage");
+renderParkVisionStatus(world.getParkVisionStatus());
 const savedQuality = guardedStorage(() => localStorage.getItem("axm-theme-park-v046-quality")
   ?? localStorage.getItem("axm-theme-park-v045-quality")
   ?? localStorage.getItem("axm-theme-park-v044-quality")
@@ -224,6 +256,7 @@ function gameLoop(now) {
   }
   if (now - lastUiUpdate > 250) {
     ui.render(state);
+    if (world.getParkVisionStatus().active) renderParkVisionStatus(world.getParkVisionStatus());
     lastUiUpdate = now;
   }
   if (now - lastAutosave > 45000) {
