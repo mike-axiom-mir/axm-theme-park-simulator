@@ -11,8 +11,12 @@ import {
   processHistoricalOperatingDayTransition
 } from "./core/historicalEconomy.js";
 import {
-  advanceOneMinuteWithHistoricalEconomy, simulateMinutesWithHistoricalEconomy
-} from "./core/historicalEconomyRuntime.js";
+  applyLegacyCareerAction, getLegacyCareerView, normalizeLegacyCareerState,
+  processLegacyCareerProgress
+} from "./core/legacyCareer.js";
+import {
+  advanceOneMinuteWithLegacyCareer, simulateMinutesWithLegacyCareer
+} from "./core/legacyCareerRuntime.js";
 import {
   SIMULATION_MILLISECONDS_PER_MINUTE, SIMULATION_SPEEDS, normalizeSimulationSpeed
 } from "./core/timeScale.js";
@@ -26,6 +30,7 @@ import { CoasterStudioUI } from "./ui/coasterStudioUI.js";
 import { ResearchLabUI } from "./ui/researchLabUI.js";
 import { UpgradeBayUI } from "./ui/upgradeBayUI.js";
 import { CashOfficeUI } from "./ui/cashOfficeUI.js";
+import { LegacyAtelierUI } from "./ui/legacyAtelierUI.js";
 import { deriveOpeningSignal } from "./presentation/openingSequence.js";
 
 const canvas = document.getElementById("game-canvas");
@@ -56,7 +61,9 @@ topActions?.prepend(upgradeButton);
 topActions?.prepend(researchButton);
 topActions?.prepend(visionButton);
 
-let state = normalizeHistoricalEconomyState(normalizeUpgradeState(normalizeResearchState(createNewGame())));
+let state = normalizeLegacyCareerState(
+  normalizeHistoricalEconomyState(normalizeUpgradeState(normalizeResearchState(createNewGame())))
+);
 let speed = 1;
 let accumulator = 0;
 let lastTime = performance.now();
@@ -69,6 +76,7 @@ const UPGRADE_ACTIONS = new Set([
   "installEntityUpgrade", "removeEntityUpgrade", "installParkUpgrade", "removeParkUpgrade"
 ]);
 const HISTORICAL_ECONOMY_ACTIONS = new Set(["completePaymentTechnology", "manualBankRun"]);
+const LEGACY_CAREER_ACTIONS = new Set(["completeLegacyStyleProject"]);
 
 function guardedStorage(callback, fallback = null) {
   try { return callback(); } catch { return fallback; }
@@ -83,20 +91,23 @@ function act(action, { quiet = false } = {}) {
         ? applyUpgradeAction(state, action)
         : HISTORICAL_ECONOMY_ACTIONS.has(action?.type)
           ? applyHistoricalEconomyAction(state, action)
-          : applyAction(state, action);
+          : LEGACY_CAREER_ACTIONS.has(action?.type)
+            ? applyLegacyCareerAction(state, action)
+            : applyAction(state, action);
   if (!result.ok && !quiet) ui.toast(result.reason ?? "That action could not be completed.", "error");
   if (result.ok) {
     if (action?.type === "startNextDay") {
       processHistoricalOperatingDayTransition(state, { source: "startNextDay" });
     }
     if (result.timeCostMinutes > 0) {
-      simulateMinutesWithHistoricalEconomy(state, result.timeCostMinutes);
+      simulateMinutesWithLegacyCareer(state, result.timeCostMinutes);
       if (state.operations?.dayReport) {
         speed = 0;
         accumulator = 0;
         ui.setSpeed(0);
       }
     }
+    processLegacyCareerProgress(state);
     state.stateHash = stateHash(state);
     world.syncWorld();
     ui.render(state);
@@ -106,7 +117,9 @@ function act(action, { quiet = false } = {}) {
 }
 
 function replaceState(nextState) {
-  state = normalizeHistoricalEconomyState(normalizeUpgradeState(normalizeResearchState(nextState)));
+  state = normalizeLegacyCareerState(
+    normalizeHistoricalEconomyState(normalizeUpgradeState(normalizeResearchState(nextState)))
+  );
   speed = state.operations?.dayReport ? 0 : 1;
   accumulator = 0;
   ui.resetTransientState();
@@ -267,11 +280,16 @@ const cashOffice = new CashOfficeUI({
   onAction: (action) => act(action, { quiet: true }),
   onMessage: (message, tone = "info") => ui.toast(message, tone)
 });
+const legacyAtelier = new LegacyAtelierUI({
+  getState: () => state,
+  onAction: (action) => act(action, { quiet: true }),
+  onMessage: (message, tone = "info") => ui.toast(message, tone)
+});
 
 coasterStudio.dialog.addEventListener("keydown", (event) => event.stopPropagation());
 
 function closeToolDialogs(except = null) {
-  for (const tool of [coasterStudio, researchLab, upgradeBay, cashOffice]) {
+  for (const tool of [coasterStudio, researchLab, upgradeBay, cashOffice, legacyAtelier]) {
     if (tool !== except) tool.close();
   }
 }
@@ -280,9 +298,11 @@ studioButton.addEventListener("click", () => { closeToolDialogs(coasterStudio); 
 researchButton.addEventListener("click", () => { closeToolDialogs(researchLab); researchLab.open(); });
 upgradeButton.addEventListener("click", () => { closeToolDialogs(upgradeBay); upgradeBay.open(); });
 cashOffice.button.addEventListener("click", () => closeToolDialogs(cashOffice));
+legacyAtelier.button.addEventListener("click", () => closeToolDialogs(legacyAtelier));
 
 function toolDialogOpen() {
-  return coasterStudio.dialog.open || researchLab.dialog.open || upgradeBay.dialog.open || cashOffice.dialog.open;
+  return coasterStudio.dialog.open || researchLab.dialog.open || upgradeBay.dialog.open
+    || cashOffice.dialog.open || legacyAtelier.dialog.open;
 }
 
 function renderParkVisionStatus(status, { announce = false } = {}) {
@@ -345,6 +365,7 @@ globalThis.__AXM_GAME__ = Object.freeze({
     researchLabOpen: researchLab.dialog.open,
     upgradeBayOpen: upgradeBay.dialog.open,
     cashOfficeOpen: cashOffice.dialog.open,
+    legacyAtelierOpen: legacyAtelier.dialog.open,
     research: (() => {
       const view = getResearchView(state);
       return { insight: view.insight, lifetimeInsight: view.lifetimeInsight, completed: view.completed.length, parkGrowth: view.parkGrowth };
@@ -367,6 +388,15 @@ globalThis.__AXM_GAME__ = Object.freeze({
         technology: view.completedTechnology.length
       };
     })(),
+    legacy: (() => {
+      const view = getLegacyCareerView(state);
+      return {
+        fund: view.fund,
+        lifetimeEarned: view.lifetimeEarned,
+        parkValue: view.parkValue,
+        completedStyleProjects: view.projects.filter((item) => item.completed).length
+      };
+    })(),
     visuals: world.getVisualHealth()
   })
 });
@@ -378,7 +408,7 @@ function gameLoop(now) {
     accumulator += delta * speed;
     let safety = 0;
     while (accumulator >= SIMULATION_MILLISECONDS_PER_MINUTE && safety++ < 40) {
-      advanceOneMinuteWithHistoricalEconomy(state);
+      advanceOneMinuteWithLegacyCareer(state);
       accumulator -= SIMULATION_MILLISECONDS_PER_MINUTE;
       if (state.operations?.dayReport) {
         speed = 0;
@@ -394,6 +424,7 @@ function gameLoop(now) {
     if (researchLab.dialog.open) researchLab.render();
     if (upgradeBay.dialog.open) upgradeBay.render();
     if (cashOffice.dialog.open) cashOffice.render();
+    if (legacyAtelier.dialog.open) legacyAtelier.render();
     lastUiUpdate = now;
   }
   if (now - lastAutosave > 45000) {
