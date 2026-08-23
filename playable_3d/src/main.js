@@ -4,7 +4,7 @@ import {
   deserializeGame, loadFromSlot, saveToSlot, serializeGame, slotMetadata
 } from "./core/save.js";
 import { stateHash } from "./core/random.js";
-import { WorldRenderer } from "./render/expressiveWorldRenderer.js";
+import { WorldRenderer } from "./render/staffAwareWorldRenderer.js";
 import { GameInterface } from "./ui/interface.js";
 import { deriveOpeningSignal } from "./presentation/openingSequence.js";
 
