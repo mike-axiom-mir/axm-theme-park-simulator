@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 import {
-  deriveGuestBodyLanguage, describeGuestBodyLanguage, GUEST_BODY_LANGUAGE_SCHEMA
+  deriveGuestBodyLanguage, describeGuestBodyLanguage, GUEST_BODY_LANGUAGE_SCHEMA,
+  deriveGuestWeatherGesture, describeGuestWeatherGesture, GUEST_WEATHER_GESTURE_SCHEMA
 } from "../src/presentation/guestBodyLanguage.js";
 import {
   deriveParkVisionPlan, nextParkVisionMode, PARK_VISION_MARKER_LIMIT, PARK_VISION_MODES
@@ -110,6 +111,29 @@ test("human-readable cue is derived from the exact same body-language descriptor
   assert.equal(neutral.strength, 0);
 });
 
+test("weather gestures reuse committed weather without mutating guest or weather state", () => {
+  const rainyGuest = visitor({ state: "walking", happiness: 90 });
+  const rain = { type: "rain", temperature: 15, precipitation: 0.72 };
+  const guestBefore = structuredClone(rainyGuest);
+  const weatherBefore = structuredClone(rain);
+  const rainy = deriveGuestWeatherGesture(rainyGuest, rain);
+  assert.equal(rainy.schema, GUEST_WEATHER_GESTURE_SCHEMA);
+  assert.equal(rainy.gesture, "rainCover");
+  assert.ok(closeTo(rainy.intensity, 0.65));
+  assert.ok(Object.isFrozen(rainy));
+  assert.deepEqual(rainyGuest, guestBefore);
+  assert.deepEqual(rain, weatherBefore);
+
+  const hot = describeGuestWeatherGesture(visitor({ state: "queueing", activityRemaining: 12 }), {
+    type: "bright", temperature: 26, precipitation: 0
+  });
+  assert.equal(hot.gesture, "heatFan");
+  assert.equal(hot.label, "Fanning in the heat");
+  assert.equal(hot.strength, 50);
+
+  assert.equal(deriveGuestWeatherGesture(visitor({ state: "resting" }), rain).gesture, "none");
+});
+
 test("Park Vision cycles through bounded management views deterministically", () => {
   assert.deepEqual(PARK_VISION_MODES, ["off", "guests", "queues", "needs", "operations"]);
   assert.equal(nextParkVisionMode("off"), "guests");
@@ -163,6 +187,8 @@ test("expressive renderer remains presentation-only and explains explicit select
   assert.match(renderer, /super\.syncStaffAndLitter\(time\)/);
   assert.match(renderer, /super\.selectVisitor\(visitorId\)/);
   assert.match(renderer, /descriptor\.pose === "delighted"/);
+  assert.match(renderer, /deriveGuestWeatherGesture/);
+  assert.match(renderer, /applyGuestWeatherGesture/);
   assert.match(renderer, /deriveGuestBodyLanguage/);
   assert.match(renderer, /describeGuestBodyLanguage/);
   assert.match(renderer, /deriveParkVisionPlan/);
