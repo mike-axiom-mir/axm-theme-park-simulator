@@ -5,6 +5,7 @@ import { normalizeStaffState } from "./staff.js";
 import { normalizeResearchState } from "./research.js";
 import { normalizeUpgradeState } from "./upgrades.js";
 import { normalizeDistrictState } from "./districts.js";
+import { normalizeHistoricalEconomyState } from "./historicalEconomy.js";
 
 export const SAVE_VERSION = 3;
 const PREFIX = "axm-theme-park-v042-slot-";
@@ -69,6 +70,7 @@ export function migrateState(input) {
   normalizeResearchState(state);
   normalizeUpgradeState(state);
   normalizeDistrictState(state);
+  normalizeHistoricalEconomyState(state);
   if (!state.world.litter.length && legacyLitter > 0) {
     state.world.litter.push({
       id: `litter-${state.world.nextLitterId++}`,
@@ -120,7 +122,8 @@ export function slotMetadata(slot, storage = localStorage) {
       savedAt: payload.savedAt,
       parkName: payload.state?.park?.name ?? "Unknown park",
       day: payload.state?.clock?.day ?? 1,
-      cash: payload.state?.economy?.cash ?? 0
+      cash: payload.state?.economy?.cash ?? 0,
+      officeVault: payload.state?.payments?.officeVault ?? 0
     };
   } catch {
     return { slot, damaged: true };
