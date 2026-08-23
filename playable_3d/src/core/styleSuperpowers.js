@@ -63,6 +63,14 @@ export const STYLE_SUPERPOWERS = Object.freeze({
     visualMode: "toon",
     moment: "Busy daytime hours make Toonburst feel bouncier; the effect remains presentation-only."
   }),
+  fantasy: power({
+    id: "aetherveil",
+    themeId: "fantasy",
+    label: "Aetherveil",
+    summary: "Fantasy, scenic, story and enchanted-nature anchors wake crystals, floating runes and arcane wisps.",
+    visualMode: "arcana",
+    moment: "Dusk, night and rain make Aetherveil glow more strongly without changing simulation values."
+  }),
   future: power({
     id: "pulse-grid",
     themeId: "future",
