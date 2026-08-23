@@ -3,7 +3,10 @@ import { applyStaffDevelopmentAction } from "./core/staff.js";
 import {
   applyResearchAction, getResearchView, normalizeResearchState
 } from "./core/research.js";
-import { advanceOneMinuteWithResearch } from "./core/researchRuntime.js";
+import {
+  applyUpgradeAction, normalizeUpgradeState
+} from "./core/upgrades.js";
+import { advanceOneMinuteWithUpgrades } from "./core/upgradeRuntime.js";
 import {
   deserializeGame, loadFromSlot, saveToSlot, serializeGame, slotMetadata
 } from "./core/save.js";
@@ -12,6 +15,7 @@ import { WorldRenderer } from "./render/contentStudioWorldRenderer.js";
 import { GameInterface } from "./ui/interface.js";
 import { CoasterStudioUI } from "./ui/coasterStudioUI.js";
 import { ResearchLabUI } from "./ui/researchLabUI.js";
+import { UpgradeBayUI } from "./ui/upgradeBayUI.js";
 import { deriveOpeningSignal } from "./presentation/openingSequence.js";
 
 const canvas = document.getElementById("game-canvas");
@@ -31,12 +35,18 @@ researchButton.id = "research-button";
 researchButton.type = "button";
 researchButton.textContent = "Research";
 researchButton.title = "Research real park evidence and grow attractions, services, stores, and the park itself";
+const upgradeButton = document.createElement("button");
+upgradeButton.id = "upgrade-button";
+upgradeButton.type = "button";
+upgradeButton.textContent = "Upgrade Bay";
+upgradeButton.title = "Install researched modules on specific park elements or across the whole park";
 const topActions = document.querySelector(".top-actions");
 topActions?.prepend(studioButton);
+topActions?.prepend(upgradeButton);
 topActions?.prepend(researchButton);
 topActions?.prepend(visionButton);
 
-let state = normalizeResearchState(createNewGame());
+let state = normalizeUpgradeState(normalizeResearchState(createNewGame()));
 let speed = 1;
 let accumulator = 0;
 let lastTime = performance.now();
@@ -45,6 +55,9 @@ let lastAutosave = performance.now();
 
 const STAFF_DEVELOPMENT_ACTIONS = new Set(["trainStaff", "setStaffZone", "cycleStaffZone"]);
 const RESEARCH_ACTIONS = new Set(["completeResearch", "growEntity", "growPark"]);
+const UPGRADE_ACTIONS = new Set([
+  "installEntityUpgrade", "removeEntityUpgrade", "installParkUpgrade", "removeParkUpgrade"
+]);
 
 function guardedStorage(callback, fallback = null) {
   try { return callback(); } catch { return fallback; }
@@ -55,7 +68,9 @@ function act(action, { quiet = false } = {}) {
     ? applyStaffDevelopmentAction(state, action)
     : RESEARCH_ACTIONS.has(action?.type)
       ? applyResearchAction(state, action)
-      : applyAction(state, action);
+      : UPGRADE_ACTIONS.has(action?.type)
+        ? applyUpgradeAction(state, action)
+        : applyAction(state, action);
   if (!result.ok && !quiet) ui.toast(result.reason ?? "That action could not be completed.", "error");
   if (result.ok) {
     state.stateHash = stateHash(state);
@@ -67,7 +82,7 @@ function act(action, { quiet = false } = {}) {
 }
 
 function replaceState(nextState) {
-  state = normalizeResearchState(nextState);
+  state = normalizeUpgradeState(normalizeResearchState(nextState));
   speed = state.operations?.dayReport ? 0 : 1;
   accumulator = 0;
   ui.resetTransientState();
@@ -210,15 +225,32 @@ const ui = new GameInterface({
 const coasterStudio = new CoasterStudioUI({
   onMessage: (message) => ui.toast(message, "info")
 });
-coasterStudio.dialog.addEventListener("keydown", (event) => event.stopPropagation());
-studioButton.addEventListener("click", () => coasterStudio.open());
-
 const researchLab = new ResearchLabUI({
   getState: () => state,
   onAction: (action) => act(action),
   onMessage: (message, tone = "info") => ui.toast(message, tone)
 });
-researchButton.addEventListener("click", () => researchLab.open());
+const upgradeBay = new UpgradeBayUI({
+  getState: () => state,
+  onAction: (action) => act(action, { quiet: true }),
+  onMessage: (message, tone = "info") => ui.toast(message, tone)
+});
+
+coasterStudio.dialog.addEventListener("keydown", (event) => event.stopPropagation());
+
+function closeToolDialogs(except = null) {
+  for (const tool of [coasterStudio, researchLab, upgradeBay]) {
+    if (tool !== except) tool.close();
+  }
+}
+
+studioButton.addEventListener("click", () => { closeToolDialogs(coasterStudio); coasterStudio.open(); });
+researchButton.addEventListener("click", () => { closeToolDialogs(researchLab); researchLab.open(); });
+upgradeButton.addEventListener("click", () => { closeToolDialogs(upgradeBay); upgradeBay.open(); });
+
+function toolDialogOpen() {
+  return coasterStudio.dialog.open || researchLab.dialog.open || upgradeBay.dialog.open;
+}
 
 function renderParkVisionStatus(status, { announce = false } = {}) {
   visionButton.textContent = `Vision · ${status.label}`;
@@ -238,7 +270,7 @@ function cycleParkVision({ announce = true } = {}) {
 
 visionButton.addEventListener("click", () => cycleParkVision());
 addEventListener("keydown", (event) => {
-  if (event.code !== "KeyV" || world.mode !== "manage" || coasterStudio.dialog.open || researchLab.dialog.open) return;
+  if (event.code !== "KeyV" || world.mode !== "manage" || toolDialogOpen()) return;
   if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
   cycleParkVision();
 });
@@ -276,10 +308,15 @@ globalThis.__AXM_GAME__ = Object.freeze({
     opening: ui.openingActive,
     coasterStudioOpen: coasterStudio.dialog.open,
     researchLabOpen: researchLab.dialog.open,
+    upgradeBayOpen: upgradeBay.dialog.open,
     research: (() => {
       const view = getResearchView(state);
       return { insight: view.insight, lifetimeInsight: view.lifetimeInsight, completed: view.completed.length, parkGrowth: view.parkGrowth };
     })(),
+    upgrades: {
+      park: state.upgrades?.park?.length ?? 0,
+      entity: (state.world.entities ?? []).reduce((sum, entity) => sum + (entity.installedUpgrades?.length ?? 0), 0)
+    },
     visuals: world.getVisualHealth()
   })
 });
@@ -287,12 +324,12 @@ globalThis.__AXM_GAME__ = Object.freeze({
 function gameLoop(now) {
   const delta = Math.min(1000, now - lastTime);
   lastTime = now;
-  if (speed > 0 && !coasterStudio.dialog.open && !researchLab.dialog.open) {
+  if (speed > 0 && !toolDialogOpen()) {
     accumulator += delta * speed;
     const millisecondsPerMinute = 620;
     let safety = 0;
     while (accumulator >= millisecondsPerMinute && safety++ < 40) {
-      advanceOneMinuteWithResearch(state);
+      advanceOneMinuteWithUpgrades(state);
       accumulator -= millisecondsPerMinute;
       if (state.operations?.dayReport) {
         speed = 0;
@@ -306,6 +343,7 @@ function gameLoop(now) {
     ui.render(state);
     if (world.getParkVisionStatus().active) renderParkVisionStatus(world.getParkVisionStatus());
     if (researchLab.dialog.open) researchLab.render();
+    if (upgradeBay.dialog.open) upgradeBay.render();
     lastUiUpdate = now;
   }
   if (now - lastAutosave > 45000) {
