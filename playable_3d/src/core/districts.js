@@ -5,7 +5,7 @@ export const DISTRICT_IDS = Object.freeze(["north", "east", "south", "west"]);
 export const DISTRICT_THEME_IDS = Object.freeze([
   "neutral", "garden", "adventure", "storybook", "cartoon", "fantasy",
   "western", "medieval", "halloween", "christmas", "newyear",
-  "future", "robotica", "software", "waterfront"
+  "future", "robotica", "software", "waterfront", "gilded"
 ]);
 
 export const DISTRICT_DEFINITIONS = Object.freeze({
@@ -127,6 +127,13 @@ export const DISTRICT_THEMES = Object.freeze({
     summary: "Boardwalk timber, reeds, mist, harbour lights and attractions shaped around water.",
     signatureTags: ["water"],
     preferredTags: ["water", "scenic", "family", "garden", "adventure", "food", "care"]
+  }),
+  gilded: districtTheme({
+    id: "gilded",
+    label: "Gilded Wealth",
+    summary: "Polished gold, black and white marble, velvet ropes, jewel lights, fountains, crowns and unapologetic show-off luxury on everything.",
+    signatureTags: ["luxury"],
+    preferredTags: ["luxury", "retail", "food", "scenic", "care", "family", "future", "storybook"]
   })
 });
 
