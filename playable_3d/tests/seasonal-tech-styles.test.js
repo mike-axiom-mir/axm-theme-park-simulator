@@ -117,6 +117,7 @@ test("each new themed land can unleash its distinct district spectacle", () => {
 
 test("seasonal and technology renderer is bounded and stays outside simulation authority", () => {
   const renderer = read("../src/render/festivalTechStyleWorldRenderer.js");
+  const motionGuard = read("../src/render/festivalTechMotionGuardWorldRenderer.js");
   const finalSeam = read("../src/render/finalStyleWorldRenderer.js");
   const stateGuard = read("../src/render/stateSafeParkIdentityWorldRenderer.js");
   const simulation = read("../src/core/simulation.js");
@@ -131,7 +132,10 @@ test("seasonal and technology renderer is bounded and stays outside simulation a
   assert.match(renderer, /software-codewave/);
   assert.match(renderer, /festival-tech-style-dressing-root/);
   assert.match(renderer, /setQuality/);
-  assert.match(finalSeam, /festivalTechStyleWorldRenderer/);
+  assert.match(motionGuard, /FestivalTechStyleWorldRenderer/);
+  assert.match(motionGuard, /christmasSnowAnchored: true/);
+  assert.match(motionGuard, /snowBaseX/);
+  assert.match(finalSeam, /festivalTechMotionGuardWorldRenderer/);
   assert.match(stateGuard, /finalStyleWorldRenderer/);
   assert.doesNotMatch(simulation, /hauntfall|snowglow|countdown-burst|servo-surge|codewave|festivalTechStyleWorldRenderer/);
 });
