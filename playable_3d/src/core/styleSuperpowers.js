@@ -71,6 +71,22 @@ export const STYLE_SUPERPOWERS = Object.freeze({
     visualMode: "arcana",
     moment: "Dusk, night and rain make Aetherveil glow more strongly without changing simulation values."
   }),
+  western: power({
+    id: "frontier-rush",
+    themeId: "western",
+    label: "Frontier Rush",
+    summary: "Rail, river, adventure and family anchors wake wagon-wheel motion, lantern lines and drifting dust signals.",
+    visualMode: "frontier",
+    moment: "Late afternoon and dry bright weather make Frontier Rush feel warmer and dustier without changing simulation values."
+  }),
+  medieval: power({
+    id: "bannerwake",
+    themeId: "medieval",
+    label: "Bannerwake",
+    summary: "Story, indoor and adventure anchors wake stone keep silhouettes, banners, courtyard rings and torchlight.",
+    visualMode: "keep",
+    moment: "Evening and night strengthen Bannerwake's torch-and-banner presentation only."
+  }),
   future: power({
     id: "pulse-grid",
     themeId: "future",
