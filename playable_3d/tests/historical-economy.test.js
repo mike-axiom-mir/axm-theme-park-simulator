@@ -6,12 +6,14 @@ import { createNewGame } from "../src/core/simulation.js";
 import { normalizeResearchState } from "../src/core/research.js";
 import {
   MANUAL_BANK_RUN_CUT, MANUAL_BANK_RUN_MINUTES,
-  acceptedElectronicShare, applyHistoricalEconomyAction, calendarYear,
+  acceptedElectronicShare, applyHistoricalEconomyAction,
   collectVaultToBank, getHistoricalEconomyView, marketElectronicShare,
   normalizeHistoricalEconomyState, paymentTechnologyView, processPaymentIncomeEvents,
   weeklyCollectionDue
 } from "../src/core/historicalEconomy.js";
-import { HISTORICAL_OPERATING_DAYS_PER_YEAR } from "../src/core/historicalTimeline.js";
+import {
+  HISTORICAL_OPERATING_DAYS_PER_YEAR, calendarYear
+} from "../src/core/historicalTimeline.js";
 import { deserializeGame, serializeGame } from "../src/core/save.js";
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
