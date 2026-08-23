@@ -52,7 +52,9 @@ Available presentation identities:
 - Storybook;
 - Future.
 
-Select a park element in management view and press **Y** to cycle the style of the district containing that element. All park elements in the same district inherit the same small visual accent, giving the park a coherent local identity without overwriting each attraction's own model.
+Select a park element in management view and either press **Y** or use the contextual **District Style** top-bar button to cycle the style of the district containing that element. The button disables itself whenever there is no selected park element, including while a guest/crew member is selected or a build/remove tool has cleared entity selection.
+
+All park elements in the same district inherit the same small visual accent, giving the park a coherent local identity without overwriting each attraction's own model.
 
 District styling currently has **zero simulation effects**:
 - no guest motive mutation;
@@ -83,7 +85,7 @@ worldRenderer
 
 The previous special-content model swap logic was preserved verbatim in `specialContentWorldRenderer.js` so the new visible layer can be bypassed or repaired independently.
 
-`stateSafeParkIdentityWorldRenderer.js` normalizes style-only district defaults before renderer intake and immediately refreshes `stateHash`, preventing presentation defaults from silently leaving deterministic state integrity stale.
+`stateSafeParkIdentityWorldRenderer.js` normalizes style-only district defaults before renderer intake, immediately refreshes `stateHash`, owns the touch/mouse District Style control, keeps its enabled state synchronized with the current selection, and blocks style changes while tool dialogs are open.
 
 `simulation.js` remains district-independent and does not own visual upgrade hardware.
 
@@ -97,6 +99,7 @@ The previous special-content model swap logic was preserved verbatim in `special
 - save persistence and legacy neutral defaults;
 - final renderer layering;
 - state-hash guard presence;
+- District Style button/dialog guard source wiring;
 - preserved simulation independence from district/visual hardware code.
 
 ## Verification truth boundary
@@ -120,7 +123,7 @@ Then perform the real WebGL/play gate with special attention to:
 - click/select behavior when module meshes overlap attraction meshes;
 - park infrastructure placement near the entrance on the Living Globe;
 - district accent scale on all content families;
-- Y hotkey isolation while dialogs/input fields are active;
+- Y/button isolation while dialogs/input fields are active;
 - save/load of district themes;
 - visual performance with a large park;
 - Growth + Upgrade stacking balance remains unchanged by presentation code.
