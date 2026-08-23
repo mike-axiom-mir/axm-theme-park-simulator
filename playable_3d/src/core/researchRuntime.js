@@ -44,8 +44,23 @@ function refund(state, amount, label, subjectId = "park") {
   return value;
 }
 
+function effectiveParkModifier(state) {
+  const base = parkResearchModifier(state);
+  let restCareLevels = 0;
+  for (const entity of state.world?.entities ?? []) {
+    const definition = catalogDefinition(entity.catalogId);
+    if (definition.category !== "Services" || definition.kind === "service" || definition.need !== "rest") continue;
+    restCareLevels += normalizeEntityResearchGrowth(entity).care;
+  }
+  return Object.freeze({
+    ...base,
+    demandBonus: Math.min(0.08, base.demandBonus + restCareLevels * 0.0015),
+    ratingBonus: Math.min(4, base.ratingBonus + restCareLevels * 0.18)
+  });
+}
+
 function applyNewGuestGrowth(state, events) {
-  const modifier = parkResearchModifier(state);
+  const modifier = effectiveParkModifier(state);
   if (!modifier.newGuestPatience && !modifier.newGuestStay) return;
   for (const entry of events) {
     if (entry.type !== "visitor.entered") continue;
@@ -114,7 +129,7 @@ function applyEntityGrowth(state, before, events) {
 }
 
 function applyParkGrowth(state, events) {
-  const modifier = parkResearchModifier(state);
+  const modifier = effectiveParkModifier(state);
   if (modifier.hourlyOperationsRebate > 0) {
     const hourly = events.filter((entry) => entry.type === "economy.cost"
       && entry.data?.label === "Hourly operations and staff");
