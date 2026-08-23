@@ -66,7 +66,8 @@ test("each styled identity has a distinct superpower that can be earned by match
     ["future", "pulse-grid", ["tidalturn", "lagoonshow"]],
     ["robotica", "servo-surge", ["bumpers", "cloudhop"]],
     ["software", "codewave", ["skysail", "cloudcinema"]],
-    ["waterfront", "tidecall", ["canalcruise", "lilypond"]]
+    ["waterfront", "tidecall", ["canalcruise", "lilypond"]],
+    ["gilded", "grand-radiance", ["sunbeam", "lagoonshow"]]
   ];
 
   for (const [themeId, powerId, content] of cases) {
@@ -96,6 +97,7 @@ test("style superpowers stay in additive presentation layering and do not leak i
   const medievalRenderer = read("../src/render/medievalStyleWorldRenderer.js");
   const seasonalTechRenderer = read("../src/render/festivalTechStyleWorldRenderer.js");
   const seasonalMotionGuard = read("../src/render/festivalTechMotionGuardWorldRenderer.js");
+  const gildedRenderer = read("../src/render/gildedStyleWorldRenderer.js");
   const finalStyle = read("../src/render/finalStyleWorldRenderer.js");
   const stateGuard = read("../src/render/stateSafeParkIdentityWorldRenderer.js");
   const simulation = read("../src/core/simulation.js");
@@ -122,7 +124,9 @@ test("style superpowers stay in additive presentation layering and do not leak i
   assert.match(seasonalTechRenderer, /robotica-servo-surge/);
   assert.match(seasonalTechRenderer, /software-codewave/);
   assert.match(seasonalMotionGuard, /FestivalTechStyleWorldRenderer/);
-  assert.match(finalStyle, /festivalTechMotionGuardWorldRenderer/);
+  assert.match(gildedRenderer, /FestivalTechMotionGuardWorldRenderer/);
+  assert.match(gildedRenderer, /gilded-grand-radiance/);
+  assert.match(finalStyle, /gildedStyleWorldRenderer/);
   assert.match(stateGuard, /finalStyleWorldRenderer/);
-  assert.doesNotMatch(simulation, /styleSuperpowers|styleSuperpowerPlan|Frontier Rush|Bannerwake|Hauntfall|Snowglow|Countdown Burst|Servo Surge|Codewave|festivalTechStyleWorldRenderer/);
+  assert.doesNotMatch(simulation, /styleSuperpowers|styleSuperpowerPlan|Frontier Rush|Bannerwake|Hauntfall|Snowglow|Countdown Burst|Servo Surge|Codewave|Grand Radiance|gildedStyleWorldRenderer/);
 });
