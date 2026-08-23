@@ -2,136 +2,173 @@
 
 Status: **SOURCE-INTEGRATED / AWAITING LOCAL TEST/BUILD**
 
-This pass changes the playable career economy from a timeless single-money abstraction into a historically evolving payment layer beginning in **1980**.
+This pass gives the playable park a historically evolving career beginning in **1980**, with real separation between earned revenue, spendable bank funds and physical cash waiting in the park office.
 
-It remains additive over the preserved simulator:
+It remains additive:
 
 ```text
 preserved simulation
   -> research / functional growth
     -> installed upgrades
-      -> historical payment evolution + cash logistics
+      -> historical payments + cash logistics + career timeline
 ```
 
-The base simulation still owns guest spending and emits committed `economy.income` events. The historical layer classifies those already-real sales afterward. It does not invent duplicate admission, ride, or service revenue.
+The preserved simulation still owns guest spending first and emits committed `economy.income` events. The historical layer classifies those real sales afterward; it never invents duplicate admission, ride or service revenue.
 
-## Career calendar
+## Career time versus map time
 
-The historical timeline begins in **1980**.
+The historical calendar now belongs to the **whole park career**, not to the active map/scenario's local Day counter.
 
-For playability, historical years use one isolated compression constant:
+`historicalTimeline.js` keeps:
 
-- 4 representative operating days = 1 career year.
+- `careerOperatingDay` — continuous across the entire career;
+- historical start year — 1980;
+- representative operating days per year — 8;
+- active map id;
+- map-start career day.
 
-This is deliberately a game-timescale abstraction, not a claim that four real park days equal a calendar year. The constant lives in `historicalTimeline.js` so local playtesting can slow or accelerate the career without rewriting payment logic.
+The current map may independently use local `clock.day` values.
 
-Current milestone ordering is based on Dutch payment-history anchors:
+This means a future campaign transition can do:
 
-- 1980 — cash-first starting era;
-- 1988 — early PIN/debit technology can become researchable;
-- 1996 — wider park PIN-network adoption project becomes available;
-- 2014 — contactless checkout becomes researchable;
-- around 2015 — model market preference reaches roughly half electronic;
-- 2025 — model market preference reaches roughly 83% electronic / 17% cash.
+```text
+Career: 2005 · career operating day 201
+Map A: Day 27
+   -> begin Map B
+Career: 2005 · career operating day 201
+Map B: Day 1
+```
 
-The market curve between milestone points is interpolated rather than jumping instantly on January 1.
+The year does **not** reset when a map starts at Day 1.
+
+The same continuity also applies to:
+
+- PIN/card adoption;
+- payment-market mix;
+- weekly cash-collection rhythm;
+- payment ledger history.
+
+`beginMapCampaignTimeline(...)` is the explicit seam for a future map-campaign loader.
+
+## Historical-year pacing
+
+The temporary 4-days/year value was too fast once normal theme-park fast-forward was considered.
+
+The current source contract is:
+
+- **8 representative operating days = 1 historical year**.
+
+The playable park operates from 09:00 to 22:00, which is 780 simulated minutes per operating day.
+
+The simulation tempo is 620 real milliseconds per simulated minute.
+
+A shared `timeScale.js` now defines the playable speeds:
+
+- Pause;
+- 1×;
+- 2×;
+- 4×.
+
+The previous 3× / 8× controls were replaced with the more conventional 2× / 4× controls.
+
+Approximate uninterrupted real-time pacing is therefore:
+
+- one operating day at 1×: 8.06 minutes;
+- one operating day at 2×: 4.03 minutes;
+- one operating day at 4×: 2.02 minutes;
+- one historical year at 1×: 64.48 minutes;
+- one historical year at 2×: 32.24 minutes;
+- one historical year at 4×: 16.12 minutes.
+
+Reaching 2025 from the beginning of 1980 therefore represents roughly twelve hours of uninterrupted 4× simulation, before player pauses, building, research and management time.
+
+Simulation speed only changes **real-time playback**. It never changes career-day counting, historical year, research requirements or economic outcomes.
 
 ## Bank balance versus office vault
 
-Existing `state.economy.cash` now represents **spendable bank/liquid funds** at the final historical runtime layer.
+`state.economy.cash` is the spendable liquid/bank balance at the final historical runtime layer.
 
-Cash guest payments are handled differently:
+Cash guest payments are routed as follows:
 
-1. the preserved simulation books the gross income normally;
-2. the historical layer recognizes the committed guest-payment event;
-3. the same gross amount is removed from immediately spendable bank funds;
-4. it is moved into `state.payments.officeVault`.
+1. the preserved simulation books gross income once;
+2. the historical layer observes the committed guest-payment event;
+3. the cash amount is removed from immediately spendable bank funds;
+4. the same amount enters `state.payments.officeVault`.
 
-Therefore:
+Therefore a park can be profitable but temporarily unable to spend all of that money because some is physically still in the office.
 
-- revenue is still earned once;
-- day/lifetime income remain truthful gross revenue;
-- cash does not become spendable twice;
-- building, maintenance, research investment and upgrades continue to use the existing spendable bank balance;
-- a profitable park can temporarily have weak liquidity because physical cash is still in the office.
+## Classified guest income
 
-This separation is intentional.
-
-## Which income is classified
-
-Only real guest payment sources are routed through payment-method logic:
+The payment layer currently classifies only real guest-payment events:
 
 - Admission;
 - Ride ticket;
 - Service sale.
 
-Non-guest accounting events such as recovered construction material or adventure rewards are not arbitrarily turned into till cash.
+Recovered building material, adventure rewards and other non-guest accounting events are not arbitrarily treated as till cash.
 
 ## Cash transaction cost
 
-Cash currently has:
+Normal cash has:
 
 **€0 per-transaction processing fee.**
 
-There is no fake till-counting minigame and no hidden percentage haircut on normal cash sales.
+There is no counting-money or driving minigame.
 
-Its tradeoff is **liquidity delay and physical storage in the office vault**.
+Cash's cost is liquidity delay and physical storage.
 
 ## Weekly collection car
 
-The park has an automatic cash-collection route every **7 operating days**.
+The collection car arrives every **7 career operating days**.
 
-When the collection day begins:
+The schedule follows `careerOperatingDay`, not the current map's local day number. Starting a new campaign map therefore does not reset or accelerate the cash-truck schedule.
 
-- the final historical runtime checks the due collection before the first normal minute runs;
-- the entire office vault is transferred to the spendable bank balance;
-- the vault becomes zero;
-- gross revenue is not booked again;
-- there is currently **no collection fee**.
+On collection:
 
-The first source attempt deliberately follows the existing `startNextDay` / day-report authority rather than assuming the park reaches midnight. `historicalEconomyRuntime.js` therefore checks a due pickup at the beginning of the new operating day's first tick.
+- the full office vault transfers to spendable bank funds;
+- the office vault becomes zero;
+- gross revenue is not booked twice;
+- there is currently no pickup fee.
 
 ## Manual bank run
 
-The player can choose to access office-vault money early from the **Cash Office**.
+The player can bank the current office vault early at any time.
 
 Current explicit rule:
 
-- available whenever the vault contains money;
-- deposits the current vault immediately;
-- **10% of that early deposit is lost**;
-- **90 in-game minutes pass** while the player/manager is away;
-- the park continues simulating during those 90 minutes;
-- cash earned while the trip is happening remains new vault cash;
-- if the operating day ends during the trip, the normal day-report stop still wins.
+- full current vault is taken to the bank;
+- 10% is lost and booked as a real cost;
+- the remaining 90% becomes spendable bank money;
+- 90 in-game minutes pass;
+- the park continues operating during those 90 minutes;
+- new cash earned during the trip remains as new vault cash;
+- closing/day-report authority can still stop the elapsed-time simulation.
 
-The 10% cut came from the requested design. The 90-minute duration is an isolated source-pass choice for later local tuning.
-
-There is no driving minigame.
+No travel minigame is introduced.
 
 ## Electronic payments
 
-Electronic payments settle directly into spendable bank funds, but a small processing fee is booked as a real cost.
+Electronic payments settle directly into spendable bank funds, with a small visible processing cost.
 
-Current stylized fee rates:
+Current stylized gameplay rates:
 
 - before 2000: 0.60%;
 - 2000–2013: 0.45%;
 - 2014 onward: 0.30%;
-- minimum booked fee on an electronic transaction: €0.01.
+- minimum electronic fee: €0.01.
 
-These fee rates are gameplay approximations, not claims of exact historical Dutch merchant tariffs.
+These are gameplay approximations rather than exact historical merchant tariffs.
 
-The important simulation behavior is the tradeoff:
+The intended tradeoff is:
 
-- cash = no transaction fee, but vault delay;
-- electronic = immediate bank liquidity, but tiny accumulating fee.
+```text
+cash        -> zero transaction fee -> delayed liquidity
+PIN / card  -> immediate liquidity   -> tiny accumulating fee
+```
 
 ## Era payment mix
 
-The visitor market has an era-based electronic preference curve.
-
-Current anchor shares:
+Current market electronic-preference anchors:
 
 - 1980: 0%;
 - 1988: 2%;
@@ -144,171 +181,120 @@ Current anchor shares:
 - 2025: 83%;
 - 2035: 90%.
 
-The park does **not** automatically receive that whole share. Acceptance is capped by the payment technology the player has adopted.
+The park can accept only the portion supported by technology it has actually researched.
 
-## Payment-technology research
-
-Payment modernization uses the existing Research evidence/Insight resources, but lives in the Cash Office as a dedicated historical technology lane.
+## Payment research
 
 ### PIN / Debit Terminals
 
-Available from **1988**.
+Available from 1988.
 
-Requires:
+Requires Commerce + Operations evidence and Research Insight.
 
-- Commerce evidence;
-- Operations evidence;
-- research Insight.
-
-Effect:
-
-- park can accept up to 25% electronic payments, still capped by visitor-era preference.
+Acceptance cap: 25%.
 
 ### Park-wide PIN Network
 
-Available from **1996** after PIN / Debit Terminals.
+Available from 1996 after early PIN terminals.
 
-Requires more:
+Requires additional Commerce + Services + Operations evidence and Insight.
 
-- Commerce evidence;
-- Guest-services evidence;
-- Operations evidence;
-- research Insight.
-
-Effect:
-
-- acceptance cap rises to 70%.
-
-1996 is a gameplay adoption milestone in this source pass, not a claim that every Dutch park adopted one specific network in that exact year.
+Acceptance cap: 70%.
 
 ### Contactless Checkout
 
-Available from **2014** after the park-wide PIN network.
+Available from 2014 after the park-wide PIN network.
 
-Effect:
+Allows the park to follow the full era-appropriate electronic preference.
 
-- the park can follow the full era-appropriate electronic share.
-
-Technology existence and park adoption are intentionally separate. Reaching a year makes technology *available to research*; it does not silently install it.
-
-## Deterministic method assignment
-
-Each committed guest-payment event is assigned cash/electronic deterministically from:
-
-- event sequence;
-- event subject;
-- sale label;
-- sale amount;
-- current career year.
-
-No nondeterministic browser randomness is introduced.
+Historical availability and park adoption are deliberately separate: reaching a year makes technology researchable; it does not silently install it.
 
 ## Cash Office UI
 
-Added:
+The Cash Office shows:
 
-`playable_3d/src/ui/cashOfficeUI.js`
-
-It exposes:
-
-- career year;
+- historical year;
+- career operating day;
+- current map-local day;
 - spendable bank balance;
-- physical office-vault cash;
-- days until weekly collection;
+- physical office vault;
+- next career-based weekly collection;
 - accepted cash/electronic mix;
-- wider visitor market electronic preference;
-- current electronic fee rate;
-- today's/lifetime processing fees;
-- payment technology research;
-- manual 10% / 90-minute early bank route.
-
-Opening the Cash Office pauses the normal real-time loop, consistent with the existing Research Lab / Upgrade Bay / Coaster Studio tool-dialog pattern.
-
-The 90-minute manual bank action intentionally runs the final historical simulation even while the dialog is open, then refreshes the view.
+- broader market preference;
+- electronic processing rate and accumulated fees;
+- payment-technology research;
+- manual 10% / 90-minute bank route;
+- current 8-days/year pacing and its approximate duration at 4×.
 
 ## Save compatibility
 
-`save.js` now normalizes and preserves:
+Current save version remains 3.
 
-- historical timeline state;
-- office-vault balance;
-- payment technology completion;
-- cash/electronic ledger totals;
+Migration normalizes and preserves:
+
+- historical career day;
+- start year and year-compression constant;
+- active map timeline metadata;
+- office vault;
+- payment technology;
+- cash/electronic ledgers;
 - collection/manual-bank history.
 
-`SAVE_VERSION` remains 3.
-
-Older saves receive safe 1980/default historical-payment state during migration rather than being rejected.
+Legacy saves without `careerOperatingDay` infer it once from their existing local day, then use the separated career counter from that point forward.
 
 ## Authority boundary
 
-The preserved `simulation.js` remains unaware of:
+`simulation.js` remains unaware of:
 
-- historical payment mix;
+- historical years;
+- career operating days;
+- map-campaign continuity;
+- payment mix;
 - office vault;
-- PIN research;
-- contactless research;
-- weekly collection;
+- payment technology;
+- cash collection;
 - manual bank runs.
 
-It continues to own the real guest sale first.
-
-The historical wrapper is responsible only for:
-
-- payment-method classification;
-- liquidity location;
-- payment fee cost;
-- payment technology adoption;
-- weekly/manual cash settlement.
+Historical logic observes committed simulation outcomes from outside the preserved core.
 
 ## Focused proof
 
-Added:
+`playable_3d/tests/historical-economy.test.js` now covers:
 
-`playable_3d/tests/historical-economy.test.js`
-
-Coverage includes:
-
-- 1980 start year;
-- compressed-year isolation;
-- 1988 and 2025 year mapping;
-- cash income moved from spendable bank funds to office vault;
-- no duplicate income booking;
-- free full weekly vault transfer;
-- 10% manual-bank cut;
-- 90-minute manual-bank time cost;
-- year/evidence/Insight-gated PIN research;
-- 2015 50/50 market anchor;
-- 2025 card-majority market anchor;
-- electronic fee accumulation;
-- modern mix still retaining some cash;
-- save round-trip;
-- preserved simulation independence;
-- final runtime layering;
-- Cash Office UI presence.
+- 1980 start;
+- 8 career operating days/year;
+- 1988 and 2025 career-day mapping;
+- map Day 1 reset without career-year reset;
+- Pause / 1× / 2× / 4× contract;
+- real-minute pacing at all active speeds;
+- cash-to-vault routing without duplicate revenue;
+- weekly pickup following career days rather than map days;
+- manual 10% / 90-minute banking;
+- payment year/research gates;
+- modern card-majority mix and fees;
+- save persistence of local map day + continuous career day;
+- preserved-simulation independence.
 
 ## Verification truth boundary
 
 This GitHub-connected seat can inspect and mutate source but is not the trusted local Node/WebGL/build environment.
 
-Therefore the status remains:
+Therefore:
 
 **SOURCE-INTEGRATED / AWAITING LOCAL TEST/BUILD**
 
-No full Node-suite, real browser/WebGL or production-build PASS is claimed here.
+No full Node-suite, browser/WebGL or production-build PASS is claimed here.
 
 `dist/game.js` remains intentionally untouched.
 
 Later local intake should specifically test:
 
-- whether 4 operating days/year is too fast or too slow;
-- liquidity pressure in the 1980 cash-first era;
-- weekly-pickup timing immediately after `startNextDay`;
-- bank balance behavior if cash reclassification meets same-minute operating costs;
-- manual bank run crossing closing time;
-- payment mix across milestone years;
-- fee accumulation on many very small sales;
-- technology research pacing;
+- whether ~16.1 real minutes/year at 4× feels right;
+- whether 8 representative days/year gives enough time to use each era's technology;
+- map-campaign transitions preserving year, cash truck and payment research;
+- vault liquidity pressure in early cash-heavy years;
+- manual-bank trips near closing time;
+- 1× / 2× / 4× CPU/render stability;
 - Cash Office readability on phone;
 - save migration from pre-history saves;
-- balance interaction with Research/Growth/Upgrades.
+- interaction with Research/Growth/Upgrades.
