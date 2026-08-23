@@ -48,6 +48,12 @@ test("dedicated Galleon model animates from ride evidence without mutating it", 
   const model = createGalleonModel(entity);
   assert.equal(model.userData.specialAttractionId, "galleon");
   assert.ok(model.userData.rideAnchor);
+  const warning = model.getObjectByName("galleon-condition-warning");
+  const evolution = model.getObjectByName("galleon-evolution-dressing");
+  assert.ok(warning);
+  assert.ok(evolution);
+  assert.equal(warning.visible, false);
+
   model.userData.updateVisual(0, entity);
   model.userData.updateVisual(0.1, entity);
   const passengers = [];
@@ -57,10 +63,14 @@ test("dedicated Galleon model animates from ride evidence without mutating it", 
   assert.deepEqual(entity, before);
 
   entity.open = false;
+  entity.condition = 20;
+  entity.evolutionLevel = 3;
   entity.cycleRemaining = 0;
   entity.riders = [];
   model.userData.updateVisual(0.2, entity);
   assert.equal(passengers.filter((passenger) => passenger.visible).length, 0);
+  assert.equal(warning.visible, true);
+  assert.ok(evolution.children.length >= 10, "level-three Galleon should expose visible evolution dressing");
 });
 
 test("default Coaster Studio draft is a valid closed portable design", () => {
@@ -161,6 +171,7 @@ test("playable source wires Coaster Studio and the dedicated attraction model wi
   assert.match(main, /CoasterStudioUI/);
   assert.match(main, /coaster-studio-button/);
   assert.match(main, /!coasterStudio\.dialog\.open/);
+  assert.match(main, /coasterStudio\.dialog\.addEventListener\("keydown"/);
   assert.match(renderer, /SPECIAL_ATTRACTION_FACTORIES/);
   assert.match(renderer, /galleon: createGalleonModel/);
   assert.match(studio, /Track nodes/);
