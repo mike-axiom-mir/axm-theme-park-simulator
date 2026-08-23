@@ -106,7 +106,9 @@ function createFantasyEntityDressing(fit, entity) {
 
   const crystals = [];
   for (const [x, z, height] of [[-0.24, 0.02, 0.52], [0.03, -0.04, 0.68], [0.28, 0.07, 0.44]]) {
-    const crystal = addMesh(root, new THREE.ConeGeometry(0.12, height, 5), violet, x, 0.2 + height / 2, z);
+    const baseY = 0.2 + height / 2;
+    const crystal = addMesh(root, new THREE.ConeGeometry(0.12, height, 5), violet, x, baseY, z);
+    crystal.userData.baseY = baseY;
     crystals.push(crystal);
   }
 
@@ -122,7 +124,7 @@ function createFantasyEntityDressing(fit, entity) {
     rune.rotation.z = time * 0.22 * boost;
     base.rotation.y = Math.sin(time * 0.2) * 0.04;
     crystals.forEach((crystal, index) => {
-      crystal.position.y += Math.sin(time * 1.45 + index * 1.6) * 0.0025 * boost;
+      crystal.position.y = crystal.userData.baseY + Math.sin(time * 1.45 + index * 1.6) * 0.045 * boost;
       crystal.rotation.y = time * (0.08 + index * 0.02);
     });
     wisps.forEach((wisp, index) => {
@@ -222,7 +224,8 @@ function createAetherveil(power) {
     const ring = addMesh(root, new THREE.TorusGeometry(0.56 + index * 0.3, 0.035, 5, 18), index === 1 ? aether : violet,
       0, 0.72 + index * 0.16, 0);
     ring.rotation.x = index === 0 ? Math.PI / 2 : Math.PI / 3 + index * 0.34;
-    ring.rotation.z = index * 0.6;
+    ring.userData.baseZ = index * 0.6;
+    ring.rotation.z = ring.userData.baseZ;
     rings.push(ring);
   }
 
@@ -262,7 +265,7 @@ function createAetherveil(power) {
     const boost = magicBoost(state);
     dais.rotation.y = time * 0.025;
     rings.forEach((ring, index) => {
-      ring.rotation.z += (0.002 + index * 0.0012) * boost;
+      ring.rotation.z = ring.userData.baseZ + time * (0.16 + index * 0.06) * (index % 2 ? -1 : 1) * boost;
       ring.rotation.y = time * (0.08 + index * 0.03) * (index % 2 ? -1 : 1) * boost;
       ring.scale.setScalar(0.94 + Math.sin(time * 1.15 + index) * 0.06 * boost);
     });
