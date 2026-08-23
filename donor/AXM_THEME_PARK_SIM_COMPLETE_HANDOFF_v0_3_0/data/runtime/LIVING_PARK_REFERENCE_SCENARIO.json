@@ -1,0 +1,46 @@
+{
+  "scenario_id": "living-park-reference-v0.3.0",
+  "status": "reference_not_gameplay_map",
+  "world_id": "axm-reference-park",
+  "world_seed": 7302026,
+  "cohort": {
+    "cohort_id": "local-families",
+    "origin_zone_id": "regional-local",
+    "population": 1000,
+    "unaware": 250,
+    "aware": 200,
+    "considering": 150,
+    "first_time_ready": 100,
+    "previous_satisfied": 150,
+    "loyal_repeat": 100,
+    "disappointed": 50
+  },
+  "forces": {
+    "awareness_rate": 0.1,
+    "consideration_rate": 0.2,
+    "readiness_rate": 0.25,
+    "first_visit_rate": 0.3,
+    "repeat_visit_rate": 0.25,
+    "repeat_strength": 0.8,
+    "expectation_delivery": 0.85,
+    "loyalty_rate": 0.3,
+    "recovery_rate": 0.1,
+    "visit_capacity": 200
+  },
+  "ride": {
+    "ride_id": "classic-dragon-coaster",
+    "name": "Classic Dragon Coaster",
+    "age_years": 22,
+    "open": false,
+    "cycles": 0
+  },
+  "economy": {
+    "cash": 10000,
+    "first_visit_value": 12,
+    "repeat_visit_value": 9
+  },
+  "notes": [
+    "Attraction age is retained as history and maintenance context, not a popularity penalty.",
+    "The scenario proves shared deterministic organs; it is not a rendered first map."
+  ]
+}

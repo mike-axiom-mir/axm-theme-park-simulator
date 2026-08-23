@@ -1,0 +1,74 @@
+{
+  "animation_signal": {
+    "authoritative": false,
+    "clip_id": "ride-gate-open-lowgraphic-v1",
+    "duration_ticks": 6,
+    "entity_id": "classic-dragon-coaster",
+    "parameters": {
+      "frames": 6,
+      "style": "self-made-low-graphic"
+    },
+    "rebuildable": true,
+    "signal_id": "anim-d481de31345c6a117aaf1be2b1f586c7",
+    "source_event_id": "event_4f45fcfe6ec9c0458568b42d",
+    "start_tick": 0,
+    "state_version": 2
+  },
+  "blocking_reference_checks": [
+    "one_small_map_loads",
+    "self_made_low_graphic_animation_visible"
+  ],
+  "cadence_authoritative_clock": "simulation",
+  "contribution_ledger_valid": true,
+  "contribution_unallocated": {},
+  "counterfactual_auto_selected": false,
+  "counterfactual_review_order": [
+    "evolve-capacity",
+    "maintain-classic",
+    "no_action"
+  ],
+  "event_chain_valid": true,
+  "event_log_hash": "05dfef1ce961333f014ff02329d6982870bf4c072bb6d0ce059b0c26fed96cf1",
+  "event_types": [
+    "park.opened",
+    "ride.opened",
+    "market.stepped",
+    "world.tick"
+  ],
+  "first_map_acceptance": {
+    "blocking": 2,
+    "failed": 0,
+    "not_run": 2,
+    "passed": 3,
+    "ready": false
+  },
+  "first_map_ready": false,
+  "first_time_visits": 44.625,
+  "fork_branch_id": "capacity-experiment",
+  "fork_event_log_preserved": true,
+  "fork_parent_branch_id": "main",
+  "population_conserved": true,
+  "population_final": 1000.0,
+  "population_initial": 1000,
+  "population_resolution": {
+    "bucket_size": 10,
+    "exact_population": 1000,
+    "full_bucket_count": 100,
+    "remainder_count": 0,
+    "tier": "meso"
+  },
+  "reference_digest": "3e8253ec9a169017791e4ae54dba78a7fe24fd7ad8ebd0e5b68962fdeeecbd0e",
+  "repeat_visits": 50.0,
+  "revenue": 985.5,
+  "ride_age_years": 22,
+  "ride_attributed_value": 689.8499999999999,
+  "ride_cycles": 94.625,
+  "ride_open": true,
+  "scenario_id": "living-park-reference-v0.3.0",
+  "snapshot_id": "snapshot_f72756107867a89b7f0a9cf3",
+  "snapshot_verified": true,
+  "state_hash": "0ab4f37661fee9362f989e50bf996ec0d2302dddcad6ebb0d19af037cc8e7be6",
+  "state_version": 4,
+  "status": "reference_not_gameplay_map",
+  "tick": 1
+}

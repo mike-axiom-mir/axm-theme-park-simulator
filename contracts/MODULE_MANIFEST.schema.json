@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AXM Theme Park Module Manifest v0.2.0",
+  "type": "object",
+  "required": [
+    "module_id",
+    "version",
+    "owns",
+    "consumes",
+    "emits_events",
+    "determinism",
+    "canonical_contract_version"
+  ],
+  "properties": {
+    "module_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_.-]+$"
+    },
+    "version": {
+      "type": "string"
+    },
+    "canonical_contract_version": {
+      "type": "string"
+    },
+    "owns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "consumes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "emits_events": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "consumes_events": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "declared_shortcuts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "direct_state_mutations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 0
+    },
+    "determinism": {
+      "type": "object",
+      "required": [
+        "seeded_randomness_only",
+        "replay_safe"
+      ],
+      "properties": {
+        "seeded_randomness_only": {
+          "const": true
+        },
+        "replay_safe": {
+          "const": true
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

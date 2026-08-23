@@ -1,0 +1,89 @@
+{
+  "module_id": "axm.themepark.visitors_crews",
+  "version": "0.1.0",
+  "status": "scaffold",
+  "owns": [
+    "Visitor",
+    "VisitorGroup",
+    "AudienceSegment",
+    "CrewMember",
+    "QueueDecision",
+    "AudienceCohortState",
+    "CohortForces",
+    "MarketStepResult"
+  ],
+  "consumes": [
+    "WorldClock",
+    "OpeningSchedule",
+    "WeatherState",
+    "ParkIdentityIntent",
+    "Attraction",
+    "RideOperationState",
+    "AtmosphereEvidence",
+    "Store",
+    "ServiceEntity",
+    "EvidenceRef",
+    "ExplanationPacket",
+    "SimulationState",
+    "CommandEnvelope",
+    "ContributionClaim"
+  ],
+  "emits_events": [
+    "visitor.arrived",
+    "visitor.moved",
+    "visitor.queue_joined",
+    "visitor.rode",
+    "visitor.left",
+    "crew.shift_started",
+    "crew.task_completed"
+  ],
+  "consumes_events": [
+    "world.tick",
+    "ride.opened",
+    "ride.closed",
+    "weather.changed",
+    "store.opened",
+    "campaign.event"
+  ],
+  "capabilities": [
+    "audience_profiles",
+    "crew_task_boundary",
+    "crew_workload",
+    "geography",
+    "memories",
+    "motivations",
+    "pathfinding_boundary",
+    "queues",
+    "visit_history",
+    "visitor_perception_boundary",
+    "cohort_population_conservation",
+    "first_time_repeat_separation",
+    "first_repeat_capacity_allocation"
+  ],
+  "notes": [
+    "Novelty belongs to visitor/audience state."
+  ],
+  "canonical_contract_version": "0.3.0",
+  "determinism": {
+    "seeded_randomness_only": true,
+    "replay_safe": true
+  },
+  "declared_shortcuts": [],
+  "required_capabilities": [
+    "world_clock",
+    "evidence_packets",
+    "attraction_operation",
+    "atmosphere_evidence",
+    "commerce_services"
+  ],
+  "state_namespaces": [
+    "visitors.population",
+    "crews.operations"
+  ],
+  "system_ids": [
+    "visitors.arrival",
+    "visitors.movement",
+    "visitors.queues",
+    "crews.tasks"
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "module_id": "axm.themepark.foundation",
+  "version": "0.3.0",
+  "status": "reference",
+  "owns": [
+    "WorldClock",
+    "OpeningSchedule",
+    "WeatherState",
+    "ParkIdentityIntent",
+    "EvidenceRef",
+    "ExplanationPacket",
+    "SaveManifest",
+    "MigrationPlan",
+    "ChangeRequest",
+    "SimulationState",
+    "CommandEnvelope",
+    "StateSnapshot",
+    "BranchLineage",
+    "ContributionClaim",
+    "CounterfactualProjection",
+    "SimulationCadencePlan",
+    "ParkEvent",
+    "EventRecord",
+    "EventIntent",
+    "CommandPlan",
+    "ContributionAudit"
+  ],
+  "consumes": [],
+  "emits_events": [
+    "world.tick",
+    "weather.changed",
+    "schedule.opened",
+    "schedule.closed",
+    "save.created",
+    "migration.proposed",
+    "command.accepted",
+    "command.rejected",
+    "snapshot.captured",
+    "branch.forked"
+  ],
+  "consumes_events": [],
+  "capabilities": [
+    "action_gate",
+    "authoritative_state_store",
+    "branch_return_verification",
+    "deterministic_replay",
+    "event_hash_chain",
+    "evidence_packets",
+    "first_map_acceptance",
+    "merge_gate",
+    "metric_provenance",
+    "presentation_profiles",
+    "runtime_assembly",
+    "world_clock",
+    "atomic_command_transactions",
+    "explicit_state_ownership",
+    "snapshot_restore",
+    "branch_lineage",
+    "causal_contribution_ledger",
+    "counterfactual_review",
+    "simulation_render_decoupling",
+    "audience_cohort_conservation",
+    "first_repeat_separation",
+    "population_resolution",
+    "living_reference_world",
+    "atomic_event_batches",
+    "duplicate_command_rejection",
+    "verified_snapshot_restore"
+  ],
+  "notes": [
+    "Reference integration foundation, not a complete game engine.",
+    "Canonical roots are unchanged from v0.2.0; this release extends contracts and tested reference organs."
+  ],
+  "canonical_contract_version": "0.3.0",
+  "determinism": {
+    "seeded_randomness_only": true,
+    "replay_safe": true
+  },
+  "declared_shortcuts": [],
+  "required_capabilities": [],
+  "state_namespaces": [
+    "foundation.world",
+    "foundation.evidence",
+    "foundation.save"
+  ],
+  "system_ids": [
+    "foundation.command_router",
+    "foundation.world_clock",
+    "foundation.evidence_commit",
+    "foundation.snapshot"
+  ]
+}

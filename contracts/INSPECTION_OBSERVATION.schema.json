@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "AXM Inspection Observation",
+  "required": [
+    "observation_id",
+    "tick",
+    "observer_id",
+    "subject_ids",
+    "state_hash",
+    "findings",
+    "evidence_refs",
+    "mode"
+  ],
+  "properties": {
+    "observation_id": {
+      "type": "string"
+    },
+    "tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "observer_id": {
+      "type": "string"
+    },
+    "subject_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "state_hash": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64
+    },
+    "findings": {
+      "type": "object"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "mode": {
+      "enum": [
+        "adventure",
+        "camera",
+        "ride",
+        "staff",
+        "ai_observer"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

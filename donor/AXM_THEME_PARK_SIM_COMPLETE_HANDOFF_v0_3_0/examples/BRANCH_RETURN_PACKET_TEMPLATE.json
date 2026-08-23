@@ -1,0 +1,28 @@
+{
+  "packet_id": "replace-me",
+  "branch_id": "replace-me",
+  "module_id": "replace-me",
+  "module_version": "0.1.0",
+  "foundation_contract_version": "0.3.0",
+  "canonical_root_hash": "3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f",
+  "status": "scaffold",
+  "implemented_capabilities": [],
+  "reference_capabilities": [],
+  "placeholder_capabilities": [
+    "replace-me"
+  ],
+  "tests_passed": 0,
+  "tests_failed": 0,
+  "artifacts": [
+    {
+      "path": "replace-me",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "bytes": 0,
+      "role": "placeholder-template"
+    }
+  ],
+  "unresolved_gaps": [
+    "Replace every placeholder before intake."
+  ],
+  "change_request_ids": []
+}

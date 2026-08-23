@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.command-envelope.schema.json",
+  "title": "AXM Deterministic Command Envelope v0.3.0",
+  "type": "object",
+  "required": [
+    "command_id",
+    "command_type",
+    "actor_id",
+    "target_module",
+    "expected_state_version",
+    "tick",
+    "payload"
+  ],
+  "properties": {
+    "command_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "command_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_module": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expected_state_version": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "payload": {
+      "type": "object"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "correlation_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

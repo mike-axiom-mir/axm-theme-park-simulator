@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "status": "tunable_reference_not_canon",
+  "reachable_demand_market": {
+    "geographic_reach": 0.2,
+    "awareness": 0.15,
+    "audience_fit": 0.2,
+    "travel_friction_inverse": 0.1,
+    "price_fit": 0.1,
+    "marketing_fit": 0.1,
+    "expectation_delivery": 0.15
+  },
+  "atmosphere_quality": {
+    "coherence": 0.18,
+    "visibility": 0.08,
+    "sensory_integration": 0.1,
+    "queue_ride_integration": 0.15,
+    "audience_theme_fit": 0.13,
+    "maintenance": 0.1,
+    "transition_quality": 0.08,
+    "environmental_comfort": 0.1,
+    "clutter_penalty": 0.04,
+    "contradiction_penalty": 0.04
+  },
+  "notes": [
+    "Weights prove causal decomposition; they are not final balance.",
+    "Theme intensity changes influence, not universal park success.",
+    "Age is intentionally absent from reachable demand."
+  ]
+}

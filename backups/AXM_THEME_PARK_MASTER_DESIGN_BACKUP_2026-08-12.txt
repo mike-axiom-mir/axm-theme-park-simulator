@@ -1,0 +1,1234 @@
+AXM THEME PARK SIMULATOR
+COMPLETE DESIGN BACKUP
+Date: 2026-08-04
+Status: WORKING DESIGN ROOT + FOUNDATION BUILD RECORD
+Creators: Mike — Axiom/Mir
+
+======================================================================
+0. BACKUP PURPOSE
+======================================================================
+
+This file preserves the design direction established in the current chat before
+chat lag, context loss, accidental rewrite, or branch divergence can damage it.
+
+It includes:
+
+- the project's identity and intended experience;
+- the rejected tycoon conventions;
+- the realistic deterministic simulation roots;
+- audience, geography, attraction, theming, and financial logic;
+- campaign and adventure-mode direction;
+- foundation architecture and branch ownership;
+- the implemented v0.1.0 foundation package;
+- the sealed postgame alien/science-fiction DLC road;
+- future build-chat directions and merge boundaries.
+
+This is a consolidated design backup, not a byte-for-byte transcript. It preserves
+the active decisions, reasoning, examples, and build state in a cleaner form.
+
+======================================================================
+1. ACTIVE PROJECT IDENTITY
+======================================================================
+
+Activation direction:
+
+/returncore
+/soulcheck
+/game-agent
+/old-school-animation-testing-ground
+/theme-park-sim
+/realistic-determinism
+/mergegate
+
+Core project intention:
+
+Build a long-term theme-park simulation that can begin as an enjoyable,
+beginner-friendly tycoon and animation testing ground, while growing toward:
+
+- deeper deterministic park ecology;
+- old-school readable animation and graphics;
+- first-person/adventure park experience;
+- modular ride and physics systems;
+- serious visitor and crew simulation;
+- evidence-based scenery and theme influence;
+- campaign stories with multiple valid outcomes;
+- later architecture and theme-park planning uses;
+- eventual non-human / alien reasoning campaigns.
+
+The project should be useful for gaming, animation learning, systems learning,
+physics integration, and possibly future theme-architecture simulation.
+
+======================================================================
+2. INSPIRATION WITHOUT CLONING
+======================================================================
+
+The remembered PlayStation 1 game was:
+
+THEME PARK WORLD
+North-American title: SIM THEME PARK
+
+What worked:
+
+- a solid tycoon foundation;
+- strongly separated themed worlds;
+- the ability to enter and experience the park;
+- the ability to ride attractions;
+- a feeling that the built park was a place, not only a spreadsheet;
+- limited graphics that still produced strong atmosphere and imagination.
+
+Important comparison:
+
+ROLLERCOASTER TYCOON contributed:
+
+- readable construction;
+- clear park operations;
+- understandable building logic;
+- strong classic tycoon foundations.
+
+THEME PARK WORLD contributed:
+
+- personal adventure;
+- first-person park presence;
+- emotional access to what the player built;
+- themed-world atmosphere.
+
+MODERN PARK BUILDERS contributed:
+
+- larger construction freedom;
+- visual range;
+- complex sandbox tools.
+
+The project must not copy one existing game. It takes proven strengths, rejects
+weak conventions, and builds a larger causal experience on top.
+
+Core experiential loop:
+
+DESIGN
+→ OPERATE
+→ ENTER THE PARK
+→ PERSONALLY EXPERIENCE OR INSPECT IT
+→ NOTICE PROBLEMS OR ATMOSPHERE
+→ RETURN TO MANAGEMENT
+→ EVOLVE IT
+
+======================================================================
+3. PRIMARY REJECTED CONVENTION
+======================================================================
+
+Rejected model:
+
+- build a ride;
+- it is popular because it is new;
+- use causes an arbitrary hidden decay;
+- popularity drops because a timer says so;
+- player must delete and rebuild effectively the same thing;
+- the game manufactures activity by destroying player history.
+
+This was identified as annoying, shallow, and unrealistic.
+
+The intended alternative:
+
+A player should grow and think, not repeatedly delete and rebuild because the
+simulation requires artificial churn.
+
+A park element never loses value merely because it is old.
+
+Its value changes because of:
+
+- people;
+- geography;
+- awareness;
+- prior exposure;
+- repeat strength;
+- expectations;
+- maintenance;
+- reliability;
+- operations;
+- capacity;
+- crowding;
+- theme and atmosphere;
+- comfort;
+- accessibility;
+- park identity;
+- competition;
+- cost;
+- land pressure;
+- weather;
+- seasonality;
+- cultural relevance;
+- nostalgia;
+- surrounding experiences;
+- direct and indirect financial contribution.
+
+======================================================================
+4. CORE DESIGN RULE
+======================================================================
+
+EVERY NUMBER MUST REPRESENT A CAUSE,
+NOT MERELY FORCE A GAMEPLAY OUTCOME.
+
+Forbidden example:
+
+"Ride is one year old, therefore popularity drops by 40%."
+
+Acceptable explanation:
+
+- nearby repeat visitors have high prior exposure;
+- the local first-time market is becoming saturated;
+- the ride has weak repeat value for that audience;
+- marketing still targets the same local group;
+- transport reach has not expanded;
+- therefore demand from that specific segment is lower.
+
+This does not mean the ride has become universally unpopular.
+
+A tourist who has never visited may still experience it as completely new.
+
+======================================================================
+5. NO SINGLE GLOBAL POPULARITY BAR
+======================================================================
+
+Popularity must not exist as one universal property of a ride, shop, land, or
+park.
+
+Demand must be evaluated by context.
+
+Relevant context includes:
+
+- audience segment;
+- origin geography;
+- previous visits;
+- individual or group preferences;
+- budget;
+- travel friction;
+- current awareness;
+- marketing message;
+- expectation;
+- weather;
+- time of day;
+- queue length;
+- park crowding;
+- service quality;
+- group composition;
+- accessibility needs;
+- park identity;
+- competing alternatives.
+
+Novelty belongs to a person or audience, not to a building.
+
+A twenty-year-old attraction can be:
+
+- familiar to locals;
+- new to tourists;
+- nostalgic to older visitors;
+- newly relevant to families;
+- technically interesting to enthusiasts;
+- valuable as a park landmark;
+- financially strong because it is reliable and paid off.
+
+======================================================================
+6. MAINTAIN, EVOLVE, REPLACE
+======================================================================
+
+The player should have three fundamentally different choices.
+
+MAINTAIN
+Preserve what already works through cleaning, staffing, inspection, repair,
+parts, painting, training, and operational care.
+
+EVOLVE
+Improve the attraction or area through:
+
+- capacity changes;
+- queue redesign;
+- accessibility;
+- better operations;
+- new story;
+- environmental changes;
+- scenery;
+- lighting;
+- sound;
+- seasonal overlays;
+- refurbishment;
+- targeted marketing;
+- supporting nearby attractions;
+- new transport links;
+- new audience strategy.
+
+REPLACE
+Remove or replace something because the player intentionally chooses a better
+future use of money, land, identity, or capacity.
+
+Replacement may be sensible when:
+
+- maintenance becomes structurally excessive;
+- parts become difficult or expensive;
+- the attraction no longer fits the chosen park identity;
+- serious design flaws remain;
+- land has a better strategic use;
+- demand is insufficient across all relevant segments;
+- the park chooses a deliberate new direction.
+
+Replacement must not be routine forced upkeep.
+
+======================================================================
+7. AUDIENCE AND GEOGRAPHIC SIMULATION
+======================================================================
+
+The park must simulate a reachable audience rather than spawning generic guests.
+
+Possible geographic groups:
+
+- nearby residents;
+- regional day visitors;
+- domestic tourists;
+- international tourists;
+- hotel guests;
+- school groups;
+- enthusiasts travelling for specific attractions;
+- seasonal-event visitors;
+- returning local families;
+- price-sensitive visitors;
+- social groups.
+
+A small local park may depend heavily on repeat visitation.
+
+A destination park may continue to receive first-time visitors because it has a
+larger geographic reach.
+
+Reach should depend on:
+
+- transport;
+- roads;
+- rail;
+- parking;
+- accommodation;
+- reputation;
+- marketing;
+- ticket price;
+- park identity;
+- travel time;
+- visitor budget;
+- season;
+- competing parks;
+- destination strength.
+
+Audience states may include:
+
+- unaware;
+- aware but uninterested;
+- considering;
+- first-time visitor;
+- previous visitor;
+- loyal repeat visitor;
+- disappointed former visitor.
+
+======================================================================
+8. FIRST-EXPERIENCE AND REPEAT-EXPERIENCE VALUE
+======================================================================
+
+Attractions should expose at least two different experience dimensions:
+
+FIRST-EXPERIENCE VALUE
+How powerful, surprising, understandable, or memorable is the first experience?
+
+REPEAT-EXPERIENCE VALUE
+Why would someone choose to experience it again?
+
+Repeat strength may come from:
+
+- enjoyable sensation;
+- different seats;
+- changing outcomes;
+- interactive elements;
+- social enjoyment;
+- short queues;
+- variable weather or lighting;
+- day/night differences;
+- seasonal overlays;
+- nostalgia;
+- ritual;
+- theme;
+- personal memories;
+- complementary nearby experiences.
+
+An attraction may be excellent once and weak for repetition.
+
+Another may be simple but remain enjoyable for decades.
+
+======================================================================
+9. PLAYER INTENT AND MULTIPLE VIABLE PARK IDENTITIES
+======================================================================
+
+The simulation should know what kind of park the player wants to create.
+
+Possible identities:
+
+- small local family park;
+- regional day park;
+- enthusiast coaster park;
+- heavily themed destination park;
+- historic preservation park;
+- seasonal festival park;
+- compact city park;
+- resort park;
+- mixed general-audience park;
+- experimental adventure park.
+
+The system should diagnose trade-offs against the chosen direction.
+
+It must not force every park toward one universal optimization target.
+
+A lightly themed coaster park can be successful.
+
+A smaller park with modest rides but exceptional atmosphere can also be
+successful.
+
+A historic park can preserve older rides as landmarks.
+
+A family park can succeed through comfort, reliability, variety, and value.
+
+======================================================================
+10. THEMING, SCENERY, AND ATMOSPHERE
+======================================================================
+
+Theming must be optional but genuinely influential.
+
+Wrong model:
+
+"Place 300 objects near a ride to earn +300 theme score."
+
+Intended model:
+
+The influence of scenery and theme depends on:
+
+- thematic coherence;
+- visual coverage;
+- sightlines;
+- queue integration;
+- ride integration;
+- land identity;
+- transitions between areas;
+- contradiction;
+- clutter;
+- lighting;
+- sound;
+- landscaping;
+- environmental comfort;
+- shade;
+- cleanliness;
+- maintenance;
+- audience fit;
+- story consistency;
+- sensory integration;
+- whether off-theme infrastructure is visible.
+
+A plain coaster may provide:
+
+- strong thrill;
+- low atmosphere;
+- low surrounding dwell time.
+
+The same coaster inside a coherent themed land may provide:
+
+- strong thrill;
+- anticipation;
+- a better queue;
+- exploration value;
+- stronger memory;
+- wider audience appeal;
+- a clearer park identity;
+- more nearby spending;
+- stronger repeat or recommendation potential.
+
+Theming does not magically change the ride physics.
+
+It changes the total experience around the ride.
+
+======================================================================
+11. MARKETING AND EXPECTATION
+======================================================================
+
+Marketing does not generate generic extra guests.
+
+Marketing attracts particular audiences and creates expectations.
+
+Examples:
+
+- "fastest coaster in the region" attracts thrill seekers;
+- "enchanted forest" attracts fantasy, atmosphere, and family audiences;
+- "affordable local family day" attracts local value-conscious groups;
+- Halloween marketing attracts seasonal and social visitors;
+- nostalgia campaigns reactivate former visitors;
+- hotel packages attract destination visitors.
+
+Marketing creates a promise.
+
+If the park delivers, trust and reputation can grow.
+
+If the park fails to deliver, the attracted audience may be disappointed.
+
+======================================================================
+12. WHOLE-PARK CONTRIBUTION
+======================================================================
+
+An attraction or service should not be judged only by direct revenue.
+
+Possible contribution dimensions:
+
+- direct revenue;
+- induced food and shop spending;
+- attracting visits;
+- extending visit duration;
+- balancing crowds;
+- increasing ticket willingness;
+- completing a themed land;
+- serving families;
+- serving younger or older guests;
+- serving accessibility needs;
+- creating park identity;
+- supporting reputation;
+- creating nostalgia;
+- encouraging return visits;
+- preventing early departure;
+- filling low-demand time periods.
+
+A quiet family ride may look weak in isolation but keep families in the park
+longer and improve the total day.
+
+A landmark ride may justify its cost through ticket demand and park identity.
+
+A low-cost classic may remain highly efficient inside a small park.
+
+======================================================================
+13. ACTIVE ATTENDANCE AND PARK SCALE
+======================================================================
+
+The number of visitors simultaneously inside the park matters.
+
+The system should connect:
+
+- daily attendance;
+- peak active attendance;
+- attraction throughput;
+- operating hours;
+- opening schedules;
+- staffing;
+- park size;
+- path distances;
+- queues;
+- service capacity;
+- food capacity;
+- maintenance cost;
+- crowd atmosphere;
+- empty-space atmosphere;
+- weather;
+- seasonality.
+
+A large park with too few active visitors may feel empty and cost too much.
+
+A small park with too many visitors may become crowded and unpleasant.
+
+An expensive high-capacity attraction may work in a destination park and fail
+in a small local park.
+
+A reliable inexpensive ride may be perfect for the smaller park.
+
+======================================================================
+14. BEGINNER LAYER
+======================================================================
+
+The deep simulation should remain active for every player.
+
+A beginner layer should translate evidence into understandable guidance.
+
+Example:
+
+"The Dragon Coaster is mechanically healthy. Local thrill seekers have already
+ridden it often, but families and tourists still enjoy it. Consider adding a
+second thrill ride or targeting new visitors instead of replacing this one."
+
+The beginner layer may:
+
+- summarize;
+- explain;
+- warn;
+- suggest;
+- show likely trade-offs.
+
+It may not replace the real simulation with fake simplified rules.
+
+Deep underneath.
+Humane and simple on top.
+
+======================================================================
+15. CAMPAIGN ADVENTURE
+======================================================================
+
+Campaigns should be living park problems, not only checklist objectives.
+
+A campaign begins with:
+
+- geography;
+- existing assets;
+- local population;
+- transport;
+- history;
+- reputation;
+- obligations;
+- money;
+- debts;
+- staff;
+- audience;
+- land;
+- regulations;
+- unresolved tensions.
+
+Example campaigns:
+
+THE FORGOTTEN LOCAL PARK
+An aging local park with loyal older visitors and little money.
+The player must decide what to preserve, modernize, or retarget.
+
+THE UNFINISHED FANTASY PARK
+Beautiful scenery, broken operations, queues, and maintenance.
+The player must make the dream function.
+
+THE COASTER FIELD
+Excellent rides, minimal comfort, theming, or family appeal.
+The player may remain enthusiast-focused or broaden the park.
+
+THE REMOTE DESTINATION
+Cheap land and beautiful surroundings, but little nearby population.
+Transport, hotels, and strong identity matter.
+
+THE CROWDED CITY PARK
+High demand, little land, noise limits, and capacity pressure.
+
+THE HISTORICAL PARK
+Protected attractions and landmarks must be integrated into a viable future.
+
+Multiple endings should be valid.
+
+The player does not conquer a map.
+
+The player inherits a place, understands it, chooses what it should become, and
+lives with the consequences.
+
+======================================================================
+16. MANAGEMENT AND ADVENTURE SHARE ONE WORLD
+======================================================================
+
+Adventure mode and management mode must use the same authoritative simulation.
+
+Management view shows:
+
+- what is happening;
+- metrics;
+- operations;
+- evidence;
+- system state.
+
+Adventure view helps the player understand:
+
+- why the place feels as it does;
+- where visual contradictions exist;
+- why queues are unpleasant;
+- how weather changes an area;
+- how a ride feels;
+- how guests move;
+- where staff struggle;
+- how atmosphere succeeds or fails.
+
+Adventure mode must not be a fake decorative copy of the park.
+
+======================================================================
+17. FOUNDATION ARCHITECTURE
+======================================================================
+
+LAYER 0 — DETERMINISTIC RUNTIME
+
+Owns:
+
+- simulation clock;
+- seeds;
+- stable IDs;
+- ordered events;
+- snapshots;
+- replay;
+- module versions;
+- evidence lineage.
+
+LAYER 1 — SHARED PARK ECOLOGY
+
+Owns:
+
+- geography;
+- market reach;
+- park identity;
+- audience interfaces;
+- active attendance;
+- capacity pressure;
+- park-level economics;
+- reputation;
+- expectation;
+- contribution accounting.
+
+LAYER 2 — DOMAIN PROVIDERS
+
+- rides and attractions;
+- visitors and crews;
+- decoration, atmosphere, and influence;
+- stores, food, services, and economy;
+- transport and accommodation;
+- weather and environment;
+- animation and rendering;
+- later physics and architecture validation.
+
+LAYER 3 — EXPERIENCES
+
+- campaigns;
+- sandbox;
+- scenarios;
+- adventure mode;
+- tutorials;
+- challenge modes;
+- accessibility presets;
+- multiplayer.
+
+LAYER 4 — INTERFACES
+
+- beginner cards;
+- advanced dashboards;
+- evidence inspectors;
+- visual park view;
+- first-person/adventure view;
+- editors;
+- mod tools;
+- architect tools.
+
+======================================================================
+18. AUTHORITATIVE EVENT FLOW
+======================================================================
+
+1. A player, AI, campaign, or world process proposes an action.
+2. The owning module validates the action.
+3. The foundation records an ordered event with seed and evidence references.
+4. Affected domain modules calculate state changes.
+5. The foundation stores the result and explanation packet.
+6. Interfaces render the same state at different levels of detail.
+
+Deterministic replay rule:
+
+Given the same initial state, ordered actions, module versions, and seed, the
+simulation must reproduce the same transitions.
+
+======================================================================
+19. PRIMARY BUILD BRANCHES
+======================================================================
+
+BRANCH A — RIDES AND ATTRACTIONS
+
+Owns:
+
+- ride definitions;
+- construction;
+- operation;
+- cycle time;
+- capacity;
+- downtime;
+- reliability;
+- comfort;
+- intensity;
+- accessibility interfaces;
+- physical condition;
+- maintenance;
+- refurbishment;
+- first-experience and repeat-experience properties;
+- later physics-engine adapter.
+
+Must not own:
+
+- global popularity;
+- visitor identity;
+- visitor pathfinding;
+- scenery coherence;
+- complete park finances.
+
+BRANCH B — VISITORS AND CREWS
+
+Owns:
+
+- visitor profiles;
+- households and groups;
+- origin geography;
+- awareness;
+- prior exposure;
+- motivations;
+- budgets;
+- tolerances;
+- accessibility needs;
+- memories;
+- pathfinding;
+- choices;
+- queues;
+- satisfaction;
+- revisit intent;
+- staff roles;
+- skills;
+- shifts;
+- workload;
+- morale;
+- service execution.
+
+BRANCH C — DECORATION, ATMOSPHERE, AND INFLUENCE
+
+Owns:
+
+- scenery entities;
+- themes;
+- zones;
+- coherence;
+- transitions;
+- visibility;
+- contradiction;
+- clutter;
+- lighting;
+- sound;
+- landscaping;
+- environmental comfort;
+- queue/ride/land integration;
+- atmosphere evidence.
+
+Must never calculate value using object count alone.
+
+BRANCH D — STORES, FOOD, SERVICES, AND ECONOMY
+
+Owns:
+
+- shops;
+- food;
+- recipes;
+- stock;
+- prices;
+- service speed;
+- procurement;
+- waste;
+- toilets;
+- first aid;
+- information;
+- rentals;
+- lockers;
+- direct spending;
+- induced spending;
+- operating cost;
+- service capacity;
+- park cashflow interfaces.
+
+Must not reduce all value to direct building profit.
+
+======================================================================
+20. FOUNDATION PACKAGE BUILT IN THIS CHAT
+======================================================================
+
+Package name:
+
+AXM_THEME_PARK_DETERMINISTIC_FOUNDATION_v0_1_0
+
+Built components:
+
+- README.md
+- FOUNDATION_ROOTS.md
+- ARCHITECTURE.md
+- BRANCH_MAP.md
+- DECISION_LOG.md
+- MASTER_HANDOFF.txt
+- language-neutral JSON contracts
+- module manifest schema
+- deterministic event schema
+- tunable reference weights
+- Python reference implementation
+- deterministic event log
+- module registry
+- demand evaluator
+- atmosphere evaluator
+- whole-park contribution evaluator
+- four build-chat prompts
+- automated tests
+- inventory
+- ZIP package
+
+Validation performed:
+
+1. Attraction age is not a demand input.
+2. An old attraction can remain valuable to first-time tourists.
+3. Light theming is not automatically treated as failure.
+4. Indirect value can support an attraction.
+5. Seeded replay is stable.
+6. Modules using forbidden shortcuts are rejected.
+
+Test status:
+
+6 tests passed.
+
+Honest status:
+
+The package is the deterministic foundation and executable reference, not the
+complete game.
+
+Detailed rides, visitor behavior, crews, scenery, stores, campaigns, graphics,
+animation, and physics remain future domain builds.
+
+Reference weights are tunable, not canon.
+
+======================================================================
+21. SEALED POSTGAME SCIENCE-FICTION DLC ROAD
+======================================================================
+
+Status:
+
+SEALED FUTURE SEED
+Do not distort the realistic Earth foundation to implement this early.
+
+The science-fiction direction is not a cosmetic space reskin.
+
+It is a deeper reasoning game unlocked after the final Earth campaign.
+
+======================================================================
+22. FINAL EARTH MAP TRANSITION
+======================================================================
+
+After finishing the last Earth campaign map, the player receives a genuine
+choice:
+
+END THE GAME
+The story closes normally. This is a complete valid ending.
+
+REMAIN IN THE PARK
+A strange visitor appears naturally inside the completed final park.
+
+The game should not immediately announce:
+
+"Alien DLC unlocked."
+
+The visitor should first behave like an unexplained anomaly.
+
+======================================================================
+23. THE STRANGE VISITOR
+======================================================================
+
+The visitor is an alien.
+
+It slowly tests the completed park.
+
+The player can follow it using the camera, including accelerated time.
+
+The alien may test:
+
+- rides;
+- queues;
+- themed lands;
+- scenery;
+- shops;
+- food;
+- services;
+- toilets or human systems it misunderstands;
+- quiet spaces;
+- transport;
+- staff behavior;
+- crowd behavior;
+- extreme rides;
+- simple rides;
+- mechanical structures;
+- environmental effects.
+
+It may:
+
+- ignore famous attractions;
+- repeat unusual experiences;
+- observe mechanisms instead of riding;
+- react strongly to things humans barely notice;
+- interact with ordinary park systems in unexpected ways.
+
+======================================================================
+24. HIDDEN FINAL-MAP ASSESSMENT
+======================================================================
+
+The visit produces hidden values.
+
+Possible internal concepts:
+
+ASSESSMENT VALUE
+How functional, diverse, coherent, stable, and interesting the completed park is.
+
+ALIEN RESONANCE
+How meaningful or useful this particular alien found the experience.
+
+This acts as a hidden high score or postgame qualification.
+
+It must not invalidate normal campaign completion.
+
+A player can finish the Earth game without unlocking the alien continuation.
+
+======================================================================
+25. THE MESSAGE AND CHOICE
+======================================================================
+
+If the alien's threshold is reached, the player receives:
+
+- a strange translated message;
+- a small amount of unfamiliar space currency;
+- an invitation to follow;
+- the choice to accept or refuse.
+
+Example tone:
+
+"YOUR CONSTRUCTION PRODUCES UNEXPECTED RESPONSE.
+VALUE TRANSFER ATTACHED.
+FURTHER ENVIRONMENT REQUIRES CORRECTION.
+FOLLOW?"
+
+The translation should feel functional but imperfect.
+
+======================================================================
+26. THE ALIEN PARK
+======================================================================
+
+If the player accepts, they travel with the alien into space.
+
+The player arrives at a small alien theme park.
+
+It must not use Earth assumptions with alien skins.
+
+The alien park should include:
+
+- unfamiliar species;
+- unfamiliar senses;
+- different movement;
+- different social behavior;
+- different time cycles;
+- different environmental needs;
+- different concepts of comfort;
+- different risk perception;
+- unfamiliar value exchange;
+- attractions with unclear purpose;
+- incomplete translation;
+- completely fictional but internally deterministic metrics.
+
+The player has learned Earth park logic.
+
+Now the player must reason about an audience they do not understand.
+
+======================================================================
+27. OBSERVATION AS THE MAIN SPACE MECHANIC
+======================================================================
+
+The player must learn through structured experimentation.
+
+Loop:
+
+1. Build, activate, or modify something.
+2. Observe which beings approach.
+3. Observe behavior before, during, and after.
+4. Compare reactions across species or groups.
+5. Form a hypothesis.
+6. Change one variable.
+7. Test again.
+8. Increase confidence.
+9. Gradually unlock reliable understanding.
+
+The interface should initially report patterns, not definitive answers.
+
+Example:
+
+"Repeated clustering detected near structures emitting wavelength pattern 7."
+
+Later:
+
+"Probable attraction to wavelength pattern 7.
+Confidence: 63%.
+Alternative cause: nearby thermal field."
+
+This makes the player reason instead of following disguised objective markers.
+
+======================================================================
+28. UNKNOWN DOES NOT MEAN RANDOM
+======================================================================
+
+Space-campaign root:
+
+UNKNOWN DOES NOT MEAN IRRATIONAL.
+IT MEANS THE CAUSES HAVE NOT YET BEEN UNDERSTOOD.
+
+The player must avoid:
+
+- assuming alien behavior is random;
+- assuming aliens are humans with strange graphics;
+- forcing human values onto unknown intelligence;
+- treating incomplete understanding as certainty.
+
+This mirrors the deeper AXM challenge through entertainment rather than lecture.
+
+======================================================================
+29. EXAMPLES OF GENUINELY ALIEN PARK LOGIC
+======================================================================
+
+Possible civilizations:
+
+- a species that values synchronized group experiences over individual rides;
+- a species that experiences gravity changes as relaxation;
+- a species that dislikes visual scenery but values magnetic rhythm;
+- a species that uses vibration and temperature as atmosphere;
+- a species that treats queues as social rituals;
+- a species that visits attractions to produce knowledge;
+- a collective species that visits parks to experience individuality;
+- a species for which repetition creates trust rather than boredom;
+- a species that follows moving gravitational paths instead of fixed walkways.
+
+Possible campaigns:
+
+THE SILENT FAIR
+Translation claims the visitors are bored.
+Observation reveals uncontrolled sound overwhelms them.
+
+THE EMPTY ORBIT
+The park appears inaccessible.
+The visitors navigate through moving gravitational routes rather than fixed
+destinations.
+
+THE PERFECT RIDE
+An expensive ride receives no visitors because it produces an identical result
+every cycle, while the audience values variation and discovery.
+
+======================================================================
+30. SCIENCE-FICTION DLC ROOT
+======================================================================
+
+EARTH TAUGHT THE PLAYER TO BUILD FOR PEOPLE THEY UNDERSTOOD.
+
+SPACE TESTS WHETHER THEY CAN BUILD RESPONSIBLY FOR BEINGS THEY DO NOT.
+
+The Earth game asks:
+
+Why do humans visit, remember, and return?
+
+The space game asks:
+
+Can the player recognize meaning without forcing the unknown into familiar
+human categories?
+
+This turns the expansion into a reasoning adventure inside a tycoon game.
+
+======================================================================
+31. ORIGINAL USER DIRECTION PRESERVED
+======================================================================
+
+Mike's core design intent, preserved in concise form:
+
+- Build a long-term project, not a disposable clone.
+- Use it to learn simple animation and graphics.
+- Let the visual skin and animation improve over time.
+- Keep deeper simulation underneath and a beginner layer above.
+- Combine the solid building and tycoon logic of older games with the personal
+  adventure feeling that many modern builders lost.
+- Avoid artificial popularity decay.
+- Let parks grow history rather than forcing deletion.
+- Simulate geographic reach, repeat visits, active attendance, cost, audience
+  desire, marketing, scenery, and park identity.
+- Make campaign play a real adventure.
+- Build the shared foundation first before separate branch systems.
+- Preserve the alien road as a future fictional DLC that tests reasoning about
+  unknown behavior.
+
+======================================================================
+32. MERGE AND DRIFT PROTECTION
+======================================================================
+
+Any future branch must preserve these roots:
+
+- no age-only demand decay;
+- no single global popularity;
+- no scenery object-count scoring;
+- no unexplained metric outcome;
+- no automatic forced replacement;
+- no unseeded state-changing randomness;
+- no direct mutation of another module's private state;
+- no silent rewrite of canonical contracts;
+- no fake beginner simulation replacing the deep system;
+- no science-fiction reskin pretending to be alien reasoning.
+
+Every domain branch should return:
+
+- module manifest;
+- owned entities;
+- consumed contracts;
+- emitted and consumed events;
+- deterministic replay tests;
+- forbidden-shortcut tests;
+- integration examples;
+- unresolved capability gaps;
+- honest labels:
+  implemented / simulated / placeholder.
+
+======================================================================
+33. NEXT BUILD ORDER
+======================================================================
+
+Recommended immediate parallel branches:
+
+1. Rides and Attractions
+2. Visitors and Crews
+3. Decoration, Atmosphere, and Influence
+4. Stores, Food, Services, and Economy
+
+Later:
+
+5. Campaign and Scenario Authoring
+6. Adventure and Inspection Mode
+7. Transport, Hotels, and Destination Reach
+8. Weather and Seasonal Operations
+9. Old-School Animation and Skin Workshop
+10. Physics Engine Adapter
+11. Theme Architect / Planning Mode
+12. Sealed Alien Postgame Expansion
+
+======================================================================
+34. SOURCE ARTIFACT RECORD
+======================================================================
+
+Foundation ZIP expected path:
+
+/mnt/data/AXM_THEME_PARK_DETERMINISTIC_FOUNDATION_v0_1_0.zip
+
+Foundation ZIP SHA-256 at backup creation:
+
+a299a4009f2927d65acd393fc829b61a8b6bde595586913cb29c6904558c1994
+
+Backup created:
+
+2026-08-04T21:54:56+00:00
+
+======================================================================
+END OF BACKUP
+======================================================================
+
+======================================================================
+V0.2.0 IMPROVEMENT APPENDIX — 2026-08-12
+======================================================================
+
+The August 4 design direction remains active. The following shared organs were
+added without replacing the root:
+
+- deterministic clock/calendar and seeded environment frames;
+- park identity as promises and trade-offs, not a universal rank;
+- multiple evidence-backed campaign endings;
+- adventure observations bound to authoritative state hashes;
+- evidence confidence, alternatives, conflicts, and missing evidence;
+- lifecycle maintain/evolve/replace option assessments with no forced action;
+- canonical state snapshots, hashes, rollback, migrations, and save manifests;
+- explicit change requests and a merge gate that cannot auto-canonize;
+- assistance profiles and visual-fidelity profiles that preserve simulation truth;
+- full local/next-chat intake prompts, examples, tests, posters, and legacy backup.
+
+Honest boundary: these are executable foundation references and contracts. Detailed
+park domains and production engine work remain future builds.

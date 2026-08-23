@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.cohort-forces.schema.json",
+  "title": "AXM Audience Cohort Forces v0.3.0",
+  "type": "object",
+  "required": [
+    "awareness_rate",
+    "consideration_rate",
+    "readiness_rate",
+    "first_visit_rate",
+    "repeat_visit_rate",
+    "repeat_strength",
+    "expectation_delivery",
+    "loyalty_rate",
+    "recovery_rate",
+    "visit_capacity"
+  ],
+  "properties": {
+    "awareness_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "consideration_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "readiness_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "first_visit_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "repeat_visit_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "repeat_strength": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "expectation_delivery": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "loyalty_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "recovery_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "visit_capacity": {
+      "type": "number",
+      "minimum": 0
+    },
+    "loyalty_lapse_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0
+    },
+    "disappointment_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0
+    }
+  },
+  "additionalProperties": false,
+  "description": "Marketing moves existing people between states; it never creates population. Recovery preserves prior exposure and feeds repeat behavior, not first-time novelty."
+}

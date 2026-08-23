@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AXM Campaign Definition",
+  "type": "object",
+  "required": [
+    "campaign_id",
+    "name",
+    "multiple_valid_outcomes",
+    "outcome_paths"
+  ],
+  "properties": {
+    "campaign_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "multiple_valid_outcomes": {
+      "const": true
+    },
+    "outcome_paths": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "outcome_id",
+          "label",
+          "conditions",
+          "epilogue"
+        ],
+        "properties": {
+          "outcome_id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "metric",
+                "operator",
+                "value"
+              ],
+              "properties": {
+                "metric": {
+                  "type": "string"
+                },
+                "operator": {
+                  "enum": [
+                    "gte",
+                    "lte",
+                    "gt",
+                    "lt",
+                    "eq",
+                    "ne"
+                  ]
+                },
+                "value": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "epilogue": {
+            "type": "string"
+          },
+          "postgame_hook": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#10151d">
+  <title>AXM Theme Park · Living Globe</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <canvas id="game-canvas" aria-label="3D theme park world"></canvas>
+
+  <section id="opening-sequence" class="opening-sequence hidden" aria-hidden="true" aria-label="Living Globe park opening cinematic">
+    <div class="opening-stars" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <div class="opening-horizon" aria-hidden="true"></div>
+    <div class="opening-orbit" aria-hidden="true"><span class="opening-sun"></span></div>
+    <div class="opening-planet" aria-hidden="true">
+      <span class="opening-land land-a"></span><span class="opening-land land-b"></span>
+      <span class="opening-carousel"><i></i><b></b></span>
+      <span class="opening-gate"><i></i><i></i><b></b></span>
+    </div>
+    <div class="opening-copy">
+      <p id="opening-kicker" class="eyebrow">A small world wakes</p>
+      <h1 id="opening-title">Moonroot Park</h1>
+      <p id="opening-line">The old carousel still has a future.</p>
+    </div>
+    <div class="opening-progress" aria-hidden="true"><span></span></div>
+    <button id="skip-opening" class="opening-skip" type="button">Skip opening</button>
+  </section>
+
+  <header class="topbar game-ui">
+    <div class="brand">
+      <span class="brand-mark">AXM</span>
+      <span><b id="park-name">Moonroot Park</b><small>Living Globe · 16-bit 3D</small></span>
+    </div>
+    <div class="metrics" aria-live="polite">
+      <div><small>Cash</small><b id="cash">€0</b></div>
+      <div><small>Guests</small><b id="guests">0</b></div>
+      <div><small>Rating</small><b id="rating">0</b></div>
+      <div class="park-level"><small>Park level</small><b id="park-level">1</b></div>
+      <div><small>Clock</small><b id="clock">Day 1</b></div>
+      <div class="weather"><small>Weather</small><b id="weather">Bright</b></div>
+    </div>
+    <div class="top-actions">
+      <button id="mode-button" class="primary" type="button">Walk park</button>
+      <button id="menu-button" type="button" aria-label="Open park menu">Menu</button>
+    </div>
+  </header>
+
+  <aside id="mission-panel" class="panel mission-panel game-ui">
+    <button class="panel-handle" data-collapse="mission-panel" type="button">Campaign</button>
+    <div class="panel-body">
+      <p class="eyebrow">Inherited place</p>
+      <h2 id="campaign-title">A Local Park With a Future</h2>
+      <p id="campaign-briefing" class="muted"></p>
+      <div id="objectives" class="objectives"></div>
+      <div id="progression" class="progression-card"></div>
+      <div id="guidance" class="guidance"></div>
+    </div>
+  </aside>
+
+  <aside id="guest-pulse" class="guest-pulse game-ui calm" aria-live="polite" aria-label="Live guest needs">
+    <div><b>Guest Pulse</b><small>Live needs</small></div>
+    <div id="guest-pulse-items" class="guest-pulse-items"></div>
+  </aside>
+
+  <aside id="inspector" class="panel inspector game-ui hidden" aria-live="polite">
+    <button class="panel-close" id="inspector-close" type="button" aria-label="Close inspector">×</button>
+    <div id="inspector-content"></div>
+  </aside>
+
+  <div id="build-hint" class="build-hint game-ui hidden"></div>
+  <div id="walk-hint" class="walk-hint game-ui hidden">WASD move · Q/E turn · Shift run · Space inspect or collect</div>
+  <div id="ride-hint" class="ride-hint game-ui hidden">Experiencing the live ride · Escape to leave</div>
+
+  <div class="speed-controls game-ui" aria-label="Simulation speed">
+    <button data-speed="0" type="button">Ⅱ</button>
+    <button data-speed="1" class="active" type="button">▶</button>
+    <button data-speed="3" type="button">▶▶</button>
+    <button data-speed="8" type="button">▶▶▶</button>
+  </div>
+
+  <section id="build-dock" class="build-dock game-ui">
+    <div id="category-tabs" class="category-tabs"></div>
+    <div id="build-items" class="build-items"></div>
+    <button id="remove-path-button" class="remove-path" type="button">Remove path</button>
+    <button id="cancel-build" class="cancel-build hidden" type="button">Cancel tool</button>
+  </section>
+
+  <div id="toasts" class="toasts game-ui" aria-live="assertive"></div>
+
+  <div id="touch-controls" class="touch-controls game-ui" aria-hidden="true">
+    <div class="touch-pad">
+      <button data-key="KeyW" type="button">▲</button>
+      <button data-key="KeyA" type="button">◀</button>
+      <button data-key="KeyS" type="button">▼</button>
+      <button data-key="KeyD" type="button">▶</button>
+    </div>
+    <div class="touch-actions">
+      <button data-key="KeyQ" type="button">↶</button>
+      <button data-key="KeyE" type="button">↷</button>
+      <button data-key="ShiftLeft" type="button">Run</button>
+      <button id="touch-interact" class="primary" type="button">Inspect</button>
+    </div>
+  </div>
+
+  <dialog id="start-dialog" class="modal start-modal" open>
+    <div class="modal-card hero-card">
+      <p class="eyebrow">Playable foundation · v0.4.6</p>
+      <h1>Build a park.<br><span>Then step inside it.</span></h1>
+      <p>The beloved old carousel is not obsolete. Inherit this small Living Globe park, understand what works, and choose how it grows.</p>
+      <div class="hero-world">
+        <span class="pixel-planet">◉</span>
+        <div><b>Real 3D Living Globe</b><small>Curved world · orbiting sun · live guests · discoveries · offline</small></div>
+      </div>
+      <div class="modal-actions vertical">
+        <button id="continue-button" class="primary" type="button">Continue autosave</button>
+        <button id="campaign-button" type="button">Start campaign park</button>
+        <button id="sandbox-button" type="button">Start open sandbox</button>
+        <button data-open-dialog="help-dialog" class="quiet" type="button">How to play</button>
+      </div>
+      <small class="honest">First playable vertical slice—not yet a full commercial Theme Park World-scale game.</small>
+    </div>
+  </dialog>
+
+  <dialog id="menu-dialog" class="modal">
+    <div class="modal-card wide-card">
+      <button class="modal-x" data-close-dialog="menu-dialog" type="button">×</button>
+      <p class="eyebrow">Park menu</p>
+      <h2>World and park</h2>
+      <div class="menu-grid">
+        <section>
+          <h3>Three world saves</h3>
+          <div id="save-slots" class="save-slots"></div>
+        </section>
+        <section>
+          <h3>Park settings</h3>
+          <label>Park name <input id="park-name-input" maxlength="40"></label>
+          <label>Entry ticket <input id="ticket-input" type="range" min="0" max="40" step="1"><output id="ticket-output">€12</output></label>
+          <label>Graphics
+            <select id="quality-select">
+              <option value="retro">Retro 16-bit 3D</option>
+              <option value="crisp">Crisp low-poly</option>
+              <option value="tiny">Tiny-device mode</option>
+            </select>
+          </label>
+          <label>Marketing
+            <select id="marketing-select">
+              <option value="local-families">Affordable local family day</option>
+              <option value="thrill-seekers">Regional thrill seekers</option>
+              <option value="tourist-discovery">Tourist discovery</option>
+              <option value="none">No active campaign</option>
+            </select>
+          </label>
+          <div class="staff-row"><span>Cleaners <b id="cleaner-count">1</b></span><button data-staff="cleaners" data-delta="-1">−</button><button data-staff="cleaners" data-delta="1">Hire</button></div>
+          <div class="staff-row"><span>Mechanics <b id="mechanic-count">1</b></span><button data-staff="mechanics" data-delta="-1">−</button><button data-staff="mechanics" data-delta="1">Hire</button></div>
+          <p id="staff-summary" class="staff-summary">2 crew active · 0 jobs today</p>
+          <button id="park-open-button" class="full" type="button">Close park</button>
+        </section>
+      </div>
+      <div class="modal-actions">
+        <button id="export-button" type="button">Export save</button>
+        <label class="button-like">Import save<input id="import-input" type="file" accept="application/json,.json"></label>
+        <button id="fullscreen-button" type="button">Fullscreen</button>
+        <button id="replay-opening-button" type="button">Replay opening</button>
+        <button data-open-dialog="help-dialog" type="button">Controls</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="help-dialog" class="modal">
+    <div class="modal-card">
+      <button class="modal-x" data-close-dialog="help-dialog" type="button">×</button>
+      <p class="eyebrow">Controls</p>
+      <h2>One park, two views</h2>
+      <div class="help-grid">
+        <div><b>Manage</b><p>Choose a build item, point at the globe, and click. Drag paths to paint a route. R rotates. Left-drag rotates the camera; right-drag/WASD pans; wheel zooms.</p></div>
+        <div><b>Walk</b><p>WASD or left stick moves, Q/E, mouse, or right stick turns, Shift/trigger runs, and Space/A inspects or collects glowing trail stamps. Click guests or visible crew to read their live needs and current work.</p></div>
+      </div>
+      <p class="muted">The simulation keeps running in both views. Graphics may change fidelity; park truth does not.</p>
+    </div>
+  </dialog>
+
+  <dialog id="ending-dialog" class="modal">
+    <div class="modal-card wide-card">
+      <p class="eyebrow">Campaign evidence supports several futures</p>
+      <h2>What should this place become?</h2>
+      <p class="muted">No ending is automatically canon. You may choose one or keep building.</p>
+      <div id="ending-options" class="ending-options"></div>
+      <button data-close-dialog="ending-dialog" type="button">Keep playing for now</button>
+    </div>
+  </dialog>
+
+  <dialog id="day-report-dialog" class="modal">
+    <div class="modal-card day-report-card">
+      <p class="eyebrow">Operating day complete</p>
+      <h2 id="day-report-title">Day report</h2>
+      <div id="day-report-stats" class="day-report-stats"></div>
+      <p id="day-report-note" class="muted"></p>
+      <div class="modal-actions">
+        <button id="next-day-button" class="primary" type="button">Open next morning</button>
+        <button data-close-dialog="day-report-dialog" type="button">Keep reviewing</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="fatal-error" class="fatal-error hidden"></div>
+  <script src="./game.js"></script>
+</body>
+</html>

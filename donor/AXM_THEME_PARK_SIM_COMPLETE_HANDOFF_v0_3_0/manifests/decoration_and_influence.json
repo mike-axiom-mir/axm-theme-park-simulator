@@ -1,0 +1,69 @@
+{
+  "module_id": "axm.themepark.decoration",
+  "version": "0.1.0",
+  "status": "scaffold",
+  "owns": [
+    "SceneryEntity",
+    "ThemeZone",
+    "AtmosphereEvidence"
+  ],
+  "consumes": [
+    "WorldClock",
+    "WeatherState",
+    "ParkIdentityIntent",
+    "Attraction",
+    "Visitor",
+    "CrewMember",
+    "EvidenceRef",
+    "ExplanationPacket",
+    "CommandEnvelope",
+    "ContributionClaim"
+  ],
+  "emits_events": [
+    "scenery.placed",
+    "scenery.removed",
+    "themezone.updated",
+    "atmosphere.recalculated"
+  ],
+  "consumes_events": [
+    "world.tick",
+    "weather.changed",
+    "ride.built",
+    "visitor.moved",
+    "crew.task_completed"
+  ],
+  "capabilities": [
+    "atmosphere_evidence",
+    "clutter",
+    "coherence",
+    "comfort",
+    "contradiction",
+    "sensory_integration",
+    "sightlines",
+    "theme_zone_context",
+    "transitions"
+  ],
+  "notes": [
+    "Object count alone cannot create value."
+  ],
+  "canonical_contract_version": "0.3.0",
+  "determinism": {
+    "seeded_randomness_only": true,
+    "replay_safe": true
+  },
+  "declared_shortcuts": [],
+  "required_capabilities": [
+    "world_clock",
+    "evidence_packets",
+    "attraction_geometry",
+    "visitor_perception_boundary",
+    "crew_task_boundary"
+  ],
+  "state_namespaces": [
+    "decoration.world"
+  ],
+  "system_ids": [
+    "decoration.sightlines",
+    "decoration.atmosphere"
+  ]
+}

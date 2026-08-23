@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "AXM Environment Frame",
+  "required": [
+    "tick",
+    "day_index",
+    "season",
+    "weather_type",
+    "temperature_c",
+    "precipitation",
+    "wind",
+    "daylight",
+    "seed",
+    "evidence_refs"
+  ],
+  "properties": {
+    "tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "day_index": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "season": {
+      "type": "string"
+    },
+    "weather_type": {
+      "type": "string"
+    },
+    "temperature_c": {
+      "type": "number"
+    },
+    "precipitation": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "wind": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "daylight": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

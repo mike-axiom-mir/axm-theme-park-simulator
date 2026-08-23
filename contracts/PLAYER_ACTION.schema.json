@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "AXM Player or Agent Action",
+  "required": [
+    "action_id",
+    "action_type",
+    "actor_id",
+    "target_ids",
+    "requested_tick",
+    "payload",
+    "evidence_refs"
+  ],
+  "properties": {
+    "action_id": {
+      "type": "string"
+    },
+    "action_type": {
+      "type": "string"
+    },
+    "actor_id": {
+      "type": "string"
+    },
+    "target_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requested_tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "payload": {
+      "type": "object"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

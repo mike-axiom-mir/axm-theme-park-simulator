@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "AXM State Snapshot",
+  "required": [
+    "snapshot_id",
+    "tick",
+    "contract_version",
+    "module_versions",
+    "state",
+    "previous_snapshot_hash"
+  ],
+  "properties": {
+    "snapshot_id": {
+      "type": "string"
+    },
+    "tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "contract_version": {
+      "type": "string"
+    },
+    "module_versions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "state": {
+      "type": "object"
+    },
+    "previous_snapshot_hash": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

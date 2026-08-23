@@ -1,0 +1,58 @@
+AXM PLAYABLE 3D v0.4.6 — LIVE VISUAL RECEIPT
+=============================================
+
+claim:
+  Functional rest benches, seated guests, bounded pixel need signals, and Guest
+  Pulse make visitor life easier to read without clutter or state mutation.
+
+surface / route:
+  playable_3d/PLAY_GAME.html -> campaign -> guest signal -> bench -> recovery
+
+visual backend and fallback reason:
+  BROWSER_PRIMARY attempted in the original v0.4.6 run. Cloud Chrome refused the local URL
+  with net::ERR_BLOCKED_BY_CLIENT. No Windows desktop, game-window, or shared-
+  window capture adapter was exposed for fallback.
+
+viewport / device / seat:
+  Cloud Chrome default viewport; one local player intended.
+
+capture capability:
+  Browser control was present, but policy blocked the target before a stable
+  game frame could be captured.
+
+baseline:
+  No rendered baseline was obtained. Source delivery is checked separately by
+  the local HTTP gate.
+
+authorized action:
+  Open the local game and observe a complete guest bench-rest cycle.
+
+observed sequence:
+  Navigation request -> browser policy error ERR_BLOCKED_BY_CLIENT -> blocked
+  tab closed -> preview process stopped.
+
+typed observation:
+  No live guest, bench, seated pose, pixel signal, or Guest Pulse pixels were
+  observed. Automated tests executed the routing, recovery, model pose, signal
+  descriptors, 18/12/6 quality ceilings, UI wiring, and state boundaries.
+
+verdict:
+  UNKNOWN — MISSING_VISUAL_CAPTURE
+
+named seam:
+  Cloud-browser-to-localhost preview boundary.
+
+buffer digest:
+  No visual buffer or frame existed to digest.
+
+temporary paths deleted:
+  None created. The blocked browser tab was closed and the preview process was
+  stopped.
+
+cleanup complete:
+  yes
+
+next cheapest test:
+  Open playable_3d/PLAY_GAME.html on a local WebGL-capable desktop. Follow a
+  tired signaled guest through bench queue, seated pose, recovery, and return;
+  compare signal density at Crisp, Retro, and Tiny.

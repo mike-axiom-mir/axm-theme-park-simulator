@@ -1,0 +1,20 @@
+AXM Theme Park Simulator — IN PRODUCTION
+
+A long-term theme-park simulation and AXM low-graphic animation testing ground.
+
+The first versions aim for reachable, self-made low-graphic movement and
+animation. The systems, visuals, and park experiences can improve step by step.
+
+Core direction:
+- no fake popularity decay;
+- maintain, evolve, or replace with intention;
+- visitors react through causes;
+- build from above and experience the park from within;
+- parks can grow history instead of forced demolition cycles.
+
+First maps are currently targeted for November/December 2026. This is a target,
+not a guaranteed release date.
+
+Concept visuals are not gameplay screenshots.
+
+Mike — Axiom/Mir

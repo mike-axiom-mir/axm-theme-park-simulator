@@ -1,0 +1,21 @@
+{
+  "reference_only_not_meteorological_truth": true,
+  "seasons": {
+    "spring": {
+      "base_temperature_c": 12,
+      "daylight": 0.6
+    },
+    "summer": {
+      "base_temperature_c": 21,
+      "daylight": 0.82
+    },
+    "autumn": {
+      "base_temperature_c": 13,
+      "daylight": 0.52
+    },
+    "winter": {
+      "base_temperature_c": 5,
+      "daylight": 0.32
+    }
+  }
+}

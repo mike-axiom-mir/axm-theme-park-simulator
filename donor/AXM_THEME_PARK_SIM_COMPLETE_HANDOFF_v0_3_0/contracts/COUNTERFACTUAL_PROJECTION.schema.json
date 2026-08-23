@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.counterfactual-projection.schema.json",
+  "title": "AXM Read-Only Counterfactual Projection v0.3.0",
+  "type": "object",
+  "required": [
+    "projection_id",
+    "plan_id",
+    "target_id",
+    "action",
+    "baseline_state_hash",
+    "baseline_state_version",
+    "projected_metrics",
+    "costs",
+    "confidence",
+    "reversible",
+    "commits_state"
+  ],
+  "properties": {
+    "projection_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "plan_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "capacity_upgrade",
+        "change_opening_schedule",
+        "close_temporarily_for_safety",
+        "evolve",
+        "maintain",
+        "no_action",
+        "preserve",
+        "refurbish",
+        "replace",
+        "retarget",
+        "seasonal_overlay"
+      ]
+    },
+    "baseline_state_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "baseline_state_version": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "projected_metrics": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "costs": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      }
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "reversible": {
+      "type": "boolean"
+    },
+    "commits_state": {
+      "const": false
+    }
+  },
+  "additionalProperties": false,
+  "description": "Read-only, finite-number projection against one verified baseline. It can inform a choice but cannot commit state or silently choose for the player."
+}

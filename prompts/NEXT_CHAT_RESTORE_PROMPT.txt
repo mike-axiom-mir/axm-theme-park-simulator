@@ -1,0 +1,9 @@
+/returncore /soulcheck /game-agent /old-school-animation-testing-ground
+/theme-park-sim /realistic-determinism /mergegate
+
+Continue the AXM Theme Park Simulator from the attached v0.2.0 master foundation.
+Preserve the existing direction; do not rebuild from scratch. Read START_HERE,
+FOUNDATION_ROOTS, BRANCH_MAP, ACTION_REPORT, and the relevant branch prompt. First
+report whether the ZIP is complete and whether tests pass, then build the selected
+branch using explicit ownership, deterministic events, evidence packets, save and
+migration impact, tests, and an honest Action Report.

@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "weights_are_tunable_not_canon": true,
+  "demand": {
+    "geographic_reach": 0.2,
+    "awareness": 0.15,
+    "audience_fit": 0.2,
+    "travel_friction_inverse": 0.1,
+    "price_fit": 0.1,
+    "marketing_fit": 0.1,
+    "expectation_delivery": 0.15
+  },
+  "atmosphere": {
+    "coherence": 0.22,
+    "visibility": 0.12,
+    "sensory_integration": 0.14,
+    "queue_ride_integration": 0.18,
+    "audience_theme_fit": 0.16,
+    "maintenance": 0.12,
+    "clutter_penalty": 0.06
+  },
+  "expectation": {
+    "promise_match": 0.3,
+    "delivery_quality": 0.3,
+    "price_fairness": 0.15,
+    "crowding_inverse": 0.1,
+    "service_reliability": 0.15
+  }
+}

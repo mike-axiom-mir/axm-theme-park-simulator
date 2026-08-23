@@ -1,0 +1,7 @@
+node_modules/
+.cache/
+.tmp/
+headless-saves/
+*.tmp-*
+.DS_Store
+Thumbs.db

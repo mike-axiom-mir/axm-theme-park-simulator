@@ -1,0 +1,19 @@
+{
+  "change_request_id": "CR-EXAMPLE-NOT-APPROVED",
+  "reason": "Example only: propose a new canonical metric after evidence review.",
+  "affected_roots": [
+    "FOUNDATION_ROOTS.md"
+  ],
+  "before_hashes": {
+    "FOUNDATION_ROOTS.md": "362beabe1e99a8dbfea41da8419384f05d0bd75098418fb68ab268cb98ea8366"
+  },
+  "after_hashes": {
+    "FOUNDATION_ROOTS.md": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "evidence": [
+    "example-evidence-reference"
+  ],
+  "rollback_plan": "Restore the packaged v0.2.0 root file from legacy or release copy.",
+  "approval_status": "proposed",
+  "approved_by": []
+}

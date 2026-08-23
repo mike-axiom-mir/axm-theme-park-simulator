@@ -1,0 +1,47 @@
+{
+  "identities": [
+    {
+      "identity_id": "local_family_park",
+      "primary_promises": [
+        "affordable full day",
+        "reliable family variety"
+      ],
+      "target_audiences": [
+        "nearby families",
+        "school groups"
+      ],
+      "protected_elements": [
+        "historic carousel"
+      ],
+      "acceptable_tradeoffs": [
+        "fewer extreme rides"
+      ],
+      "forbidden_compromises": [
+        "unsafe crowding",
+        "hidden price traps"
+      ]
+    },
+    {
+      "identity_id": "immersive_destination",
+      "primary_promises": [
+        "coherent worlds",
+        "memorable whole-day atmosphere"
+      ],
+      "target_audiences": [
+        "tourists",
+        "theme explorers",
+        "families"
+      ],
+      "protected_elements": [
+        "sightline control",
+        "land transitions"
+      ],
+      "acceptable_tradeoffs": [
+        "higher operating cost"
+      ],
+      "forbidden_compromises": [
+        "generic decoration spam"
+      ]
+    }
+  ]
+}

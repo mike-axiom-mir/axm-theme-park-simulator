@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AXM Deterministic Park Event v0.2.0",
+  "type": "object",
+  "required": [
+    "event_id",
+    "event_type",
+    "tick",
+    "actor_id",
+    "target_ids",
+    "payload",
+    "seed",
+    "module_id",
+    "module_version",
+    "evidence_refs"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+    },
+    "actor_id": {
+      "type": "string"
+    },
+    "target_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "payload": {
+      "type": "object"
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "module_id": {
+      "type": "string"
+    },
+    "module_version": {
+      "type": "string"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "state_before_hash": {
+      "type": "string"
+    },
+    "state_after_hash": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

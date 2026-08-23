@@ -1,0 +1,258 @@
+AXM THEME PARK — PLAYABLE LIVING GLOBE 3D v0.4.6
+=================================================
+
+STATUS
+------
+Playable tycoon-and-adventure vertical slice with a repeatable day loop,
+walkable Living Globe, visible routed crew, spatial litter, a 3D opening camera
+flight, state-aware ride/boarding motion, distinct animated service buildings,
+visible service customers, decorated paths and queues, four animated scenery
+families, functional two-seat rest benches, seated guest poses, bounded pixel
+guest-status signals, a live Guest Pulse panel, bounded day/night nature
+ambience, animated crew tools, cleanup departures, and bounded low-poly weather.
+Automated simulation, migration, model, build, and delivery gates pass. Local
+visual/WebGL observation remains.
+
+PLAY
+----
+Open:
+  playable_3d/PLAY_GAME.html
+
+The ready build needs neither internet nor installation.
+
+FIRST TEST ROUTE
+----------------
+1. Choose Start campaign park and let the opening settle into the live globe.
+2. Inspect normal paths and queue lanes for inset stones, verge plants, swaying
+   flowers, and fluttering pennants.
+3. Place a tree, lantern, fountain, and bench; watch each unique animation.
+4. Fast-forward until Guest Pulse reports Rest, follow a signaled guest to a
+   bench, and confirm queue, seated recovery, and return to the park.
+5. Compare guest-signal density at Crisp, Retro, and Tiny.
+6. Watch butterflies before 18:00 and fireflies after 18:00; trigger rain and
+   confirm both yield while windblown leaves remain tree-anchored.
+7. Watch one ride board/cycle/close sequence and one customer at each service.
+8. Finish a day, inspect Bench rests, then save/reload and confirm continuity.
+
+SOURCE
+------
+  playable_3d/src/          editable game source
+  playable_3d/dist/         ready-to-play offline build
+  playable_3d/tests/        deterministic playable tests
+  playable_3d/DONOR_RUNTIME_V030_INTAKE.md
+
+REBUILD
+-------
+From playable_3d/:
+  npm run check
+
+The build script has no package dependency. Three.js r180 remains vendored with
+its MIT license.
+
+TEST STATUS
+-----------
+  Protected foundation: 39 passed
+  Playable JavaScript: 43 passed
+  Attached donor handoff: 136 passed
+  Offline bundle: passed
+  Static local delivery: passed
+  Full-day and three-day deterministic smokes: passed
+  v0.3 and v0.4 save migrations: passed
+  Nine active/closed attraction and service model updates: passed
+  Four animated scenery models and full-map path budgets: passed
+  40-actor quality/time/weather atmosphere ceiling: passed
+  Two-seat bench routing, recovery, reporting and migration: passed
+  Guest signal ceilings (18/12/6) and Guest Pulse wiring: passed
+  Camera endpoint, actor determinism, 72-actor cap: passed
+  Live visual capture: MISSING_VISUAL_CAPTURE (local preview blocked)
+
+SOURCE TRACE
+------------
+Small world used:
+  AXM Living Globe / world.grafthold.globe
+  GitHub commit a4f99fbfc05268173458bf3fb8f3fe616919e376
+
+Large Caelus Foundation Planet was deliberately not used.
+
+HONEST SCOPE
+------------
+This is a substantial playable slice, not a complete Theme Park World-sized
+commercial game. Staff zones/training, custom coaster construction, hotels,
+transport, multiplayer, advanced physics, authoring tools, and the sealed alien
+postgame remain future work.
+
+CONTINUITY RECEIPT — 2026-08-22
+--------------------------------
+work line / turn / seat:
+  AXM Theme Park Playable Living Globe / v0.4.2 -> v0.4.3 / primary local seat
+
+verified facts with age and source:
+  Fresh this build: 29/29 playable tests from Node test runner; 39/39 protected
+  foundation tests from run_tests.py; 136/136 donor tests from the donor package
+  verifier; 17-module 923,104-byte bundle from the local build; four HTTP 200
+  delivery checks; full-day full-day-smoke hash verified.
+
+assumptions:
+  Visual intent is inferred from source and contract tests. Camera feel, motion
+  cadence, WebGL appearance, and responsive fit were not visually observed.
+
+open holds:
+  MISSING_VISUAL_CAPTURE at the cloud-browser-to-localhost seam. One complete
+  opening, one skip, one rainy period, and one crew job still need local eyes.
+
+decisions as state:
+  Save schema 3 and the v042 storage prefix remain stable for compatibility.
+  New animation remains render-only. Weather remains capped at 72 actors.
+  Protected v0.2.0 files and their checksum index remain unchanged.
+
+access reread:
+  yes
+
+next cheapest step:
+  Open playable_3d/PLAY_GAME.html on a WebGL-capable local desktop and perform
+  the short visual route in PLAYABLE_3D_LIVE_VISUAL_RECEIPT.txt.
+
+continuity seam:
+  none; v0.4.2 handoff and verified source were present when v0.4.3 began.
+
+raw sense material carried:
+  false
+
+CONTINUITY RECEIPT — 2026-08-22 — v0.4.4
+------------------------------------------
+work line / turn / seat:
+  AXM Theme Park Playable Living Globe / v0.4.3 -> v0.4.4 / primary local seat
+
+verified facts with age and source:
+  Fresh this build: 33/33 playable tests from Node's test runner; 39/39
+  protected foundation tests from run_tests.py; 136/136 donor tests from the
+  donor verifier; 18-module 940,399-byte offline bundle plus syntax check; four
+  HTTP 200 delivery checks; exact full-day-smoke result of 90 visitors, 81
+  carousel cycles, €1,174 carousel revenue, rating 75, €1,481 profit, 15
+  cleanups, and verified hash. All nine ride/service models instantiated and
+  updated through active and closed states without entity mutation.
+
+assumptions:
+  Visual intent is inferred from source and automated model execution. Motion
+  cadence, low-poly passenger readability, service-customer spacing, WebGL
+  appearance, camera feel, and responsive fit were not visually observed.
+
+open holds:
+  MISSING_VISUAL_CAPTURE at the cloud-browser-to-localhost seam. One real ride
+  board/cycle/close sequence and one customer visit at each service still need
+  local eyes at Retro and Tiny quality.
+
+decisions as state:
+  Attraction and service motion is render-only and follows committed open,
+  queue, rider, and cycle fields. Ride occupancy models are visual proxies
+  capped by committed riders; service customers use their actual visitor
+  models. Save schema 3 and the v042 storage prefix remain stable. Protected
+  v0.2.0 files, world source ownership, and the 72-actor weather cap remain
+  unchanged.
+
+access reread:
+  yes
+
+next cheapest step:
+  Open playable_3d/PLAY_GAME.html on a WebGL-capable local desktop and perform
+  the seven-step FIRST TEST ROUTE above.
+
+continuity seam:
+  none; the v0.4.3 receipt and verified source were present when v0.4.4 began.
+
+raw sense material carried:
+  false
+
+CONTINUITY RECEIPT — 2026-08-22 — v0.4.5
+------------------------------------------
+work line / turn / seat:
+  AXM Theme Park Playable Living Globe / v0.4.4 -> v0.4.5 / primary local seat
+
+verified facts with age and source:
+  Fresh this build: 38/38 playable tests from Node's test runner; 39/39
+  protected foundation tests from run_tests.py; 136/136 donor tests from its
+  verifier; all 30×30 cells exercised with exactly 100 possible animated-
+  decoration cells and 129 possible static nature-accent cells; four scenery
+  families instantiated and updated without input mutation; day/evening/
+  weather/quality atmosphere paths executed under a fixed 40-actor ceiling;
+  20-module 957,737-byte bundle plus syntax check and four HTTP 200 delivery
+  checks. The unchanged full-day-smoke remains 90 visitors, 81
+  carousel cycles, €1,174 carousel revenue, rating 75, €1,481 profit, 15
+  cleanups, and a verified hash.
+
+assumptions:
+  Decorative readability and cadence are inferred from source plus model and
+  matrix execution. Visual density, clipping, night contrast, WebGL appearance,
+  camera feel, and responsive fit were not observed.
+
+open holds:
+  MISSING_VISUAL_CAPTURE at the cloud-browser-to-localhost seam. One local eyes
+  pass still needs to compare path/queue dressing, all four scenery loops,
+  day/evening/rain ambience, and Retro versus Tiny density.
+
+decisions as state:
+  Path decoration is coordinate-derived and capped before rendering. Ambient
+  actors are deterministic, path/tree anchored, weather/time aware, and capped
+  at 40. All new behavior remains presentation-only. Save schema 3, the v042
+  storage prefix, protected v0.2.0 files, Living Globe ownership, and the
+  separate 72-actor weather ceiling remain unchanged.
+
+access reread:
+  yes
+
+next cheapest step:
+  Open playable_3d/PLAY_GAME.html on a WebGL-capable local desktop and perform
+  the seven-step FIRST TEST ROUTE above.
+
+continuity seam:
+  none; the v0.4.4 receipt and verified source were present when v0.4.5 began.
+
+raw sense material carried:
+  false
+
+CONTINUITY RECEIPT — 2026-08-23 — v0.4.6
+------------------------------------------
+work line / turn / seat:
+  AXM Theme Park Playable Living Globe / v0.4.5 -> v0.4.6 repair / primary
+  local seat
+
+verified facts with age and source:
+  Fresh this build: 43/43 playable tests from Node's test runner; 39/39
+  protected foundation tests from run_tests.py; 136/136 donor tests from the
+  recovered donor package verifier; 21-module 967,416-byte offline bundle plus
+  syntax check; four HTTP 200 delivery checks. The full-day-smoke result is
+  exactly 86 visitors, 81 carousel cycles, €1,164 carousel revenue, rating 76,
+  €1,418 profit, 13 cleanups, 5 bench rests, and verified hash 4bf03ebd.
+  Independent three-day replay hash 26896c94 also verified.
+
+assumptions:
+  Seated alignment, pixel-signal cadence/readability, WebGL appearance, camera
+  feel, and responsive fit are inferred from source plus automated execution;
+  no fresh live rendered frame was available in this repair seat.
+
+open holds:
+  MISSING_VISUAL_CAPTURE at the cloud-browser-to-localhost seam. One local eyes
+  pass still needs a complete tired-guest route, bench queue, seated recovery,
+  Guest Pulse update, and Crisp/Retro/Tiny signal-density comparison.
+
+decisions as state:
+  Bench use is authoritative and reuses declared access, routing, queues,
+  capacity, events, reports, and save migration. Pixel status signals and Guest
+  Pulse remain presentation-only and bounded at 18/12/6. Save schema 3, the
+  v042 storage prefix, protected v0.2.0 files, Living Globe ownership, and the
+  existing weather/atmosphere ceilings remain unchanged.
+
+access reread:
+  yes
+
+next cheapest step:
+  Open playable_3d/PLAY_GAME.html locally and perform the eight-step FIRST TEST
+  ROUTE above.
+
+continuity seam:
+  The vanished temporary v0.4.6 ZIP could not be reused after workspace
+  maintenance. Library-retained v0.4.5 was checksum-verified and the documented
+  v0.4.6 behavior was restored; its exact full-day receipt was reproduced.
+
+raw sense material carried:
+  false

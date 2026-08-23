@@ -1,0 +1,46 @@
+AXM THEME PARK MASTER FOUNDATION v0.2.0
+======================================
+
+Purpose
+-------
+This is the intake-safe shared foundation for the long-term AXM Theme Park
+Simulator. It extends v0.1.0; it does not replace or reinterpret the root.
+
+Restore command
+---------------
+/returncore /soulcheck /game-agent /old-school-animation-testing-ground
+/theme-park-sim /realistic-determinism /mergegate
+
+Read order
+----------
+1. FOUNDATION_ROOTS.md
+2. ARCHITECTURE.md
+3. BRANCH_MAP.md
+4. ACTION_REPORT.md
+5. contracts/FOUNDATION_CONTRACT.json
+6. prompts/LOCAL_INTAKE_PROMPT.txt or the relevant branch prompt
+
+Central rule
+------------
+A park element never loses value merely because it is old. Value changes through
+people, geography, expectations, maintenance, operations, context, cost, and the
+surrounding experience.
+
+What v0.2.0 adds
+----------------
+- deterministic time, calendar, seasons, and environment frames;
+- player park-identity intent without a universal best-park score;
+- campaign state with multiple valid endings;
+- adventure/inspection observations tied to the authoritative state hash;
+- confidence, alternatives, and missing-evidence handling;
+- save snapshots, hash verification, rollback, and explicit migrations;
+- merge-gate change requests with no automatic canon;
+- beginner assistance and visual-fidelity layers that cannot alter simulation;
+- maintain/evolve/replace lifecycle assessments without forced demolition;
+- expanded schemas, examples, prompts, posters, tests, and local intake files.
+
+Honest status
+-------------
+This is a strong executable reference foundation, not a finished game engine.
+Detailed rides, people, crews, scenery, stores, rendering, campaigns, physics,
+and architect tooling remain separate domain builds.

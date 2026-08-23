@@ -1,0 +1,10 @@
+LICENCE STATUS
+
+No public distribution licence has been selected for this complete project
+handoff.
+
+This is a private/local working package for Mike / AXM / Axiom–Mir.
+
+Do not silently assign CC0, MIT, proprietary, commercial, or any other licence to
+the full package. Individual future assets or public-safe components may receive
+explicit licences separately with preserved provenance.

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.command-plan.schema.json",
+  "title": "AXM Pure Command Plan v0.3.0",
+  "type": "object",
+  "required": ["accepted", "event_intents", "tick_advance", "reasons"],
+  "properties": {
+    "accepted": {"type": "boolean"},
+    "event_intents": {
+      "type": "array",
+      "items": {"$ref": "EVENT_INTENT.schema.json"}
+    },
+    "tick_advance": {"type": "integer", "minimum": 0},
+    "reasons": {"type": "array", "items": {"type": "string"}}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"accepted": {"const": false}}},
+      "then": {
+        "properties": {
+          "event_intents": {"maxItems": 0},
+          "tick_advance": {"const": 0}
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AXM Observation Packet",
+  "type": "object",
+  "required": [
+    "observation_id",
+    "observer_id",
+    "mode",
+    "subject_id",
+    "tick",
+    "state_version",
+    "facts",
+    "evidence_refs",
+    "blind_spots"
+  ],
+  "properties": {
+    "observation_id": {
+      "type": "string"
+    },
+    "observer_id": {
+      "type": "string"
+    },
+    "mode": {
+      "enum": [
+        "management",
+        "adventure",
+        "ride_camera",
+        "staff_follow",
+        "guest_follow",
+        "debug"
+      ]
+    },
+    "subject_id": {
+      "type": "string"
+    },
+    "tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "state_version": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blind_spots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

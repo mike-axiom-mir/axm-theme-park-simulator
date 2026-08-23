@@ -1,0 +1,69 @@
+{
+  "module_id": "axm.themepark.campaign",
+  "version": "0.1.0",
+  "status": "scaffold",
+  "owns": [
+    "CampaignDefinition",
+    "CampaignState",
+    "ObservationPacket"
+  ],
+  "consumes": [
+    "WorldClock",
+    "ParkIdentityIntent",
+    "EvidenceRef",
+    "ExplanationPacket",
+    "Attraction",
+    "Visitor",
+    "CrewMember",
+    "ThemeZone",
+    "FinancialEvidence",
+    "CommandEnvelope",
+    "ContributionClaim"
+  ],
+  "emits_events": [
+    "campaign.started",
+    "campaign.event",
+    "campaign.outcome_eligible",
+    "campaign.completed",
+    "observation.created"
+  ],
+  "consumes_events": [
+    "world.tick",
+    "ride.built",
+    "visitor.left",
+    "cost.posted",
+    "weather.changed"
+  ],
+  "capabilities": [
+    "adventure_inspection",
+    "authoritative_observation",
+    "campaign_orchestration",
+    "inherited_history",
+    "multiple_valid_outcomes",
+    "postgame_hook_boundary"
+  ],
+  "notes": [
+    "Adventure observations reference the authoritative state version."
+  ],
+  "canonical_contract_version": "0.3.0",
+  "determinism": {
+    "seeded_randomness_only": true,
+    "replay_safe": true
+  },
+  "declared_shortcuts": [],
+  "required_capabilities": [
+    "world_clock",
+    "evidence_packets",
+    "attraction_operation",
+    "audience_profiles",
+    "financial_evidence",
+    "theme_zone_context"
+  ],
+  "state_namespaces": [
+    "campaign.progress"
+  ],
+  "system_ids": [
+    "campaign.conditions",
+    "campaign.observation"
+  ]
+}

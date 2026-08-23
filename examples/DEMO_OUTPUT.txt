@@ -1,0 +1,40 @@
+{
+  "time": {
+    "tick": 125,
+    "sim_minute": 125,
+    "day_index": 2,
+    "minute_of_day": 5,
+    "season_index": 1,
+    "season": "summer",
+    "day_in_season": 0,
+    "year_index": 0
+  },
+  "environment": {
+    "tick": 125,
+    "day_index": 2,
+    "season": "summer",
+    "weather_type": "rain",
+    "temperature_c": 22.72,
+    "precipitation": 0.729973,
+    "wind": 0.195326,
+    "daylight": 0.82,
+    "seed": 5450250122234813347,
+    "evidence_refs": [
+      "reference_environment_generator_v0.2.0"
+    ]
+  },
+  "segmented_demand": 0.8450000000000001,
+  "lifecycle_options": {
+    "maintain": 0.88,
+    "evolve": 0.6900000000000001,
+    "replace": 0.13299999999999998
+  },
+  "forced_lifecycle_action": null,
+  "state_hash": "cb656036389962f31dda6171a4560d75f19414f2c7be359fa93cf967729eb097",
+  "low_visual_state_hash": "cb656036389962f31dda6171a4560d75f19414f2c7be359fa93cf967729eb097",
+  "high_visual_state_hash": "cb656036389962f31dda6171a4560d75f19414f2c7be359fa93cf967729eb097",
+  "available_campaign_endings": [
+    "heritage",
+    "family"
+  ]
+}

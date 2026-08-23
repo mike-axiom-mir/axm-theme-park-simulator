@@ -1,0 +1,53 @@
+{
+  "protocol_version": "0.3.0",
+  "foundation_contract_version": "0.3.0",
+  "canonical_root_hash": "3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f",
+  "root_change": false,
+  "guarantees": [
+    "Stable deterministic phase ordering independent of registration order.",
+    "Authoritative systems are never skippable; only visual/presentation work may be dropped.",
+    "Each state namespace has one declared owner.",
+    "State updates are atomic and stale writes are rejected.",
+    "Player, AI, campaign, and world actions use the same auditable proposal gate.",
+    "Derived metrics preserve evidence and algorithm lineage.",
+    "Independent branch manifests must assemble without missing contracts.",
+    "A build cannot be called first-map ready while a required check is failed or not run.",
+    "Commands commit module state and event batches atomically.",
+    "Snapshots restore explicitly and experiments fork with branch lineage.",
+    "Audience cohort transitions conserve population.",
+    "Contribution attribution cannot exceed 100% of one causal value occurrence.",
+    "Animation signals are rebuildable and non-authoritative.",
+    "Counterfactual plans are read-only and never auto-commit.",
+    "Recovered visitors retain prior exposure and cannot silently become first-time again.",
+    "Runtime numeric boundaries reject NaN, infinity, negative population, and malformed hashes before state commit.",
+    "Animation and contribution identities are stable across serialization and insertion order."
+  ],
+  "schemas": [
+    "SYSTEM_SPEC.schema.json",
+    "ACTION_PROPOSAL.schema.json",
+    "NAMESPACE_UPDATE.schema.json",
+    "COMMAND_ENVELOPE.schema.json",
+    "EVENT_INTENT.schema.json",
+    "COMMAND_PLAN.schema.json",
+    "SIMULATION_STATE.schema.json",
+    "EVENT.schema.json",
+    "EVENT_RECORD.schema.json",
+    "STATE_SNAPSHOT.schema.json",
+    "BRANCH_LINEAGE.schema.json",
+    "AUDIENCE_COHORT.schema.json",
+    "COHORT_FORCES.schema.json",
+    "MARKET_STEP_RESULT.schema.json",
+    "CONTRIBUTION_CLAIM.schema.json",
+    "CONTRIBUTION_AUDIT.schema.json",
+    "SIMULATION_CADENCE.schema.json",
+    "ANIMATION_SIGNAL.schema.json",
+    "COUNTERFACTUAL_PROJECTION.schema.json",
+    "DERIVED_METRIC_RECORD.schema.json",
+    "BRANCH_RETURN_PACKET.schema.json",
+    "FIRST_MAP_ACCEPTANCE_REPORT.schema.json"
+  ],
+  "reference_scenarios": [
+    "data/runtime/REFERENCE_SYSTEM_PLAN.json",
+    "data/runtime/LIVING_PARK_REFERENCE_SCENARIO.json"
+  ]
+}

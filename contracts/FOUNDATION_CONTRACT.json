@@ -1,0 +1,163 @@
+{
+  "contract_version": "0.2.0",
+  "extends": "0.1.0",
+  "canonical_actions": [
+    "maintain",
+    "evolve",
+    "replace",
+    "retarget",
+    "refurbish",
+    "preserve",
+    "seasonal_overlay",
+    "capacity_upgrade",
+    "inspect",
+    "rollback"
+  ],
+  "canonical_entities": {
+    "Park": {
+      "required": [
+        "id",
+        "name",
+        "identity_intent_id",
+        "geography_id",
+        "state_version"
+      ]
+    },
+    "GeographicMarket": {
+      "required": [
+        "id",
+        "origin_zones",
+        "transport_access",
+        "population_evidence"
+      ]
+    },
+    "AudienceSegment": {
+      "required": [
+        "id",
+        "origin_zone_id",
+        "motivations",
+        "budget_profile",
+        "awareness",
+        "prior_exposure",
+        "repeat_preferences"
+      ]
+    },
+    "Attraction": {
+      "required": [
+        "id",
+        "provider_module",
+        "experience_tags",
+        "capacity_profile",
+        "condition_evidence",
+        "operating_cost_profile"
+      ],
+      "forbidden": [
+        "global_popularity_decay",
+        "age_based_demand_penalty"
+      ]
+    },
+    "ClockState": {
+      "schema": "CLOCK_STATE.schema.json"
+    },
+    "EnvironmentFrame": {
+      "schema": "ENVIRONMENT_FRAME.schema.json"
+    },
+    "ParkIdentityIntent": {
+      "schema": "PARK_IDENTITY.schema.json"
+    },
+    "CampaignState": {
+      "schema": "CAMPAIGN_STATE.schema.json"
+    },
+    "InspectionObservation": {
+      "schema": "INSPECTION_OBSERVATION.schema.json"
+    },
+    "EvidenceClaim": {
+      "schema": "EVIDENCE_CLAIM.schema.json"
+    },
+    "StateSnapshot": {
+      "schema": "STATE_SNAPSHOT.schema.json"
+    },
+    "ContributionPacket": {
+      "required": [
+        "entity_id",
+        "direct_value",
+        "indirect_value",
+        "costs",
+        "net_contribution",
+        "causes",
+        "evidence_refs",
+        "uncertainty"
+      ]
+    },
+    "ExplanationPacket": {
+      "required": [
+        "subject_id",
+        "result",
+        "causes",
+        "evidence_refs",
+        "missing_evidence",
+        "player_options",
+        "tradeoffs",
+        "confidence"
+      ]
+    }
+  },
+  "canonical_metrics": {
+    "reachable_demand": {
+      "inputs": [
+        "geographic_reach",
+        "awareness",
+        "audience_fit",
+        "travel_friction_inverse",
+        "price_fit",
+        "marketing_fit",
+        "expectation_delivery"
+      ],
+      "must_be_segment_specific": true
+    },
+    "experience_value": {
+      "inputs": [
+        "core_experience",
+        "repeat_strength",
+        "operations",
+        "atmosphere",
+        "comfort",
+        "expectation_delivery"
+      ],
+      "must_be_context_specific": true
+    },
+    "net_contribution": {
+      "inputs": [
+        "direct_revenue",
+        "induced_spend",
+        "visit_attraction_value",
+        "duration_value",
+        "identity_value",
+        "crowd_balance_value",
+        "operating_cost",
+        "maintenance_cost",
+        "staffing_cost"
+      ]
+    }
+  },
+  "protected_separations": [
+    "simulation_tick_vs_visual_frame",
+    "identity_intent_vs_global_rank",
+    "assistance_profile_vs_simulation_truth",
+    "inspection_vs_mutation",
+    "confidence_vs_fact",
+    "maintenance_closure_vs_demolition"
+  ],
+  "forbidden_shortcuts": [
+    "age_only_demand_decay",
+    "single_global_popularity",
+    "decoration_object_count_score",
+    "automatic_forced_replacement",
+    "unseeded_random_state_change",
+    "unexplained_metric_output",
+    "visual_profile_changes_simulation",
+    "beginner_profile_changes_simulation",
+    "inspection_silently_mutates_state",
+    "automatic_root_canonization"
+  ]
+}

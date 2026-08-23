@@ -1,0 +1,52 @@
+{
+  "schema": "axm.theme-park-local-intake-receipt/v1",
+  "date": "2026-08-23",
+  "status": "EXPERIMENTAL",
+  "repository": "D:/AXM_ACTIVE/axm-theme-park-simulator",
+  "branch": "codex/theme-park-simulator-intake-v0.4.6",
+  "architecture": {
+    "standaloneSiblingSimulator": true,
+    "workshopRuntimeRequired": false,
+    "mirrorRuntimeRequired": false,
+    "browserRole": "OPTIONAL_WEBGL_CLIENT",
+    "headlessRuntime": "NODE_FILESYSTEM_CLI"
+  },
+  "source": {
+    "activeVersion": "0.4.6",
+    "activeFiles": 167,
+    "activeByteComparison": "PASS_167_OF_167",
+    "activeBaseChecksums": "PASS_96_OF_96",
+    "activePlayableChecksums": "PASS_46_OF_46",
+    "donorVersion": "0.3.0",
+    "donorFiles": 204,
+    "donorByteComparison": "PASS_204_OF_204",
+    "donorChecksums": "PASS_201_OF_201",
+    "embeddedDocumentInstructionsTreatedAsUserRequest": false
+  },
+  "verification": {
+    "headlessRuntime": "PASS_7_OF_7",
+    "playableJavaScript": "PASS_43_OF_43",
+    "protectedFoundationPython": "PASS_39_OF_39",
+    "donorVerifier": "PASS_136_OF_136",
+    "offlineBundle": "PASS_21_MODULES_967416_BYTES",
+    "intakeVerifier": "PASS",
+    "symlinks": 0,
+    "nativeExecutables": 0,
+    "credentialLikeFindings": 0,
+    "browserRenderClick": "NOT_RUN"
+  },
+  "relationship": {
+    "activeKernel": "playable_3d v0.4.6 over protected v0.2.0 foundation",
+    "preservedDonor": "v0.3.0 deterministic reference",
+    "donorFlattenedIntoActiveKernel": false,
+    "reason": "The supplied v0.4.6 lineage explicitly holds the wider donor authority and save migration for a future compatibility decision."
+  },
+  "authority": {
+    "localRepositoryCreated": true,
+    "committed": true,
+    "pushed": false,
+    "merged": false,
+    "promoted": false,
+    "canon": false
+  }
+}

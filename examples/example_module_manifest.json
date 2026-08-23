@@ -1,0 +1,33 @@
+{
+  "module_id": "axm.themepark.rides",
+  "version": "0.1.0",
+  "canonical_contract_version": "0.2.0",
+  "owns": [
+    "RideDefinition",
+    "RideOperationState"
+  ],
+  "consumes": [
+    "ClockState",
+    "EnvironmentFrame",
+    "ParkIdentityIntent"
+  ],
+  "capabilities": [
+    "ride.capacity_evidence",
+    "ride.condition_evidence"
+  ],
+  "emits_events": [
+    "ride.opened",
+    "ride.closed",
+    "ride.cycle_completed"
+  ],
+  "consumes_events": [
+    "environment.frame_changed",
+    "crew.maintenance_completed"
+  ],
+  "declared_shortcuts": [],
+  "direct_state_mutations": [],
+  "determinism": {
+    "seeded_randomness_only": true,
+    "replay_safe": true
+  }
+}

@@ -1,0 +1,11 @@
+test_age_is_not_a_demand_input (test_foundation.FoundationTests.test_age_is_not_a_demand_input) ... ok
+test_event_replay_is_stable (test_foundation.FoundationTests.test_event_replay_is_stable) ... ok
+test_first_time_audience_can_value_old_attraction (test_foundation.FoundationTests.test_first_time_audience_can_value_old_attraction) ... ok
+test_indirect_value_can_support_an_attraction (test_foundation.FoundationTests.test_indirect_value_can_support_an_attraction) ... ok
+test_light_theming_is_not_automatic_failure (test_foundation.FoundationTests.test_light_theming_is_not_automatic_failure) ... ok
+test_registry_blocks_forbidden_shortcut (test_foundation.FoundationTests.test_registry_blocks_forbidden_shortcut) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.000s
+
+OK

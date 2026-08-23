@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "AXM Visual Fidelity Profile",
+  "required": [
+    "profile_id",
+    "visible_guest_limit",
+    "animation_step_hz",
+    "shadow_detail",
+    "texture_scale",
+    "lod_level"
+  ],
+  "properties": {
+    "profile_id": {
+      "type": "string"
+    },
+    "visible_guest_limit": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "animation_step_hz": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "shadow_detail": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "texture_scale": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "lod_level": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false
+}

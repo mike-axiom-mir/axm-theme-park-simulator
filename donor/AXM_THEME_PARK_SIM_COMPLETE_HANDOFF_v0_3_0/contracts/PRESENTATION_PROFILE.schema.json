@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AXM Presentation Profile",
+  "type": "object",
+  "required": [
+    "profile_id",
+    "max_causes",
+    "max_options",
+    "show_confidence",
+    "show_missing_evidence",
+    "show_raw_evidence"
+  ],
+  "properties": {
+    "profile_id": {
+      "enum": [
+        "beginner",
+        "standard",
+        "advanced"
+      ]
+    },
+    "max_causes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "max_options": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "show_confidence": {
+      "type": "boolean"
+    },
+    "show_missing_evidence": {
+      "type": "boolean"
+    },
+    "show_raw_evidence": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false
+}

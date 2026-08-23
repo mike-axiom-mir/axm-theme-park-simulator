@@ -1,0 +1,151 @@
+[
+  {
+    "identity_id": "local_family",
+    "name": "Local Family Park",
+    "primary_mode": "repeat-friendly regional day park",
+    "priority_weights": {
+      "affordability": 0.2,
+      "reliability": 0.2,
+      "family_range": 0.2,
+      "comfort": 0.15,
+      "local_loyalty": 0.15,
+      "spectacle": 0.1
+    },
+    "target_audiences": [
+      "nearby_families",
+      "regional_day_visitors",
+      "schools"
+    ],
+    "protected_elements": [
+      "reliable classics",
+      "affordable entry",
+      "family memories"
+    ],
+    "acceptable_tradeoffs": [
+      "less extreme thrill",
+      "lighter theming"
+    ],
+    "notes": [
+      "Example profile only; player can edit it."
+    ]
+  },
+  {
+    "identity_id": "enthusiast_coaster",
+    "name": "Enthusiast Coaster Park",
+    "primary_mode": "technical ride destination",
+    "priority_weights": {
+      "ride_quality": 0.3,
+      "variety": 0.2,
+      "throughput": 0.15,
+      "reliability": 0.15,
+      "destination_reach": 0.1,
+      "theming": 0.1
+    },
+    "target_audiences": [
+      "thrill_seekers",
+      "ride_enthusiasts",
+      "tourists"
+    ],
+    "protected_elements": [
+      "signature rides",
+      "technical uniqueness"
+    ],
+    "acceptable_tradeoffs": [
+      "lighter family range",
+      "selective theming"
+    ],
+    "notes": [
+      "A lightly themed park can still be coherent and successful."
+    ]
+  },
+  {
+    "identity_id": "immersive_destination",
+    "name": "Immersive Destination Park",
+    "primary_mode": "multi-day themed destination",
+    "priority_weights": {
+      "atmosphere": 0.25,
+      "story_coherence": 0.2,
+      "destination_reach": 0.15,
+      "guest_duration": 0.15,
+      "service_quality": 0.15,
+      "ride_quality": 0.1
+    },
+    "target_audiences": [
+      "tourists",
+      "families",
+      "theme_explorers",
+      "social_groups"
+    ],
+    "protected_elements": [
+      "land transitions",
+      "signature environments"
+    ],
+    "acceptable_tradeoffs": [
+      "higher maintenance",
+      "slower expansion"
+    ],
+    "notes": [
+      "Theming is valuable because of fit and coherence, not object count."
+    ]
+  },
+  {
+    "identity_id": "historic_preservation",
+    "name": "Historic Preservation Park",
+    "primary_mode": "living park history",
+    "priority_weights": {
+      "heritage": 0.3,
+      "maintenance": 0.2,
+      "nostalgia": 0.15,
+      "education": 0.1,
+      "financial_stability": 0.15,
+      "modern_balance": 0.1
+    },
+    "target_audiences": [
+      "locals",
+      "nostalgia_visitors",
+      "families",
+      "tourists"
+    ],
+    "protected_elements": [
+      "historic rides",
+      "original entrance",
+      "archive"
+    ],
+    "acceptable_tradeoffs": [
+      "lower peak capacity",
+      "selective modern additions"
+    ],
+    "notes": [
+      "Old assets can gain heritage value while condition remains causal."
+    ]
+  },
+  {
+    "identity_id": "compact_city",
+    "name": "Compact City Park",
+    "primary_mode": "high-demand limited-land park",
+    "priority_weights": {
+      "capacity": 0.25,
+      "land_efficiency": 0.2,
+      "transport_access": 0.15,
+      "noise_control": 0.1,
+      "service_speed": 0.15,
+      "variety": 0.15
+    },
+    "target_audiences": [
+      "city_residents",
+      "tourists",
+      "after_work_visitors"
+    ],
+    "protected_elements": [
+      "public transport access",
+      "compact identity"
+    ],
+    "acceptable_tradeoffs": [
+      "smaller scenery footprints",
+      "vertical building"
+    ],
+    "notes": [
+      "High demand does not erase comfort or neighborhood consequences."
+    ]
+  }
+]

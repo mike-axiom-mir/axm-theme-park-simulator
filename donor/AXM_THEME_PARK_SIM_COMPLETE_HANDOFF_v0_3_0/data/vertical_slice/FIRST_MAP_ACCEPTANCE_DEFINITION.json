@@ -1,0 +1,102 @@
+{
+  "definition_version": "0.3.0",
+  "rule": "A first map is not ready while any required check is failed or not_run.",
+  "checks": [
+    {
+      "check_id": "roots_verified",
+      "category": "integrity",
+      "required": true,
+      "description": "roots verified"
+    },
+    {
+      "check_id": "package_verifier_passes",
+      "category": "integrity",
+      "required": true,
+      "description": "package verifier passes"
+    },
+    {
+      "check_id": "same_seed_same_digest",
+      "category": "determinism",
+      "required": true,
+      "description": "same seed same digest"
+    },
+    {
+      "check_id": "save_reload_same_state",
+      "category": "determinism",
+      "required": true,
+      "description": "save reload same state"
+    },
+    {
+      "check_id": "one_small_map_loads",
+      "category": "playable_slice",
+      "required": true,
+      "description": "one small map loads"
+    },
+    {
+      "check_id": "entrance_and_path_work",
+      "category": "playable_slice",
+      "required": true,
+      "description": "entrance and path work"
+    },
+    {
+      "check_id": "at_least_three_simple_attractions",
+      "category": "playable_slice",
+      "required": true,
+      "description": "at least three simple attractions"
+    },
+    {
+      "check_id": "visitors_arrive_move_queue_leave",
+      "category": "playable_slice",
+      "required": true,
+      "description": "visitors arrive move queue leave"
+    },
+    {
+      "check_id": "one_crew_task_loop",
+      "category": "playable_slice",
+      "required": true,
+      "description": "one crew task loop"
+    },
+    {
+      "check_id": "basic_cashflow_closes",
+      "category": "playable_slice",
+      "required": true,
+      "description": "basic cashflow closes"
+    },
+    {
+      "check_id": "management_and_walk_view_same_state",
+      "category": "shared_world",
+      "required": true,
+      "description": "management and walk view same state"
+    },
+    {
+      "check_id": "visual_frames_may_drop_without_sim_skip",
+      "category": "performance",
+      "required": true,
+      "description": "visual frames may drop without sim skip"
+    },
+    {
+      "check_id": "self_made_low_graphic_animation_visible",
+      "category": "animation",
+      "required": true,
+      "description": "self made low graphic animation visible"
+    },
+    {
+      "check_id": "concept_art_not_claimed_as_gameplay",
+      "category": "honesty",
+      "required": true,
+      "description": "concept art not claimed as gameplay"
+    },
+    {
+      "check_id": "known_placeholders_listed",
+      "category": "honesty",
+      "required": true,
+      "description": "known placeholders listed"
+    },
+    {
+      "check_id": "nov_dec_target_reconfirmed",
+      "category": "release",
+      "required": false,
+      "description": "nov dec target reconfirmed"
+    }
+  ]
+}

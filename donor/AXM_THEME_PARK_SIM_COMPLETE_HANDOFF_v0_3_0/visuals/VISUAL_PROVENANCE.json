@@ -1,0 +1,50 @@
+{
+  "project": "AXM Theme Park Simulator",
+  "assets": [
+    {
+      "filename": "01_in_production_animation_testing_ground.png",
+      "sha256": "80a14f9783d6271d8a31d8845d1d3a80b73e80a0efc53da00a35946716346e1f",
+      "classification": "concept_visual",
+      "generated_with": "OpenAI image generation in ChatGPT",
+      "generated_date": "2026-08-04",
+      "creator_credit": "Mike - Axiom/Mir",
+      "role": "Project introduction and animation-testing-ground expectation",
+      "not_gameplay_capture": true
+    },
+    {
+      "filename": "02_realistic_deterministic_simulation.png",
+      "sha256": "e4da9d82602dca36e19a118e202ec249742967d5ff1dce254c852a9880d84f66",
+      "classification": "concept_visual",
+      "generated_with": "OpenAI image generation in ChatGPT",
+      "generated_date": "2026-08-04",
+      "creator_credit": "Mike - Axiom/Mir",
+      "role": "Realistic determinism and no fake popularity decay",
+      "not_gameplay_capture": true
+    },
+    {
+      "filename": "03_low_graphic_animation_learning_ground.png",
+      "sha256": "a7fa2bfc8727781b8cc13734614ef4a4df52c91973ac99a5aae3cc4460edab11",
+      "classification": "concept_visual",
+      "generated_with": "OpenAI image generation in ChatGPT",
+      "generated_date": "2026-08-04",
+      "creator_credit": "Mike - Axiom/Mir",
+      "role": "Low-graphic animation learning and movement test scope",
+      "not_gameplay_capture": true
+    },
+    {
+      "filename": "04_roadmap_honest_expectations.png",
+      "sha256": "05b89e58a6e547af7d082c760e7316289b62a6ec9f37a85715a8ff232fbbc3d6",
+      "classification": "concept_visual",
+      "generated_with": "OpenAI image generation in ChatGPT",
+      "generated_date": "2026-08-04",
+      "creator_credit": "Mike - Axiom/Mir",
+      "role": "Early roadmap and November/December target communication",
+      "not_gameplay_capture": true
+    }
+  ],
+  "usage_notes": [
+    "These images communicate direction and expectations.",
+    "They are not screenshots from a playable build.",
+    "Preserve creation provenance when reused or modified."
+  ]
+}

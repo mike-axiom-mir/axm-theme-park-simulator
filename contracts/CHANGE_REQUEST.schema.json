@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "AXM Foundation Change Request",
+  "required": [
+    "request_id",
+    "proposer_module",
+    "base_contract_version",
+    "target_contract_version",
+    "requested_changes",
+    "rationale",
+    "root_impact",
+    "evidence_refs"
+  ],
+  "properties": {
+    "request_id": {
+      "type": "string"
+    },
+    "proposer_module": {
+      "type": "string"
+    },
+    "base_contract_version": {
+      "type": "string"
+    },
+    "target_contract_version": {
+      "type": "string"
+    },
+    "requested_changes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "root_impact": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

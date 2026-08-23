@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.simulation-state.schema.json",
+  "title": "AXM Authoritative Simulation State v0.3.0",
+  "type": "object",
+  "required": [
+    "world_id",
+    "world_seed",
+    "tick",
+    "state_version",
+    "branch_id",
+    "module_states"
+  ],
+  "properties": {
+    "world_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "world_seed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "state_version": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "branch_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "module_states": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

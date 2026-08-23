@@ -1,0 +1,23 @@
+{
+  "package_name": "AXM_THEME_PARK_MASTER_FOUNDATION_v0_2_0",
+  "version": "0.2.0",
+  "created_utc": "2026-08-12T11:42:54+00:00",
+  "extends": "AXM_THEME_PARK_DETERMINISTIC_FOUNDATION_v0_1_0",
+  "test_exit_code": 0,
+  "demo_exit_code": 0,
+  "full_package_includes": [
+    "foundation code and contracts",
+    "tests and examples",
+    "branch prompts",
+    "four posters",
+    "original August 4 backup",
+    "legacy v0.1.0 ZIP"
+  ],
+  "honest_status": {
+    "implemented": "executable reference foundation",
+    "not_implemented": "complete game and production engine"
+  },
+  "finalized_utc": "2026-08-12T11:43:58+00:00",
+  "test_count": 39,
+  "payload_file_count_excluding_inventory_and_checksum_index": 95
+}

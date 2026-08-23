@@ -1,0 +1,1046 @@
+{
+  "package_id": "AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_3_0",
+  "package_version": "0.3.0",
+  "generated_date": "2026-08-12",
+  "canonical_design_root_hash": "3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f",
+  "excluded_paths": [
+    "CHECKSUMS.sha256",
+    "PROJECT_INDEX.json",
+    "release/TEST_REPORT.txt",
+    "release/VERIFICATION_REPORT.txt"
+  ],
+  "file_count": 200,
+  "total_indexed_bytes": 20241146,
+  "category_counts": {
+    "ACTION_REPORT.md": 1,
+    "ARCHITECTURE.md": 1,
+    "BRANCH_MAP.md": 1,
+    "CHANGELOG.md": 1,
+    "DECISION_LOG.md": 1,
+    "FOUNDATION_ROOTS.md": 1,
+    "LICENSE_STATUS.txt": 1,
+    "MASTER_HANDOFF.txt": 1,
+    "PROVENANCE.md": 1,
+    "README.md": 1,
+    "ROADMAP.md": 1,
+    "START_HERE.txt": 1,
+    "backups": 1,
+    "changes": 1,
+    "contracts": 38,
+    "data": 8,
+    "docs": 19,
+    "examples": 12,
+    "legacy": 24,
+    "manifests": 7,
+    "media_social_copy.txt": 1,
+    "prompts": 9,
+    "pyproject.toml": 1,
+    "release": 6,
+    "scripts": 10,
+    "src": 29,
+    "tests": 16,
+    "visuals": 6
+  },
+  "files": [
+    {
+      "path": "ACTION_REPORT.md",
+      "bytes": 3745,
+      "sha256": "9d5591033334627be6f484829b134f8c2fbad48315410c7cb9aa54d34f5d1dc7"
+    },
+    {
+      "path": "ARCHITECTURE.md",
+      "bytes": 3083,
+      "sha256": "4f5e9ad4f07b763ec573c0cdfd87f6d4cf3aefef5288bd90e862f0107d368c4b"
+    },
+    {
+      "path": "BRANCH_MAP.md",
+      "bytes": 2449,
+      "sha256": "8bed3ce7f6a9a2ef84721a44d963706a0fc349dca39f29d764f895b4b875156a"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 1541,
+      "sha256": "7964514c7de60e5e1606674d6cb8f09aae8ff9552084aeb1618f89c25f483ad3"
+    },
+    {
+      "path": "DECISION_LOG.md",
+      "bytes": 2191,
+      "sha256": "587c7541468d98732b09e9bbbd9e684bcfb323f610f6b5bff8f579a71ff93a19"
+    },
+    {
+      "path": "FOUNDATION_ROOTS.md",
+      "bytes": 7622,
+      "sha256": "362beabe1e99a8dbfea41da8419384f05d0bd75098418fb68ab268cb98ea8366"
+    },
+    {
+      "path": "LICENSE_STATUS.txt",
+      "bytes": 391,
+      "sha256": "3cc4669578f29575dfbc3359d54ef10ac4b320f9a711c58e9e0f2c106ad20df6"
+    },
+    {
+      "path": "MASTER_HANDOFF.txt",
+      "bytes": 1337,
+      "sha256": "83edc514d1a149d9ce8994a8f3be8239b27aa09d3dcc0f094ece7dd99a61fbc9"
+    },
+    {
+      "path": "PROVENANCE.md",
+      "bytes": 775,
+      "sha256": "c60674978e36702dd3c359359e378a42f8e22e338a730a6fff7bd3951a82458d"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3100,
+      "sha256": "670132b55e96555ce749b45aefa8b381793bc3e45cf6bc3ea31b57193a49f45c"
+    },
+    {
+      "path": "ROADMAP.md",
+      "bytes": 2101,
+      "sha256": "f7f868ab13d95a7ac566b297fe6daefbe80d0cf9286324864977d36a5c5402f1"
+    },
+    {
+      "path": "START_HERE.txt",
+      "bytes": 2022,
+      "sha256": "443732543b4d220fbcf469e1cbbea185c4826f7c8704d3c8236801f7c1e1713d"
+    },
+    {
+      "path": "backups/AXM_THEME_PARK_SIM_COMPLETE_DESIGN_BACKUP_2026-08-04.txt",
+      "bytes": 32581,
+      "sha256": "bfbcd5ecfa0240d53740c9aee0912c266e6f1f0ac6311479c9741c46893bac77"
+    },
+    {
+      "path": "changes/RUNTIME_SPINE_v0_3_0.json",
+      "bytes": 904,
+      "sha256": "3bd5bdf3c07bedb2e29567b4b086c05926783b28d34d2ebe180132deb277adff"
+    },
+    {
+      "path": "contracts/ACTION_PROPOSAL.schema.json",
+      "bytes": 1273,
+      "sha256": "4d41a1af2cbb92d2348939d9f12c11e2aa9ac163e00f070eb0319ddb77863713"
+    },
+    {
+      "path": "contracts/ANIMATION_SIGNAL.schema.json",
+      "bytes": 1306,
+      "sha256": "ce1523e3e51dd406193213c7b8debe2c99c5776f3b99f4b614f18da90611d5c4"
+    },
+    {
+      "path": "contracts/AUDIENCE_COHORT.schema.json",
+      "bytes": 1452,
+      "sha256": "8bf5e251fbdbbcfcf051793d4ad849c871ca60774ae91f323d2e58fdc21ba21b"
+    },
+    {
+      "path": "contracts/BRANCH_LINEAGE.schema.json",
+      "bytes": 827,
+      "sha256": "21d85d50c81f12184804e2e092fcc7d25ba6a310d86bc366c9e57eb85f05f5b5"
+    },
+    {
+      "path": "contracts/BRANCH_RETURN_PACKET.schema.json",
+      "bytes": 2508,
+      "sha256": "7f5ba9934ae5401cec1482a3b326153aa9f85bb45bc6dc2df508c9eec210aa6c"
+    },
+    {
+      "path": "contracts/CAMPAIGN_DEFINITION.schema.json",
+      "bytes": 1891,
+      "sha256": "9e4a230ac3a013d563f481c1bc31f795e1901c8af7fed6ccc9e1241b69683a51"
+    },
+    {
+      "path": "contracts/CHANGE_REQUEST.schema.json",
+      "bytes": 1380,
+      "sha256": "87c6b8746ef98417ec534bef19b1249945b3e7455f050494a215c7613352f127"
+    },
+    {
+      "path": "contracts/COHORT_FORCES.schema.json",
+      "bytes": 1844,
+      "sha256": "aa069ceee559a80b5b28ca9f932c244fc6293e8b451c72a65a8522a057e8514c"
+    },
+    {
+      "path": "contracts/COMMAND_ENVELOPE.schema.json",
+      "bytes": 1106,
+      "sha256": "a79481fa6a3e6bdb97576e9fadcb0d75812c69108963a1d55adf866f66233ac2"
+    },
+    {
+      "path": "contracts/COMMAND_PLAN.schema.json",
+      "bytes": 796,
+      "sha256": "2b8f95a232a4edb5f4cd6f5aa8f4de9e07d157186bb20c10dde88dd7a80d93ab"
+    },
+    {
+      "path": "contracts/CONTRIBUTION_AUDIT.schema.json",
+      "bytes": 1244,
+      "sha256": "480d151dfbd8adef34d8d8a86e8b4df8d27281fc5022cc4a4bf98eb470f8c545"
+    },
+    {
+      "path": "contracts/CONTRIBUTION_CLAIM.schema.json",
+      "bytes": 2092,
+      "sha256": "6f1632332c5090113e5388a5684180f2a7f2e706217d6194d34dc3e7b50257b1"
+    },
+    {
+      "path": "contracts/COUNTERFACTUAL_PROJECTION.schema.json",
+      "bytes": 2083,
+      "sha256": "ff5276ad11983d34bd64d5be847ae4c607b9034fa270743f999f1d6242b5e361"
+    },
+    {
+      "path": "contracts/DERIVED_METRIC_RECORD.schema.json",
+      "bytes": 1679,
+      "sha256": "49befc64b3c79802c9fc25ead849cbe26ecf84ac42c28a5b28111b52e17d28d0"
+    },
+    {
+      "path": "contracts/EVENT.schema.json",
+      "bytes": 1354,
+      "sha256": "2fa3946bdfddb1f8e6512c259625377cfd65e9e1454d6eb3cd7888dafb6638d6"
+    },
+    {
+      "path": "contracts/EVENT_INTENT.schema.json",
+      "bytes": 662,
+      "sha256": "0e5d3b5030fe17c5c99884cbf45e3c927771470b85dbd7c56c793c0ef932838c"
+    },
+    {
+      "path": "contracts/EVENT_RECORD.schema.json",
+      "bytes": 535,
+      "sha256": "f0460a9f86418f5e582f5155714c79e75107cc9942aeedb77c5c75d7df0cd1c6"
+    },
+    {
+      "path": "contracts/EVIDENCE_REF.schema.json",
+      "bytes": 969,
+      "sha256": "bf717e2fe832ff20c84c4a46b3cc1125d2d56a8f2b39f023b99f08faa5aa34e5"
+    },
+    {
+      "path": "contracts/EXPLANATION_PACKET.schema.json",
+      "bytes": 1572,
+      "sha256": "2a6c38d5d151f2fdda5a20eb9fcdcc359936f6a43684fa0b181cecb5cc0f6b42"
+    },
+    {
+      "path": "contracts/FIRST_MAP_ACCEPTANCE_REPORT.schema.json",
+      "bytes": 1384,
+      "sha256": "6107f25b3ac3fc494a381dd715c306a27e7b50d7201a704b5fab38fc3deea425"
+    },
+    {
+      "path": "contracts/FOUNDATION_CONTRACT.json",
+      "bytes": 14497,
+      "sha256": "151c198219aabe655390fdafa7bde0943e3e7202e05198ae6e4ed33ce55122ff"
+    },
+    {
+      "path": "contracts/MARKET_STEP_RESULT.schema.json",
+      "bytes": 1429,
+      "sha256": "cf54937de874a1f65383bec8bc37cc9dae69695448c80d87a75aa7591bc40051"
+    },
+    {
+      "path": "contracts/MIGRATION_PLAN.schema.json",
+      "bytes": 1132,
+      "sha256": "599ed538d7fbf26e6a21f388254ff2982c2e66a7d5ca46acfcf7835a84ebd1a1"
+    },
+    {
+      "path": "contracts/MODULE_MANIFEST.schema.json",
+      "bytes": 3379,
+      "sha256": "a03e128f0a6d4bb22069aa65d5186f710f0de827a9a720f7671ab462791e46df"
+    },
+    {
+      "path": "contracts/NAMESPACE_UPDATE.schema.json",
+      "bytes": 770,
+      "sha256": "235912fcfdd3ca71a1de65c0295721fb0ecc8d242dcddc0642333b7c16c680c2"
+    },
+    {
+      "path": "contracts/OBSERVATION_PACKET.schema.json",
+      "bytes": 1121,
+      "sha256": "d2333957dfa8825573078b882477419b9e2f0f425a05ebfb070e2a73e050b61c"
+    },
+    {
+      "path": "contracts/OPENING_SCHEDULE.schema.json",
+      "bytes": 1010,
+      "sha256": "bb3acdc732bb2d672878ac2809071a0832c3d4931eb26131118fa3ed739b7e68"
+    },
+    {
+      "path": "contracts/PARK_IDENTITY.schema.json",
+      "bytes": 1061,
+      "sha256": "bc88e2498654b014884d7d5aee48550a5cc96e86e1bf6f606ed070d9cd08d3a1"
+    },
+    {
+      "path": "contracts/PRESENTATION_PROFILE.schema.json",
+      "bytes": 759,
+      "sha256": "bac55b564cf9d0bdba632328f4f56411eb27497df9108df13692a8a698bb2a85"
+    },
+    {
+      "path": "contracts/ROOT_HASH_MANIFEST.json",
+      "bytes": 574,
+      "sha256": "7057b6f14d87be3bcfba4d7f6e9e4000d89b7d6e794d01f5945933ef1dcab306"
+    },
+    {
+      "path": "contracts/RUNTIME_PROTOCOL_CONTRACT.json",
+      "bytes": 2490,
+      "sha256": "420bf44654dc45a1f37a8dd0b1aa32c378d1f2c3b6a8e72f241b6a260e84e57d"
+    },
+    {
+      "path": "contracts/SAVE_MANIFEST.schema.json",
+      "bytes": 1408,
+      "sha256": "fd6e6330a3794d8ae0371c22f040240033b2ea7719ae5990351a291e19b69055"
+    },
+    {
+      "path": "contracts/SIMULATION_CADENCE.schema.json",
+      "bytes": 1077,
+      "sha256": "4333b1e46489f249f823caa3b3f3224009bef2ca20d7683238323cef9ffb9da3"
+    },
+    {
+      "path": "contracts/SIMULATION_STATE.schema.json",
+      "bytes": 779,
+      "sha256": "df875b531146c95d717edbd951f854a710ad06200383f2f6e654cb17f923a505"
+    },
+    {
+      "path": "contracts/STATE_SNAPSHOT.schema.json",
+      "bytes": 1433,
+      "sha256": "d38ff05d1bb11d771d6817c3bfa0b87bbd47bd269b34fc20758387d9cf9c78f4"
+    },
+    {
+      "path": "contracts/SYSTEM_SPEC.schema.json",
+      "bytes": 1739,
+      "sha256": "53160a0906bb11985f1f8d098a11905410126d8a2119f7d0899cfff76041690e"
+    },
+    {
+      "path": "contracts/WEATHER_STATE.schema.json",
+      "bytes": 973,
+      "sha256": "d82a2afc46e3eb517369ffad53d1962ec36b21c1f71e7cf6ddd1d48742874dd2"
+    },
+    {
+      "path": "contracts/WORLD_CLOCK.schema.json",
+      "bytes": 526,
+      "sha256": "fd501dfdb223a844b8174309fed57211eb6c095df520898ab476168a83b3b1aa"
+    },
+    {
+      "path": "data/FIRST_MAP_TARGET.json",
+      "bytes": 615,
+      "sha256": "854a4122e19f93381a60f2b6b69d2dc819201f5185dd815174232a123bda4c21"
+    },
+    {
+      "path": "data/PARK_IDENTITY_EXAMPLES.json",
+      "bytes": 3613,
+      "sha256": "ea985072acc9f81e739a99bf754b46e9843c355445b664fc23c8ed9771a33bfc"
+    },
+    {
+      "path": "data/REFERENCE_WEIGHTS.json",
+      "bytes": 845,
+      "sha256": "cf4de2ad7b0218b959e4f572845ad9eba0f921cf5dccad32a6b3770991670fa2"
+    },
+    {
+      "path": "data/campaigns/FORGOTTEN_LOCAL_PARK.json",
+      "bytes": 2422,
+      "sha256": "ef1177adc65fe1fefab89f3f7e3c38ffcfb9e5f91d3dba1cf27fa423b1aae88b"
+    },
+    {
+      "path": "data/runtime/LIVING_PARK_REFERENCE_SCENARIO.json",
+      "bytes": 1196,
+      "sha256": "3e4664183c646adca99ae45c01354079aa0f0e4614b48c89ff9ca9210da4361d"
+    },
+    {
+      "path": "data/runtime/REFERENCE_SYSTEM_PLAN.json",
+      "bytes": 6596,
+      "sha256": "c061a89b85ceb2f36bb639de56e2ac637ffc5db1132cecc432b23b57cc6fa684"
+    },
+    {
+      "path": "data/vertical_slice/FIRST_MAP_ACCEPTANCE_DEFINITION.json",
+      "bytes": 2845,
+      "sha256": "fda19a06925c07054c667ed7c48f3bda018e108bc68028d78218f586374e2de3"
+    },
+    {
+      "path": "data/weather/TEMPERATE_PROFILE.json",
+      "bytes": 402,
+      "sha256": "901464144aa88c8d5401b113e6a97f3efe8e002c45debc39d9f33a67a67f8c74"
+    },
+    {
+      "path": "docs/ANIMATION_CADENCE_AND_POPULATION_RESOLUTION.md",
+      "bytes": 1456,
+      "sha256": "ca0699c8b6ffe409bf484fe67d10b5c8de5a4bfeefc2e7613e808df08e3141bb"
+    },
+    {
+      "path": "docs/ARCHITECTURE_EXTENSION_v0_3_0.md",
+      "bytes": 3621,
+      "sha256": "f219b332ca2176eb83d50660c33f4a05e37777acb805d58304a1c78c62cb05a6"
+    },
+    {
+      "path": "docs/AUDIENCE_COHORTS_AND_MARKET_CONSERVATION.md",
+      "bytes": 1523,
+      "sha256": "b7a2c9e5fcfb884c82b5794d2d80f9878354b13db953bbc2ee4d7e3aa6f42a08"
+    },
+    {
+      "path": "docs/BRANCH_RETURN_AND_INTAKE_PROTOCOL.md",
+      "bytes": 853,
+      "sha256": "318d5f43c33fcd2358f00bf45a84cbde279a24f5108dbe0fcddb566711067d01"
+    },
+    {
+      "path": "docs/CONTRIBUTION_LEDGER_AND_COUNTERFACTUALS.md",
+      "bytes": 1443,
+      "sha256": "dfd11462d46b8535389ee61685b601a40f1c92b51bef0743c968cd366bfc633e"
+    },
+    {
+      "path": "docs/DETERMINISTIC_KERNEL_SNAPSHOTS_AND_BRANCHES.md",
+      "bytes": 1420,
+      "sha256": "03256be425edbe22e017866f2097f8c576ed8728459cf83cb2ab823e36867d71"
+    },
+    {
+      "path": "docs/EVIDENCE_UNCERTAINTY_AND_INTERFACES.md",
+      "bytes": 861,
+      "sha256": "7a3c392884be9868c709b7f13cf8da45aef2e260b052dc53139fd5df381db127"
+    },
+    {
+      "path": "docs/FIRST_MAPS_TARGET_NOV_DEC_2026.md",
+      "bytes": 1415,
+      "sha256": "49f53ff0e2dd34d48d78f7166e96e6e04446aa22a2c62ad1aec80bd9e5dbcaf8"
+    },
+    {
+      "path": "docs/FIRST_MAP_REFERENCE_SLICE.md",
+      "bytes": 1553,
+      "sha256": "457bf9120435c060cf29cb877d0033955540c5226176dcecfb62cd1283cd3750"
+    },
+    {
+      "path": "docs/FIRST_MAP_VERTICAL_SLICE_ACCEPTANCE.md",
+      "bytes": 802,
+      "sha256": "a950c70bbaa2f6cf36ebc39aa129a83c280b1e5b2a2c27a257bb25d7db0b17ff"
+    },
+    {
+      "path": "docs/LOCAL_AND_NEXT_CHAT_INTAKE.md",
+      "bytes": 1428,
+      "sha256": "4449d4fe99c038e712e5befcc584e2b76e1362bbc33e6d2b2a96130827d76156"
+    },
+    {
+      "path": "docs/RUNTIME_HARDENING_v0_3_0.md",
+      "bytes": 1855,
+      "sha256": "69a548c384a2f77089cd9572dc1e70158a31d1c6f83ab82b6343e25cd7d47afd"
+    },
+    {
+      "path": "docs/RUNTIME_ORGAN_API_MAP.md",
+      "bytes": 3307,
+      "sha256": "8d9108948b1483a463da9861728f2dbdb10e6d42846a365a8c7c574e04b3b08f"
+    },
+    {
+      "path": "docs/SAVE_MIGRATION_AND_MERGE_GATE.md",
+      "bytes": 930,
+      "sha256": "18eca0db7a5a8d9dbfa41249ad8b6c8d1e634e8d463347e70d5709de5a42304d"
+    },
+    {
+      "path": "docs/SCI_FI_POSTGAME_SEED.md",
+      "bytes": 1181,
+      "sha256": "cce8be866ada95cd28bfdcb5262a91f605d619e152c7ded60561b1110674e086"
+    },
+    {
+      "path": "docs/SIMULATION_PHASES_AND_PERFORMANCE.md",
+      "bytes": 984,
+      "sha256": "b04c2a7e6af0492a779503e66c316eb5cce82dff715feab79179f76c8bbaa371"
+    },
+    {
+      "path": "docs/STATE_OWNERSHIP_ACTIONS_AND_ROLLBACK.md",
+      "bytes": 911,
+      "sha256": "18d536c39a1a4421e6ec4881ae014124a894fc8f6b09ffcadd1b1372868fc15a"
+    },
+    {
+      "path": "docs/TECHNICAL_START_FOR_LOCAL.md",
+      "bytes": 956,
+      "sha256": "0dda48b1f8febbc263f52a59e54c2e3923061fd1ae82c245e875ccd446d3862b"
+    },
+    {
+      "path": "docs/VISUAL_DEVELOPMENT_LADDER.md",
+      "bytes": 1230,
+      "sha256": "a7579ebc8d816a79ef7d1b88cde2d77119a32085fc560d321e6f4222971d5165"
+    },
+    {
+      "path": "examples/BRANCH_RETURN_PACKET_TEMPLATE.json",
+      "bytes": 744,
+      "sha256": "e1af65e1f62767e488e20edf897c6063846bd33e0de94110598678ef0d1a4b83"
+    },
+    {
+      "path": "examples/EXAMPLE_CHANGE_REQUEST.json",
+      "bytes": 625,
+      "sha256": "d9499536610e9f00653f67f9993abfbef8631dff67acea4081fe6427ed21ed46"
+    },
+    {
+      "path": "examples/EXAMPLE_OUTPUT.txt",
+      "bytes": 6001,
+      "sha256": "2103c02e1bd7a3c7a4fe427f7b72ba2df320a015d16bf054efebbbadde559385"
+    },
+    {
+      "path": "examples/EXAMPLE_SAVE_MANIFEST.json",
+      "bytes": 592,
+      "sha256": "49a1b53461644a574626aba47c5253525b2e48ab433fc9497a8b4eea94ba8269"
+    },
+    {
+      "path": "examples/FIRST_MAP_ACCEPTANCE_TEMPLATE.json",
+      "bytes": 3992,
+      "sha256": "e5683795ddeb65655b9b8c1ac1dd67dfc0d4a1b0d1938a6582350456ad31b267"
+    },
+    {
+      "path": "examples/README.md",
+      "bytes": 1477,
+      "sha256": "b8dd900052c840a475ca2c8f738eac508dafbc79e0c749e7b3edc2c8acfb06cb"
+    },
+    {
+      "path": "examples/VALID_REFERENCE_RETURN_PACKET.json",
+      "bytes": 1488,
+      "sha256": "f476fe196e3bede88d7d2f9fa91f9886dafa9f2196a22866c96aa056d482eda9"
+    },
+    {
+      "path": "examples/reference_return_artifact.txt",
+      "bytes": 69,
+      "sha256": "ef46a2c92f02bdb303e2ffe93756363eb85125867c053936e9bba48d0630759a"
+    },
+    {
+      "path": "examples/run_first_map_reference_slice.py",
+      "bytes": 16475,
+      "sha256": "f2cc09daaaf1fb109f373f58c7d3614b47d5ba65ef1b830c1e540230c13a6474"
+    },
+    {
+      "path": "examples/run_living_park_reference.py",
+      "bytes": 15438,
+      "sha256": "fa2edc62c2e1fd0cd0e527794a946a9d0939f701bf0ab8e35f098f6ce6b219f7"
+    },
+    {
+      "path": "examples/run_reference_demo.py",
+      "bytes": 6685,
+      "sha256": "6fbdfb59c4ba4a6fa7481ad6f35e313aec2305e709f90d4e931b4c2b403c2fe4"
+    },
+    {
+      "path": "examples/run_runtime_integration_demo.py",
+      "bytes": 5946,
+      "sha256": "43d5d3cd2421aa8d822bb53010efb4f3c5ae59ac6f88d9a5e712f6d08a9f4ea8"
+    },
+    {
+      "path": "legacy/AXM_THEME_PARK_DETERMINISTIC_FOUNDATION_v0_1_0.zip",
+      "bytes": 22473,
+      "sha256": "a299a4009f2927d65acd393fc829b61a8b6bde595586913cb29c6904558c1994"
+    },
+    {
+      "path": "legacy/AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_2_0.zip",
+      "bytes": 9887301,
+      "sha256": "95a29c8b3c4d0b407fb1158b957f88083dc53545b93b8eb2f065f5b85a6ff84c"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/ARCHITECTURE.md",
+      "bytes": 1917,
+      "sha256": "14fe6c9982f2edd56a46c6e3842abd87c312f259899661a7780bf8ad1f4a2580"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/BRANCH_MAP.md",
+      "bytes": 2097,
+      "sha256": "01f289d52672feda4509cf3dc0318a9eb9b90a6401cf42aff111d7d64dd8c91a"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/DECISION_LOG.md",
+      "bytes": 998,
+      "sha256": "09e4dc40b78bbe06315f8a34cbbe895df8d1514f6a9ac2a93eb490bb228636c5"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/FOUNDATION_ROOTS.md",
+      "bytes": 4603,
+      "sha256": "55500b3dca13e20206dd6dc3c1a8d4dc9e34000db78e9b30327e9fdd3a36119c"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/INVENTORY.json",
+      "bytes": 1490,
+      "sha256": "3aecf6957f697944256319a96c82c3bb833b06c57a9c87d93ce8ae2afc39cfbf"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/MASTER_HANDOFF.txt",
+      "bytes": 1267,
+      "sha256": "4addb2c16687a615ecc4da8b2a1f80157f038586aed017bf0937bc9510435e48"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/README.md",
+      "bytes": 1680,
+      "sha256": "d65db0fb4acd493d187d32b2b5e8ae737d42d8b03b8acf9dc8cf7a81f4a8d6c1"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/TEST_REPORT.txt",
+      "bytes": 822,
+      "sha256": "6e9d276eb4eaec6981e507d18f8ce630e3b02467b8cc4e6e355d12b54d17e998"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/contracts/EVENT.schema.json",
+      "bytes": 977,
+      "sha256": "e0768b8855adf90ae74b0265b68481418a3906ec84e5e91c2cce3332c3ab36cf"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/contracts/FOUNDATION_CONTRACT.json",
+      "bytes": 3064,
+      "sha256": "8476cee9237826caff229995a47c411014e189176319937f807f42733ac0ce14"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/contracts/MODULE_MANIFEST.schema.json",
+      "bytes": 1194,
+      "sha256": "bda305ad1b0062151b8b702c394a3a58ad755bdfc12517d11c2b3c44cad4c714"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/data/REFERENCE_WEIGHTS.json",
+      "bytes": 502,
+      "sha256": "ebe7111e0622ccacf2abe4a848c4b4041bef2595ff9af1735894abb0946570c7"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/prompts/BUILD_CHAT_A_RIDES_AND_ATTRACTIONS.md",
+      "bytes": 1945,
+      "sha256": "3da5f6e5b3235bbcf30e9cbbaadf6e95e5ebd1331a807070a17808ee06a2cba5"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/prompts/BUILD_CHAT_B_VISITORS_AND_CREWS.md",
+      "bytes": 1945,
+      "sha256": "76ebe304899bf8ff7fdb7964d6ea0d01b5eed5b1822cb4f3e6cc8e5ef7699b05"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/prompts/BUILD_CHAT_C_DECORATION_AND_INFLUENCE.md",
+      "bytes": 1934,
+      "sha256": "5d832b4c883533042105c8ccd988eca4ea9145ee788063dbee380da6e8b51c30"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/prompts/BUILD_CHAT_D_STORES_SERVICES_ECONOMY.md",
+      "bytes": 1976,
+      "sha256": "2a66e734e9fdaa2e5f68b641c42dcc37ebcca1686bcb8df6c36e5a8b7f1d13aa"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/src/park_foundation/__init__.py",
+      "bytes": 631,
+      "sha256": "afe3c0c7f4e194128dbff3035e1f24364dc9a80cc9cdf168d8d2694e2c1926de"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/src/park_foundation/evaluator.py",
+      "bytes": 3744,
+      "sha256": "2135ca34ea65a84714d3f9a445bcab9d4bd32aca5ea3ac8c5cc893d9cb817063"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/src/park_foundation/event_log.py",
+      "bytes": 1230,
+      "sha256": "f0188a72b5b3f6a2f5a80629da4d9a9174391592dcc823b379b5f914d096be9b"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/src/park_foundation/models.py",
+      "bytes": 1229,
+      "sha256": "7fcd35675b8200c1c99bd2a92e7f31b6e60e8a48d2ffc08a7a7c3efe0bd789d8"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/src/park_foundation/registry.py",
+      "bytes": 1481,
+      "sha256": "044adfb5a6f483337368bcded9c9db6ab9100c6c2eb76180a5cf80e117698bb2"
+    },
+    {
+      "path": "legacy/v0_1_0_unpacked/tests/test_foundation.py",
+      "bytes": 3333,
+      "sha256": "f22bf9496026db4d62d4c03b34d03be25e6f658000ec3327c9998bff05d34ae6"
+    },
+    {
+      "path": "manifests/animation_testing_ground.json",
+      "bytes": 1422,
+      "sha256": "e2faa265d5e78bce6418c285b32ad183069e88339c48ccb28a24a2631a198a9f"
+    },
+    {
+      "path": "manifests/campaign_and_adventure.json",
+      "bytes": 1463,
+      "sha256": "5b864e0970531f84ace5486826be6f1188eff10421e24ebcd8af3a9032ee941c"
+    },
+    {
+      "path": "manifests/decoration_and_influence.json",
+      "bytes": 1380,
+      "sha256": "86c1c13ae513562361ad7fb1a04ea48545292ab5abf0b235fb9f2f9f599ad649"
+    },
+    {
+      "path": "manifests/foundation_core.json",
+      "bytes": 2260,
+      "sha256": "10aca1c666bc14206f9680e562c0b86ed93b63b1f2528685598067d7f43788d9"
+    },
+    {
+      "path": "manifests/rides_and_attractions.json",
+      "bytes": 1577,
+      "sha256": "13a3748a208c36a6b2cf20961f0ed72d74c6b3c65a78021c2db95a6b3f5d6cf6"
+    },
+    {
+      "path": "manifests/stores_services_economy.json",
+      "bytes": 1547,
+      "sha256": "7c2912eb7e03fd10e1ec7a6a09e1e9ccc1381910f0590cb2045e79d6c4008479"
+    },
+    {
+      "path": "manifests/visitors_and_crews.json",
+      "bytes": 1871,
+      "sha256": "76090758b236851b555dcc3913d211d01eea2f3a9dedd75b83f5f5796f61d7c3"
+    },
+    {
+      "path": "media_social_copy.txt",
+      "bytes": 700,
+      "sha256": "065b931d0d0dc1cf96285cd7a72b99581bef7e9b1df1e3adacd18b5781a3f6fe"
+    },
+    {
+      "path": "prompts/BRANCH_SELECTION.txt",
+      "bytes": 504,
+      "sha256": "1b9f44f99825bf5ed5ee2594a03894a5249a226b2ed7fd4c0494f9c028ef2cc1"
+    },
+    {
+      "path": "prompts/BUILD_CHAT_A_RIDES_AND_ATTRACTIONS.md",
+      "bytes": 3145,
+      "sha256": "fa5b530552679ca86b8d1ca55087d24cd48608109850ff909354a8726b54ea1d"
+    },
+    {
+      "path": "prompts/BUILD_CHAT_B_VISITORS_AND_CREWS.md",
+      "bytes": 3126,
+      "sha256": "665e2882982e0ac43fd62672fe28eb59eed9a5369a7c9457ffd4184eb8f0d5f1"
+    },
+    {
+      "path": "prompts/BUILD_CHAT_C_DECORATION_AND_INFLUENCE.md",
+      "bytes": 3108,
+      "sha256": "fa82ab2bf07f015138514030927216b57eb45a8386b70ce64cbdee74e8de64d7"
+    },
+    {
+      "path": "prompts/BUILD_CHAT_D_STORES_SERVICES_ECONOMY.md",
+      "bytes": 3070,
+      "sha256": "84ad470d26f54a0b8603f6f8ceb1ed9820f311983762943747471eac0134f989"
+    },
+    {
+      "path": "prompts/BUILD_CHAT_E_CAMPAIGN_AND_ADVENTURE.md",
+      "bytes": 3028,
+      "sha256": "ea29b608491f4c38ca1d5c8a8e20d1498c665d059759eca38e0481202722851e"
+    },
+    {
+      "path": "prompts/BUILD_CHAT_F_ANIMATION_TESTING_GROUND.md",
+      "bytes": 3001,
+      "sha256": "4d9df44785bfb441c6c08a379b3bb65b1c7d5793f15e3a9e5806efe37668e9e4"
+    },
+    {
+      "path": "prompts/LOCAL_AGENT_INTAKE_PROMPT.txt",
+      "bytes": 1158,
+      "sha256": "802f850f2a2d48b810a5c3e36c61ca9731fc2bb10e7ffa80ac59fee21cfe20e6"
+    },
+    {
+      "path": "prompts/NEXT_CHAT_MASTER_PROMPT.txt",
+      "bytes": 1231,
+      "sha256": "696684136e73b966a4a4f472b8cc0588f338c09484e289f3f8e7875d613d37dd"
+    },
+    {
+      "path": "pyproject.toml",
+      "bytes": 369,
+      "sha256": "ff7f2d00797b1adb3a8bf6fbed2eb2f8a66acb5ed3d35bd303d686e16ac38e86"
+    },
+    {
+      "path": "release/CAPABILITY_STATUS.json",
+      "bytes": 1453,
+      "sha256": "5fb3b63111a2038945387aa0f2e172134fb17f443db3f8777505f9ffd432d584"
+    },
+    {
+      "path": "release/FIRST_MAP_READINESS_REPORT.json",
+      "bytes": 4830,
+      "sha256": "1a3f6a333c647f6066e89ce170002c05b5994b282a08c63f4ab3de972415e161"
+    },
+    {
+      "path": "release/FIRST_MAP_REFERENCE_OUTPUT.json",
+      "bytes": 3744,
+      "sha256": "e523b24f50a8d21dfd3afcaf6b8269a95c27cb27e1e522b09b98c19e86985003"
+    },
+    {
+      "path": "release/LIVING_REFERENCE_OUTPUT.json",
+      "bytes": 2129,
+      "sha256": "b3cb1fcd1ec3e2c780036115971153d28e78a0e569925d5416f301024b316acb"
+    },
+    {
+      "path": "release/PACKAGE_SUMMARY.txt",
+      "bytes": 1600,
+      "sha256": "e011eb3afaecafb5291563ce5bbfbc9d4943f22aeca91bd5fc6d57a20b7ef6cd"
+    },
+    {
+      "path": "release/REFERENCE_SUITE_OUTPUT.json",
+      "bytes": 1304,
+      "sha256": "2550b79477a01cad9047c514e2f7c7080ef5b410b6c575814f59fe2791283d96"
+    },
+    {
+      "path": "scripts/check_first_map_acceptance.py",
+      "bytes": 1115,
+      "sha256": "6b0874aeb94eb7530a3d16e146a0e9b7452a7e36e7b9abec5234cf0806719080"
+    },
+    {
+      "path": "scripts/generate_release_metadata.py",
+      "bytes": 2649,
+      "sha256": "98c87398be370057c1856653426edd0ae1b23f304dfe1eb34b31e025e20bfdef"
+    },
+    {
+      "path": "scripts/print_project_summary.py",
+      "bytes": 643,
+      "sha256": "d3cc35bd7776aeb023db76b6f4cc6df1ad7a83f7cca6f10d5a6c1b4dd367d631"
+    },
+    {
+      "path": "scripts/run_reference_suite.py",
+      "bytes": 1700,
+      "sha256": "964e76de23a83af127c6a4a9cbcb50d448711473d8396b625588b2c5e1647a80"
+    },
+    {
+      "path": "scripts/run_tests.py",
+      "bytes": 575,
+      "sha256": "bb624c38cff1101c99c0be37c3989bd1e9b27a5cd84f489df102a75d99365696"
+    },
+    {
+      "path": "scripts/static_validate.py",
+      "bytes": 649,
+      "sha256": "972f84885a6e32b84dd280e2beb25cc6fd763a873589961be1f35e7891fc3c37"
+    },
+    {
+      "path": "scripts/validate_return_packet.py",
+      "bytes": 1523,
+      "sha256": "a55358fb63d1d8043af2e549d18a20ab13dd8f2e42aa7bdd51f430837cf61b85"
+    },
+    {
+      "path": "scripts/validate_runtime_assembly.py",
+      "bytes": 971,
+      "sha256": "27b17268fb179040833dd7a6876853687bcfa417737e6d91e09f25da2c7fe8ed"
+    },
+    {
+      "path": "scripts/validate_system_plan.py",
+      "bytes": 2031,
+      "sha256": "c776677d15aa5bbd8dfce0c203905b6e58932133a8db23aaa01580c3d4dbdb25"
+    },
+    {
+      "path": "scripts/verify_package.py",
+      "bytes": 18398,
+      "sha256": "e6f4a6b9c03733f2b3f57e1aada6260ba2cce034a604ebfc3a3cd28354b5a771"
+    },
+    {
+      "path": "src/park_foundation/__init__.py",
+      "bytes": 2943,
+      "sha256": "726a03390733e5521e8f7104d9e77ab905858e1abb4d8ab951889587e1326670"
+    },
+    {
+      "path": "src/park_foundation/acceptance.py",
+      "bytes": 1432,
+      "sha256": "940b4bfff6985219e7bb6d9610eb66e8a8ddba952cf42cf4e3fd66e0eb164846"
+    },
+    {
+      "path": "src/park_foundation/actions.py",
+      "bytes": 5565,
+      "sha256": "2536e134abc6498bf64ef2dfc1787f0ee5da5812e2b50814ef2885af41769b9b"
+    },
+    {
+      "path": "src/park_foundation/assembly.py",
+      "bytes": 4650,
+      "sha256": "281dc57e4af41d4797e0462496c006561b56b24d00510ed6a1006c013392dd70"
+    },
+    {
+      "path": "src/park_foundation/cadence.py",
+      "bytes": 7358,
+      "sha256": "b95fd51a509b5934e8258ccb71453067db911ee513f92e46231ea3ae2ab63ddd"
+    },
+    {
+      "path": "src/park_foundation/campaign.py",
+      "bytes": 3454,
+      "sha256": "86181a6b2e7be332ed1d538858782ff9c2d4cb96f69c9d7a6d8e7ae401deb0de"
+    },
+    {
+      "path": "src/park_foundation/canonical.py",
+      "bytes": 1965,
+      "sha256": "02857c15cc847b4ec966dc0fc0321a15384d4914b8b02adcde84d276c9578c7d"
+    },
+    {
+      "path": "src/park_foundation/counterfactual.py",
+      "bytes": 7530,
+      "sha256": "1eaacde77e687e72e93b8e725258cdcd88f10f9ae6a8f393dba24a7d4da0d4c9"
+    },
+    {
+      "path": "src/park_foundation/evaluator.py",
+      "bytes": 13661,
+      "sha256": "8b1eebf7456d611d995a26bd0076e97a106937585e2ec0dc205dc630544040c4"
+    },
+    {
+      "path": "src/park_foundation/event_log.py",
+      "bytes": 6266,
+      "sha256": "73f20e8e248e3cef117d2a5c66e428fa9c3066ee582196784f435f80a9d5f16a"
+    },
+    {
+      "path": "src/park_foundation/evidence.py",
+      "bytes": 2263,
+      "sha256": "1324b6d704816358788c8ede100d3f00f770abca9d598afa7263438022f8b332"
+    },
+    {
+      "path": "src/park_foundation/identity.py",
+      "bytes": 2998,
+      "sha256": "8fd961f7ec2b994dc5624416dc0cb0e53b7cee738907657a5ffe5891a59d0022"
+    },
+    {
+      "path": "src/park_foundation/integrity.py",
+      "bytes": 1083,
+      "sha256": "c1ada24c6a3a96735b6c744a86b60f50234919a40b9c9f0ddc12984429c33624"
+    },
+    {
+      "path": "src/park_foundation/kernel.py",
+      "bytes": 13635,
+      "sha256": "d76070fc1efca1265989ff91a1d2593834b1a2ec0f7c8259c7ea4dc10f37a873"
+    },
+    {
+      "path": "src/park_foundation/ledger.py",
+      "bytes": 10567,
+      "sha256": "76e8ce59aa5d712fa8c25aef8c881460c8e53cb70fc39a2015fc528dd55fa7cb"
+    },
+    {
+      "path": "src/park_foundation/market.py",
+      "bytes": 10441,
+      "sha256": "2ad5ea7bb661597cb5ddcb7049650a7535d5d8dd3201f8d03328878beceb489f"
+    },
+    {
+      "path": "src/park_foundation/merge_gate.py",
+      "bytes": 2487,
+      "sha256": "ada7d3381ed307fd601f08f65aac321e960d562e0f75147cccb9928e682c5ef3"
+    },
+    {
+      "path": "src/park_foundation/models.py",
+      "bytes": 2689,
+      "sha256": "da48172d353f325e21a99ba7378dc7565feb65af6245aefe1d7368363e828855"
+    },
+    {
+      "path": "src/park_foundation/observation.py",
+      "bytes": 1184,
+      "sha256": "fdfcab38f636e4286edaae45e84d9516c2ab1bd5239f3a10fb2e78a05cfeda17"
+    },
+    {
+      "path": "src/park_foundation/presentation.py",
+      "bytes": 2572,
+      "sha256": "391fc57703dec20f2cbe38fffd7a6d7929cdf7aad05e615e9d83b8c95fc0af7b"
+    },
+    {
+      "path": "src/park_foundation/provenance.py",
+      "bytes": 6181,
+      "sha256": "83d6630c4c33ff769dd0c31955594016e0718c65124df5e11a142f0757eccce2"
+    },
+    {
+      "path": "src/park_foundation/registry.py",
+      "bytes": 3610,
+      "sha256": "3695c57f9a49386bf3d9220dbecfdc926e23036c3ed9323431716b14b22a9aab"
+    },
+    {
+      "path": "src/park_foundation/return_packet.py",
+      "bytes": 3161,
+      "sha256": "608c130a47e770e21cc27a7618332d939fd31fa193cc7f90e41213211b39d06d"
+    },
+    {
+      "path": "src/park_foundation/savegame.py",
+      "bytes": 3415,
+      "sha256": "0e58f27970110457002cc413e04b509bed5e16473a5ef4840c4ac92e9bd0df7b"
+    },
+    {
+      "path": "src/park_foundation/scheduler.py",
+      "bytes": 4467,
+      "sha256": "e99b0becca59525e900644ecd5d4112d857a266cf34fda91b2aeca8a799832c7"
+    },
+    {
+      "path": "src/park_foundation/snapshot.py",
+      "bytes": 8758,
+      "sha256": "e98d3bb9e6b1c5a05287fb5bed43a5cf242128edee7c00683cb94afcac9958c2"
+    },
+    {
+      "path": "src/park_foundation/state_store.py",
+      "bytes": 7933,
+      "sha256": "b8fbb3e01992ad9d57a5a633189d7c8048c66c319871b459bd0daadadaa0c33e"
+    },
+    {
+      "path": "src/park_foundation/version.py",
+      "bytes": 294,
+      "sha256": "56b02eb01bab57789edbeb901d841f340fb44130c24af411efba0c17bd7946dd"
+    },
+    {
+      "path": "src/park_foundation/world.py",
+      "bytes": 6746,
+      "sha256": "719c323a37c96e7bd1f616ecc9015d683f327e4782adfa8c9a24e9d1f9d7c7b3"
+    },
+    {
+      "path": "tests/test_cadence_counterfactual.py",
+      "bytes": 6968,
+      "sha256": "8af4ef80ee782b40150901ceb9950c9c1e5dba877f8245198f5661526f4b35b0"
+    },
+    {
+      "path": "tests/test_cli_validators.py",
+      "bytes": 1550,
+      "sha256": "53a04b1cf0c6427a21cf4d1cc8530ff927998346fe300a5b1ecef7848b4e76f6"
+    },
+    {
+      "path": "tests/test_determinism_world.py",
+      "bytes": 3855,
+      "sha256": "0ab206399719a55436cb0c3624b12da7970bcf6948d6a60910526e4712ae77e7"
+    },
+    {
+      "path": "tests/test_evaluators.py",
+      "bytes": 5187,
+      "sha256": "c4129fe9b068b8a698ef687743e5e3d9f1f8226797f899d57d54eb3a0e735d4c"
+    },
+    {
+      "path": "tests/test_first_map_reference_slice.py",
+      "bytes": 2258,
+      "sha256": "71173c02b53b3e5f4a5a9274a836e65e0039b1f7411ca51cafa00fdf8c92f601"
+    },
+    {
+      "path": "tests/test_identity_campaign_observation.py",
+      "bytes": 3473,
+      "sha256": "9f00fdc358084fd4b2f289587df4919f1a0ca0e1f78934f97c0af2564cf3e7d5"
+    },
+    {
+      "path": "tests/test_kernel_snapshot.py",
+      "bytes": 8297,
+      "sha256": "3998a25ccac2ddb35fc689dd020f1b2ae369eb7d8181597cdfc091840434a393"
+    },
+    {
+      "path": "tests/test_living_park_reference.py",
+      "bytes": 2292,
+      "sha256": "e70fc6375efafe7183137f2f5e273353a636c4ab22a4e33f8287980c7838da41"
+    },
+    {
+      "path": "tests/test_market_ledger.py",
+      "bytes": 6711,
+      "sha256": "14f96504bcb45037f9fe171a281c684477558228c90879ec804a1b4a94d50f3d"
+    },
+    {
+      "path": "tests/test_provenance_assembly_return_acceptance.py",
+      "bytes": 6461,
+      "sha256": "0099d01d56f6d7b9a52eec49b04bc39b5f66283ec5f674fc9794b20f077bda21"
+    },
+    {
+      "path": "tests/test_reference_suite_cli.py",
+      "bytes": 1350,
+      "sha256": "3a8f2e2fac6127542a61bc3e46b6e0ee2b61493328c48596dda373c4af06121c"
+    },
+    {
+      "path": "tests/test_registry_integrity_package.py",
+      "bytes": 3811,
+      "sha256": "e813434d0642c91452b9c98696797ff5e6179971ce2177b70f92c4a399d4b32a"
+    },
+    {
+      "path": "tests/test_runtime_demo.py",
+      "bytes": 1272,
+      "sha256": "7b2e96af3835cfb1fbf1ed3cd257a14b207de898b187e77f696a2a943390b7cd"
+    },
+    {
+      "path": "tests/test_runtime_hardening.py",
+      "bytes": 5818,
+      "sha256": "d70cb7049ac4cf23f21fe73f45a6b88e34f0b3ab9cc9f0c4a83d0994494f910c"
+    },
+    {
+      "path": "tests/test_save_merge_presentation.py",
+      "bytes": 3419,
+      "sha256": "01cab165dff431573e299a3232e089e71863c39dd498eaa596b6aed0bb084a1a"
+    },
+    {
+      "path": "tests/test_scheduler_state_actions.py",
+      "bytes": 6100,
+      "sha256": "5b38d1162b8fa0d66fd55bf83d5552bb6ff32d4402a44771fa22df457f3a7ae5"
+    },
+    {
+      "path": "visuals/01_in_production_animation_testing_ground.png",
+      "bytes": 2449229,
+      "sha256": "80a14f9783d6271d8a31d8845d1d3a80b73e80a0efc53da00a35946716346e1f"
+    },
+    {
+      "path": "visuals/02_realistic_deterministic_simulation.png",
+      "bytes": 2466307,
+      "sha256": "e4da9d82602dca36e19a118e202ec249742967d5ff1dce254c852a9880d84f66"
+    },
+    {
+      "path": "visuals/03_low_graphic_animation_learning_ground.png",
+      "bytes": 2441184,
+      "sha256": "a7fa2bfc8727781b8cc13734614ef4a4df52c91973ac99a5aae3cc4460edab11"
+    },
+    {
+      "path": "visuals/04_roadmap_honest_expectations.png",
+      "bytes": 2400864,
+      "sha256": "05b89e58a6e547af7d082c760e7316289b62a6ec9f37a85715a8ff232fbbc3d6"
+    },
+    {
+      "path": "visuals/README.md",
+      "bytes": 496,
+      "sha256": "c0fd696af76a8ef949571bfff59970df02f924befa909007fe83dba4bc576767"
+    },
+    {
+      "path": "visuals/VISUAL_PROVENANCE.json",
+      "bytes": 2078,
+      "sha256": "b9a80a9770e41850b617836ebf8a6f002c2a2969138695f1f159000140e59d43"
+    }
+  ]
+}

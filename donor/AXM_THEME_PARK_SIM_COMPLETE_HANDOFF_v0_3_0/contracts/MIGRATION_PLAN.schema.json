@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AXM Migration Plan",
+  "type": "object",
+  "required": [
+    "migration_id",
+    "from_version",
+    "to_version",
+    "transformations",
+    "before_root_hash",
+    "after_root_hash",
+    "requires_user_approval",
+    "rollback_save_id"
+  ],
+  "properties": {
+    "migration_id": {
+      "type": "string"
+    },
+    "from_version": {
+      "type": "string"
+    },
+    "to_version": {
+      "type": "string"
+    },
+    "transformations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "affected_contracts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "before_root_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "after_root_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "change_request_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "requires_user_approval": {
+      "type": "boolean"
+    },
+    "rollback_save_id": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AXM Save Manifest v0.2 envelope (v0.3 branch extension)",
+  "type": "object",
+  "required": [
+    "save_id",
+    "format_version",
+    "foundation_version",
+    "canonical_root_hash",
+    "module_versions",
+    "tick",
+    "state_hash",
+    "event_log_hash",
+    "migration_history"
+  ],
+  "properties": {
+    "save_id": {
+      "type": "string"
+    },
+    "format_version": {
+      "const": "0.2.0"
+    },
+    "foundation_version": {
+      "type": "string"
+    },
+    "canonical_root_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "module_versions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "state_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "event_log_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "parent_save_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "migration_history": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "branch_id": {
+      "type": "string",
+      "minLength": 1,
+      "default": "main"
+    },
+    "snapshot_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

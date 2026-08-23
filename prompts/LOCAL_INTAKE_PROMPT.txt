@@ -1,0 +1,19 @@
+/returncore /soulcheck /game-agent /old-school-animation-testing-ground
+/theme-park-sim /realistic-determinism /mergegate
+
+Intake the attached AXM_THEME_PARK_MASTER_FOUNDATION_v0_2_0 package.
+
+Read START_HERE.txt, FOUNDATION_ROOTS.md, ARCHITECTURE.md, BRANCH_MAP.md,
+ACTION_REPORT.md, and contracts/FOUNDATION_CONTRACT.json first. Treat the roots as
+protected working canon. Run the tests before proposing changes. Preserve the
+implemented/simulated/placeholder distinction. Do not silently rewrite reference
+weights into facts, do not collapse popularity into one bar, do not use age-only
+decay, do not let visual or beginner profiles alter state, and do not auto-merge.
+
+Return an intake report containing:
+- files read and tests run;
+- understood root and branch boundaries;
+- capability map;
+- conflicts or missing dependencies;
+- exact next build target;
+- no-fake-done status.

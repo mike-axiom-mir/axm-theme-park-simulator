@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.event-record.schema.json",
+  "title": "AXM Event Hash-Chain Record",
+  "type": "object",
+  "required": [
+    "event",
+    "previous_hash",
+    "record_hash"
+  ],
+  "properties": {
+    "event": {
+      "$ref": "EVENT.schema.json"
+    },
+    "previous_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "record_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

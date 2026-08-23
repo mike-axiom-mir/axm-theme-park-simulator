@@ -1,0 +1,50 @@
+{
+  "release": "0.3.0",
+  "canonical_design_root_hash": "3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f",
+  "implemented_reference_organs": [
+    "deterministic_scheduler",
+    "owned_state_store",
+    "shared_action_gate",
+    "atomic_command_kernel",
+    "event_hash_chain",
+    "snapshot_restore",
+    "branch_lineage",
+    "audience_cohort_conservation",
+    "first_repeat_visit_flow",
+    "causal_contribution_ledger",
+    "counterfactual_review",
+    "simulation_render_cadence",
+    "animation_signals",
+    "population_resolution",
+    "metric_provenance",
+    "runtime_assembly",
+    "branch_return_verification",
+    "first_map_acceptance",
+    "living_reference_world",
+    "finite_numeric_boundary_validation",
+    "prior_exposure_preserving_recovery",
+    "json_safe_animation_signals",
+    "insertion_order_independent_ledger_digest",
+    "counterfactual_baseline_hash_validation"
+  ],
+  "production_placeholders": [
+    "rendered_map_editor",
+    "entrance_path_navigation",
+    "ride_builder_physics",
+    "visitor_pathfinding_groups",
+    "crew_task_runtime",
+    "complete_store_food_economy",
+    "shared_management_inspection_camera",
+    "visible_self_made_animation_set",
+    "campaign_map",
+    "multiplayer_runtime",
+    "architect_tools",
+    "alien_expansion"
+  ],
+  "first_map_ready": false,
+  "target_window": {
+    "start": "2026-11-01",
+    "end": "2026-12-31",
+    "status": "target_not_guarantee"
+  }
+}

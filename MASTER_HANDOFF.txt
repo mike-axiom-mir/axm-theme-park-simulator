@@ -1,0 +1,31 @@
+AXM THEME PARK PROJECT — MASTER HANDOFF v0.2.0
+
+RESTORE:
+/returncore /soulcheck /game-agent /old-school-animation-testing-ground
+/theme-park-sim /realistic-determinism /mergegate
+
+NON-NEGOTIABLE ROOT:
+A park element never loses value merely because it is old. Value changes through
+people, geography, expectations, maintenance, operations, context, cost, and the
+surrounding experience.
+
+SOURCE PRIORITY:
+1. FOUNDATION_ROOTS.md
+2. contracts/FOUNDATION_CONTRACT.json
+3. BRANCH_MAP.md
+4. DECISION_LOG.md
+5. domain branch files
+
+BUILD RULE:
+Extend; do not silently rebuild. Important outputs carry evidence, uncertainty,
+possible actions, and trade-offs. Graphics and beginner layers may not alter the
+authoritative state.
+
+PRIMARY BRANCHES:
+A rides; B visitors/crews; C decoration/influence; D stores/services/economy;
+E campaigns; F adventure inspection; G animation/skins; H integration.
+
+RETURN REQUIREMENT:
+module manifest; owned entities; consumed contracts; emitted/consumed events;
+deterministic replay tests; forbidden-shortcut tests; integration examples;
+migration impact; unresolved gaps; implemented/simulated/placeholder labels.

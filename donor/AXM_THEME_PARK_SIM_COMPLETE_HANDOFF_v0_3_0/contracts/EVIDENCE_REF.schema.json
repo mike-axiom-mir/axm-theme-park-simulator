@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AXM Evidence Reference",
+  "type": "object",
+  "required": [
+    "evidence_id",
+    "source_module",
+    "state_version",
+    "status",
+    "reliability",
+    "summary"
+  ],
+  "properties": {
+    "evidence_id": {
+      "type": "string"
+    },
+    "source_module": {
+      "type": "string"
+    },
+    "state_version": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "status": {
+      "enum": [
+        "observed",
+        "reported",
+        "inferred",
+        "disputed",
+        "unknown"
+      ]
+    },
+    "reliability": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "summary": {
+      "type": "string"
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "alternatives": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "AXM Clock State",
+  "required": [
+    "tick",
+    "ticks_per_sim_minute",
+    "minutes_per_day",
+    "days_per_season",
+    "seasons"
+  ],
+  "properties": {
+    "tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ticks_per_sim_minute": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "minutes_per_day": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "days_per_season": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "seasons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

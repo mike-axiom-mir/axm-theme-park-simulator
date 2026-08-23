@@ -1,0 +1,19 @@
+{
+  "campaign_id": "forgotten_local_park",
+  "inherited_context": {
+    "geography": "regional",
+    "historic_ride_count": 3
+  },
+  "reached_tags": [
+    "stable",
+    "historic_saved"
+  ],
+  "evidence_refs": [
+    "evidence:cashflow_12m",
+    "evidence:visitor_mix"
+  ],
+  "available_ending_ids": [
+    "heritage_future",
+    "family_future"
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "acceptance": {
+    "blocking": 9,
+    "failed": 0,
+    "not_run": 10,
+    "passed": 6,
+    "ready": false
+  },
+  "acceptance_blocking_ids": [
+    "package_verifier_passes",
+    "one_small_map_loads",
+    "entrance_and_path_work",
+    "at_least_three_simple_attractions",
+    "visitors_arrive_move_queue_leave",
+    "one_crew_task_loop",
+    "basic_cashflow_closes",
+    "management_and_walk_view_same_state",
+    "self_made_low_graphic_animation_visible"
+  ],
+  "command": {
+    "accepted": true,
+    "committed": true,
+    "event_count": 1,
+    "event_log_valid": true,
+    "ride_open": true,
+    "state_version": 1,
+    "visitor_notifications": 1
+  },
+  "contribution": {
+    "claim_count": 5,
+    "ride_net": 88.0,
+    "unallocated_shares": {},
+    "valid": true
+  },
+  "counterfactual": {
+    "automatic_selection": false,
+    "no_action_preserved": true,
+    "replace_warnings": [
+      "This plan is marked irreversible; preserve a rollback branch first.",
+      "Costs are displayed separately and are not hidden inside the score.",
+      "Low-confidence projection: gather evidence before commitment."
+    ],
+    "review_order": [
+      "evolve",
+      "maintain",
+      "no_action",
+      "replace"
+    ]
+  },
+  "demo_digest": "f39b9054181a0860aa9bb2f74cc6a080e2a3999d03d29738955ef18db9405cf2",
+  "event_log_hash": "368e347edff97ea8c389a812e7e3d547d344c8d9e670844ab358f7bc63295fe4",
+  "honest_status": {
+    "implemented": [
+      "deterministic command transaction",
+      "cohort conservation reference",
+      "causal contribution attribution reference",
+      "snapshot restore and branch lineage",
+      "counterfactual review without automatic choice",
+      "non-authoritative animation signal"
+    ],
+    "placeholder": [
+      "playable map",
+      "pathfinding",
+      "production ride loop",
+      "crew task execution",
+      "renderer and visible self-made animation",
+      "closed daily cashflow"
+    ],
+    "reference": [
+      "one synthetic ride",
+      "one synthetic audience cohort",
+      "synthetic contribution values"
+    ]
+  },
+  "market": {
+    "conservation_error": 0.0,
+    "first_time_reservoir_after": 655.375,
+    "first_time_reservoir_before": 700,
+    "first_time_visits": 44.625,
+    "population_after": 1000,
+    "population_before": 1000,
+    "repeat_visits": 50.0,
+    "unmet_first_time_demand": 0.0,
+    "unmet_repeat_demand": 0.0
+  },
+  "performance": {
+    "animation_authoritative": false,
+    "animation_rebuildable": true,
+    "authoritative_clock": "simulation",
+    "economy_due_tick_20": true,
+    "population_resolution_tier": "meso",
+    "represented_population": 95
+  },
+  "provenance": {
+    "digest": "226e0355130aa68d2fa26ef2b6283639b41a47b20ab21b663e2061da7ffef6df",
+    "metric": {
+      "assumptions": [],
+      "causes": {
+        "capacity_served": 44.625,
+        "ready_demand": 44.625
+      },
+      "confidence": 1.0,
+      "evidence_refs": [
+        "ev-cohort-conserved"
+      ],
+      "headline_causes": [
+        "capacity_served",
+        "ready_demand"
+      ],
+      "metric_id": "first_time_visits",
+      "missing_evidence": [],
+      "player_options": [],
+      "result": 44.625,
+      "state_version": 1,
+      "subject_id": "tilburg-local-families",
+      "tradeoffs": [],
+      "uncertainty_notes": [],
+      "unit": "visits"
+    }
+  },
+  "same_seed_same_digest": true,
+  "snapshot": {
+    "fork_branch": "evolve-garden-land",
+    "fork_log_hash_matches": true,
+    "fork_module_state_matches": true,
+    "parent_branch": "main",
+    "restored_log_hash_matches": true,
+    "restored_state_hash_matches": true,
+    "snapshot_id": "snapshot_b4f9a2f509ccf881040c6b04"
+  },
+  "state_hash": "f0ab10cccf925cb718b8deea71ce9af6a9965a157dbdb9d51eb8a00328429200"
+}

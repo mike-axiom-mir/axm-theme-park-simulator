@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.contribution-audit.schema.json",
+  "title": "AXM Causal Contribution Audit v0.3.0",
+  "type": "object",
+  "required": [
+    "claim_count", "nominal_benefits", "nominal_costs", "nominal_net",
+    "evidence_adjusted_benefits", "evidence_adjusted_costs",
+    "evidence_adjusted_net", "by_channel", "by_subject",
+    "unallocated_shares", "warnings", "errors"
+  ],
+  "properties": {
+    "claim_count": {"type": "integer", "minimum": 0},
+    "nominal_benefits": {"type": "number"},
+    "nominal_costs": {"type": "number"},
+    "nominal_net": {"type": "number"},
+    "evidence_adjusted_benefits": {"type": "number"},
+    "evidence_adjusted_costs": {"type": "number"},
+    "evidence_adjusted_net": {"type": "number"},
+    "by_channel": {"type": "object", "additionalProperties": {"type": "number"}},
+    "by_subject": {"type": "object", "additionalProperties": {"type": "number"}},
+    "unallocated_shares": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "errors": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

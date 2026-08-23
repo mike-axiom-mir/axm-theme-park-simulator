@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.action-proposal.schema.json",
+  "title": "AXM Action Proposal v0.3.0",
+  "type": "object",
+  "required": [
+    "proposal_id",
+    "actor_id",
+    "actor_kind",
+    "target_module_id",
+    "action_type",
+    "payload",
+    "requested_tick",
+    "expected_state_version",
+    "authority_scopes",
+    "evidence_refs"
+  ],
+  "properties": {
+    "proposal_id": {
+      "type": "string"
+    },
+    "actor_id": {
+      "type": "string"
+    },
+    "actor_kind": {
+      "enum": [
+        "player",
+        "ai",
+        "campaign",
+        "world",
+        "system"
+      ]
+    },
+    "target_module_id": {
+      "type": "string"
+    },
+    "action_type": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object"
+    },
+    "requested_tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "expected_state_version": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "authority_scopes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

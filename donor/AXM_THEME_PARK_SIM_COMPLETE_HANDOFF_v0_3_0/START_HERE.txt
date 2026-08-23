@@ -1,0 +1,67 @@
+AXM THEME PARK SIMULATOR — START HERE v0.3.0
+
+RESTORE
+/returncore /soulcheck /game-agent /old-school-animation-testing-ground
+/theme-park-sim /realistic-determinism /mergegate
+
+1. DO NOT REBUILD THE ROOT
+
+Canonical root hash:
+3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f
+
+v0.3.0 is additive. The four protected canonical root files remain byte-for-byte
+unchanged from v0.2.0. The language-neutral foundation contract and runtime
+protocol advance to 0.3.0. The compatible save envelope intentionally remains
+0.2.0.
+
+2. VERIFY FIRST
+
+python scripts/verify_package.py
+
+3. READ IN THIS ORDER
+
+- FOUNDATION_ROOTS.md
+- ARCHITECTURE.md
+- docs/ARCHITECTURE_EXTENSION_v0_3_0.md
+- docs/RUNTIME_ORGAN_API_MAP.md
+- docs/RUNTIME_HARDENING_v0_3_0.md
+- contracts/RUNTIME_PROTOCOL_CONTRACT.json
+- docs/BRANCH_RETURN_AND_INTAKE_PROTOCOL.md
+- docs/FIRST_MAP_REFERENCE_SLICE.md
+- docs/FIRST_MAP_VERTICAL_SLICE_ACCEPTANCE.md
+- ACTION_REPORT.md
+
+4. RUN THE REFERENCES
+
+python scripts/run_reference_suite.py
+
+The living references must repeat exactly and must continue reporting that the
+first playable map is not ready until real rendering/gameplay evidence exists.
+
+5. CHOOSE A BRANCH
+
+A — Rides and Attractions
+B — Visitors and Crews
+C — Decoration, Atmosphere, and Influence
+D — Stores, Food, Services, and Economy
+E — Campaign and Adventure
+F — AXM Low-Graphic Animation Testing Ground
+
+Use the matching prompt under prompts/.
+
+6. REQUIRED RETURN
+
+Return a Branch Return Packet with hashes, tests, state namespaces, systems,
+action/event contracts, evidence outputs, contribution claims where relevant,
+and honest implemented/reference/placeholder labels. Then run full runtime
+assembly validation.
+
+7. PERFORMANCE RULE
+
+Never skip authoritative simulation updates to protect visual frame rate. Slow
+wall-clock or drop visual frames instead.
+
+8. RELEASE TRUTH
+
+The first-map target is November/December 2026, not a guarantee. A build is not
+ready while any required acceptance check is failed or not_run.

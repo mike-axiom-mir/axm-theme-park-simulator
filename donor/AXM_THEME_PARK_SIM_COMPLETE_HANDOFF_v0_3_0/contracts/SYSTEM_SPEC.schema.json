@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.system-spec.schema.json",
+  "title": "AXM Deterministic System Spec v0.3.0",
+  "type": "object",
+  "required": [
+    "system_id",
+    "module_id",
+    "phase",
+    "cadence_ticks",
+    "priority",
+    "reads",
+    "writes",
+    "authoritative",
+    "skippable"
+  ],
+  "properties": {
+    "system_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_.-]+$"
+    },
+    "module_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_.-]+$"
+    },
+    "phase": {
+      "enum": [
+        "command",
+        "world",
+        "arrival",
+        "movement",
+        "queue",
+        "experience",
+        "service",
+        "crew",
+        "economy",
+        "maintenance",
+        "evidence",
+        "snapshot",
+        "animation",
+        "presentation"
+      ]
+    },
+    "cadence_ticks": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "offset_ticks": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+    },
+    "priority": {
+      "type": "integer"
+    },
+    "reads": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "writes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "authoritative": {
+      "type": "boolean"
+    },
+    "skippable": {
+      "type": "boolean"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "authoritative": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "skippable": {
+            "const": false
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

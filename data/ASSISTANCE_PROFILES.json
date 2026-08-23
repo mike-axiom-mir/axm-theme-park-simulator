@@ -1,0 +1,29 @@
+{
+  "profiles": [
+    {
+      "profile_id": "beginner",
+      "detail_level": "beginner",
+      "recommendation_limit": 3,
+      "auto_pause": true,
+      "show_confidence": true,
+      "show_alternatives": false
+    },
+    {
+      "profile_id": "standard",
+      "detail_level": "standard",
+      "recommendation_limit": 5,
+      "auto_pause": false,
+      "show_confidence": true,
+      "show_alternatives": true
+    },
+    {
+      "profile_id": "expert",
+      "detail_level": "expert",
+      "recommendation_limit": 20,
+      "auto_pause": false,
+      "show_confidence": true,
+      "show_alternatives": true
+    }
+  ],
+  "simulation_truth_changes_by_profile": false
+}

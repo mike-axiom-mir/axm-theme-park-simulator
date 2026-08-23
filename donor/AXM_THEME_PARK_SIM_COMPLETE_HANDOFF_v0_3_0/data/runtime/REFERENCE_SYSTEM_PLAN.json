@@ -1,0 +1,287 @@
+{
+  "runtime_protocol_version": "0.3.0",
+  "systems": [
+    {
+      "system_id": "foundation.command_router",
+      "module_id": "axm.themepark.foundation",
+      "phase": "command",
+      "cadence_ticks": 1,
+      "offset_ticks": 0,
+      "priority": 10,
+      "reads": [
+        "foundation.world"
+      ],
+      "writes": [],
+      "authoritative": true,
+      "skippable": false
+    },
+    {
+      "system_id": "foundation.world_clock",
+      "module_id": "axm.themepark.foundation",
+      "phase": "world",
+      "cadence_ticks": 1,
+      "offset_ticks": 0,
+      "priority": 10,
+      "reads": [
+        "foundation.world"
+      ],
+      "writes": [
+        "foundation.world"
+      ],
+      "authoritative": true,
+      "skippable": false
+    },
+    {
+      "system_id": "visitors.arrival",
+      "module_id": "axm.themepark.visitors_crews",
+      "phase": "arrival",
+      "cadence_ticks": 5,
+      "offset_ticks": 0,
+      "priority": 20,
+      "reads": [
+        "foundation.world",
+        "rides.core",
+        "economy.operations"
+      ],
+      "writes": [
+        "visitors.population"
+      ],
+      "authoritative": true,
+      "skippable": false
+    },
+    {
+      "system_id": "visitors.movement",
+      "module_id": "axm.themepark.visitors_crews",
+      "phase": "movement",
+      "cadence_ticks": 1,
+      "offset_ticks": 0,
+      "priority": 20,
+      "reads": [
+        "visitors.population",
+        "rides.core",
+        "decoration.world"
+      ],
+      "writes": [
+        "visitors.population"
+      ],
+      "authoritative": true,
+      "skippable": false
+    },
+    {
+      "system_id": "visitors.queues",
+      "module_id": "axm.themepark.visitors_crews",
+      "phase": "queue",
+      "cadence_ticks": 1,
+      "offset_ticks": 0,
+      "priority": 30,
+      "reads": [
+        "visitors.population",
+        "rides.core"
+      ],
+      "writes": [
+        "visitors.population"
+      ],
+      "authoritative": true,
+      "skippable": false
+    },
+    {
+      "system_id": "rides.operation",
+      "module_id": "axm.themepark.rides",
+      "phase": "experience",
+      "cadence_ticks": 1,
+      "offset_ticks": 0,
+      "priority": 20,
+      "reads": [
+        "foundation.world",
+        "visitors.population",
+        "crews.operations"
+      ],
+      "writes": [
+        "rides.core"
+      ],
+      "authoritative": true,
+      "skippable": false
+    },
+    {
+      "system_id": "economy.services",
+      "module_id": "axm.themepark.economy",
+      "phase": "service",
+      "cadence_ticks": 2,
+      "offset_ticks": 0,
+      "priority": 20,
+      "reads": [
+        "visitors.population",
+        "crews.operations",
+        "decoration.world"
+      ],
+      "writes": [
+        "economy.operations"
+      ],
+      "authoritative": true,
+      "skippable": false
+    },
+    {
+      "system_id": "crews.tasks",
+      "module_id": "axm.themepark.visitors_crews",
+      "phase": "crew",
+      "cadence_ticks": 2,
+      "offset_ticks": 0,
+      "priority": 20,
+      "reads": [
+        "rides.core",
+        "economy.operations",
+        "decoration.world"
+      ],
+      "writes": [
+        "crews.operations"
+      ],
+      "authoritative": true,
+      "skippable": false
+    },
+    {
+      "system_id": "economy.ledger",
+      "module_id": "axm.themepark.economy",
+      "phase": "economy",
+      "cadence_ticks": 5,
+      "offset_ticks": 0,
+      "priority": 30,
+      "reads": [
+        "economy.operations",
+        "rides.core",
+        "visitors.population"
+      ],
+      "writes": [
+        "economy.operations"
+      ],
+      "authoritative": true,
+      "skippable": false
+    },
+    {
+      "system_id": "rides.condition",
+      "module_id": "axm.themepark.rides",
+      "phase": "maintenance",
+      "cadence_ticks": 10,
+      "offset_ticks": 0,
+      "priority": 20,
+      "reads": [
+        "rides.core",
+        "crews.operations"
+      ],
+      "writes": [
+        "rides.core"
+      ],
+      "authoritative": true,
+      "skippable": false
+    },
+    {
+      "system_id": "decoration.atmosphere",
+      "module_id": "axm.themepark.decoration",
+      "phase": "evidence",
+      "cadence_ticks": 5,
+      "offset_ticks": 0,
+      "priority": 20,
+      "reads": [
+        "decoration.world",
+        "visitors.population",
+        "rides.core"
+      ],
+      "writes": [
+        "decoration.world"
+      ],
+      "authoritative": true,
+      "skippable": false
+    },
+    {
+      "system_id": "foundation.evidence_commit",
+      "module_id": "axm.themepark.foundation",
+      "phase": "evidence",
+      "cadence_ticks": 1,
+      "offset_ticks": 0,
+      "priority": 90,
+      "reads": [
+        "foundation.world",
+        "rides.core",
+        "visitors.population",
+        "crews.operations",
+        "decoration.world",
+        "economy.operations"
+      ],
+      "writes": [
+        "foundation.evidence"
+      ],
+      "authoritative": true,
+      "skippable": false
+    },
+    {
+      "system_id": "campaign.conditions",
+      "module_id": "axm.themepark.campaign",
+      "phase": "evidence",
+      "cadence_ticks": 10,
+      "offset_ticks": 0,
+      "priority": 95,
+      "reads": [
+        "foundation.evidence",
+        "campaign.progress"
+      ],
+      "writes": [
+        "campaign.progress"
+      ],
+      "authoritative": true,
+      "skippable": false
+    },
+    {
+      "system_id": "foundation.snapshot",
+      "module_id": "axm.themepark.foundation",
+      "phase": "snapshot",
+      "cadence_ticks": 60,
+      "offset_ticks": 0,
+      "priority": 100,
+      "reads": [
+        "foundation.world",
+        "foundation.evidence",
+        "foundation.save"
+      ],
+      "writes": [
+        "foundation.save"
+      ],
+      "authoritative": true,
+      "skippable": false
+    },
+    {
+      "system_id": "animation.interpolate",
+      "module_id": "axm.themepark.animation",
+      "phase": "animation",
+      "cadence_ticks": 1,
+      "offset_ticks": 0,
+      "priority": 10,
+      "reads": [
+        "foundation.world",
+        "rides.core",
+        "visitors.population",
+        "crews.operations"
+      ],
+      "writes": [
+        "visual.animation"
+      ],
+      "authoritative": false,
+      "skippable": true
+    },
+    {
+      "system_id": "animation.render_debug",
+      "module_id": "axm.themepark.animation",
+      "phase": "presentation",
+      "cadence_ticks": 1,
+      "offset_ticks": 0,
+      "priority": 20,
+      "reads": [
+        "foundation.evidence",
+        "visual.animation"
+      ],
+      "writes": [
+        "visual.animation"
+      ],
+      "authoritative": false,
+      "skippable": true
+    }
+  ]
+}

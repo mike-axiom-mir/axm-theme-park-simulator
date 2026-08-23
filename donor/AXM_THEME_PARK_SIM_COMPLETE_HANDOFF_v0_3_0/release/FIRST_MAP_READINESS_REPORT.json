@@ -1,0 +1,186 @@
+{
+  "report_id": "axm-themepark-v0.3.0-current-readiness",
+  "build_id": "AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_3_0",
+  "checks": [
+    {
+      "check_id": "roots_verified",
+      "category": "integrity",
+      "required": true,
+      "status": "pass",
+      "evidence_refs": [
+        "contracts/ROOT_HASH_MANIFEST.json"
+      ],
+      "notes": [
+        "Protected root hashes match v0.2.0."
+      ]
+    },
+    {
+      "check_id": "package_verifier_passes",
+      "category": "integrity",
+      "required": true,
+      "status": "pass",
+      "evidence_refs": [
+        "release/VERIFICATION_REPORT.txt"
+      ],
+      "notes": [
+        "Full verifier is required again after extraction."
+      ]
+    },
+    {
+      "check_id": "same_seed_same_digest",
+      "category": "determinism",
+      "required": true,
+      "status": "pass",
+      "evidence_refs": [
+        "tests/test_living_park_reference.py",
+        "release/LIVING_REFERENCE_OUTPUT.json"
+      ],
+      "notes": [
+        "Living reference repeats exactly."
+      ]
+    },
+    {
+      "check_id": "save_reload_same_state",
+      "category": "determinism",
+      "required": true,
+      "status": "pass",
+      "evidence_refs": [
+        "tests/test_kernel_snapshot.py"
+      ],
+      "notes": [
+        "Snapshot restore reproduces state and event-log hashes."
+      ]
+    },
+    {
+      "check_id": "one_small_map_loads",
+      "category": "playable_slice",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "No rendered gameplay map exists yet."
+      ]
+    },
+    {
+      "check_id": "entrance_and_path_work",
+      "category": "playable_slice",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Production navigation branch has not returned."
+      ]
+    },
+    {
+      "check_id": "at_least_three_simple_attractions",
+      "category": "playable_slice",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Reference contains one state fixture, not three playable attractions."
+      ]
+    },
+    {
+      "check_id": "visitors_arrive_move_queue_leave",
+      "category": "playable_slice",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Cohort flow exists; spatial visitor lifecycle is not implemented."
+      ]
+    },
+    {
+      "check_id": "one_crew_task_loop",
+      "category": "playable_slice",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Crew execution is not implemented."
+      ]
+    },
+    {
+      "check_id": "basic_cashflow_closes",
+      "category": "playable_slice",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Reference revenue exists; a complete playable-day cashflow is not implemented."
+      ]
+    },
+    {
+      "check_id": "management_and_walk_view_same_state",
+      "category": "shared_world",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Shared-state observation contracts exist; rendered views do not."
+      ]
+    },
+    {
+      "check_id": "visual_frames_may_drop_without_sim_skip",
+      "category": "performance",
+      "required": true,
+      "status": "pass",
+      "evidence_refs": [
+        "tests/test_scheduler_state_actions.py",
+        "tests/test_cadence_counterfactual.py"
+      ],
+      "notes": [
+        "Authoritative work remains non-skippable."
+      ]
+    },
+    {
+      "check_id": "self_made_low_graphic_animation_visible",
+      "category": "animation",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Rebuildable animation signals exist; visible production animation does not."
+      ]
+    },
+    {
+      "check_id": "concept_art_not_claimed_as_gameplay",
+      "category": "honesty",
+      "required": true,
+      "status": "pass",
+      "evidence_refs": [
+        "visuals/README.md",
+        "visuals/VISUAL_PROVENANCE.json"
+      ],
+      "notes": [
+        "All four posters are labelled concept visuals."
+      ]
+    },
+    {
+      "check_id": "known_placeholders_listed",
+      "category": "honesty",
+      "required": true,
+      "status": "pass",
+      "evidence_refs": [
+        "ACTION_REPORT.md",
+        "release/CAPABILITY_STATUS.json"
+      ],
+      "notes": [
+        "Production gaps are explicitly listed."
+      ]
+    },
+    {
+      "check_id": "nov_dec_target_reconfirmed",
+      "category": "release",
+      "required": false,
+      "status": "pass",
+      "evidence_refs": [
+        "data/FIRST_MAP_TARGET.json"
+      ],
+      "notes": [
+        "Target remains November\u2013December 2026 and is not a guarantee."
+      ]
+    }
+  ]
+}

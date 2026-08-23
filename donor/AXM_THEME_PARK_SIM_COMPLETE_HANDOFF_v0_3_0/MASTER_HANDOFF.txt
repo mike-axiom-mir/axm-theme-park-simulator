@@ -1,0 +1,34 @@
+AXM THEME PARK SIMULATOR — MASTER HANDOFF v0.3.0
+
+FOUNDATION CONTRACT: 0.3.0
+RUNTIME PROTOCOL: 0.3.0
+SAVE ENVELOPE: 0.2.0 (intentionally retained for compatibility)
+CANONICAL ROOT HASH:
+3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f
+
+ROOT:
+A park element never loses value merely because it is old.
+
+THIS ROUND:
+v0.3.0 connects independent branches through deterministic scheduling,
+namespace ownership, atomic command/event/reducer transactions, snapshots and
+branch lineage, conserved audience cohorts, causal contribution attribution,
+provenance, counterfactual review, assembly checks, return packets, and
+first-map acceptance gates. The final hardening pass also blocks non-finite
+values, false first-time recovery, opaque animation parameters, unstable ledger
+identity, and malformed counterfactual baselines.
+
+VERIFY:
+python scripts/verify_package.py
+
+RUN ALL REFERENCES:
+python scripts/run_reference_suite.py
+
+CONTINUE:
+Read START_HERE.txt and use the matching branch prompt. Do not merge a branch
+without its verified return packet and a valid runtime assembly report.
+
+HONEST STATE:
+Tested foundation, runtime integration spine, and living-park references; not yet
+a complete playable park game. Both first-map references deliberately return
+not-ready because rendered gameplay evidence does not exist yet.

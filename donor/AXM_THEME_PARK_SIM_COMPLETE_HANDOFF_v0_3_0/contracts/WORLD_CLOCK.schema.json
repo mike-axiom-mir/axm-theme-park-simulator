@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AXM World Clock",
+  "type": "object",
+  "required": [
+    "tick",
+    "tick_minutes"
+  ],
+  "properties": {
+    "tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "tick_minutes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "day_index": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "minute_of_day": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1439
+    }
+  },
+  "additionalProperties": false
+}

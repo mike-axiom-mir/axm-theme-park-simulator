@@ -1,0 +1,66 @@
+{
+  "schema": "axm.theme-park-source-archives/v1",
+  "recordedDate": "2026-08-23",
+  "archives": [
+    {
+      "fileName": "AXM_THEME_PARK_PLAYABLE_LIVING_GLOBE_3D_v0_4_6_FULL_LOCAL_INTAKE.zip",
+      "bytes": 10433521,
+      "sha256": "e04496412bb6ea6b3682bc15220de2bf9693d20ac84d72506c43e7eb32f6357f",
+      "role": "ACTIVE_PLAYABLE_LINEAGE"
+    },
+    {
+      "fileName": "AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_3_0.zip",
+      "bytes": 19837795,
+      "sha256": "010782f07a931b002112240c6aed820629e00281a797ab28a57b0bd9bca3b609",
+      "role": "PRESERVED_DETERMINISTIC_DONOR"
+    }
+  ],
+  "lineages": {
+    "active": {
+      "root": ".",
+      "version": "0.4.6",
+      "sourceFiles": 167,
+      "topLevelEntries": [
+        "ACTION_REPORT.md",
+        "ARCHITECTURE.md",
+        "assets",
+        "backups",
+        "BRANCH_MAP.md",
+        "CHANGELOG.md",
+        "CHECKSUMS.sha256",
+        "contracts",
+        "data",
+        "DECISION_LOG.md",
+        "docs",
+        "examples",
+        "FOUNDATION_ROOTS.md",
+        "INVENTORY.json",
+        "legacy",
+        "LOCAL_INTAKE_GUIDE.md",
+        "MASTER_HANDOFF.txt",
+        "PACKAGE_MANIFEST.json",
+        "playable_3d",
+        "PLAYABLE_3D_ACTION_REPORT.md",
+        "PLAYABLE_3D_HANDOFF.txt",
+        "PLAYABLE_3D_LIVE_VISUAL_RECEIPT.txt",
+        "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+        "prompts",
+        "pyproject.toml",
+        "README.md",
+        "requirements.txt",
+        "run_demo.py",
+        "run_tests.py",
+        "src",
+        "START_HERE.txt",
+        "TEST_REPORT.txt",
+        "tests"
+      ]
+    },
+    "donor": {
+      "root": "donor/AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_3_0",
+      "version": "0.3.0",
+      "sourceFiles": 204
+    }
+  },
+  "runtimeRequiresOriginalArchives": false
+}

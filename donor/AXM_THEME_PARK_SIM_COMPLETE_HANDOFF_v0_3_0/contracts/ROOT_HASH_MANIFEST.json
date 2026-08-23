@@ -1,0 +1,12 @@
+{
+  "foundation_version": "0.3.0",
+  "aggregate_root_hash": "3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f",
+  "files": {
+    "FOUNDATION_ROOTS.md": "362beabe1e99a8dbfea41da8419384f05d0bd75098418fb68ab268cb98ea8366",
+    "ARCHITECTURE.md": "4f5e9ad4f07b763ec573c0cdfd87f6d4cf3aefef5288bd90e862f0107d368c4b",
+    "BRANCH_MAP.md": "8bed3ce7f6a9a2ef84721a44d963706a0fc349dca39f29d764f895b4b875156a",
+    "DECISION_LOG.md": "587c7541468d98732b09e9bbbd9e684bcfb323f610f6b5bff8f579a71ff93a19"
+  },
+  "preserved_from_version": "0.2.0",
+  "root_change": "none"
+}

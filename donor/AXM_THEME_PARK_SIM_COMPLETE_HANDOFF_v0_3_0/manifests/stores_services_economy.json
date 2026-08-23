@@ -1,0 +1,78 @@
+{
+  "module_id": "axm.themepark.economy",
+  "version": "0.1.0",
+  "status": "scaffold",
+  "owns": [
+    "Store",
+    "FoodOffer",
+    "ServiceEntity",
+    "StockState",
+    "FinancialEvidence"
+  ],
+  "consumes": [
+    "WorldClock",
+    "OpeningSchedule",
+    "WeatherState",
+    "ParkIdentityIntent",
+    "Visitor",
+    "CrewMember",
+    "Attraction",
+    "ThemeZone",
+    "EvidenceRef",
+    "ExplanationPacket",
+    "CommandEnvelope",
+    "ContributionClaim"
+  ],
+  "emits_events": [
+    "store.opened",
+    "store.closed",
+    "sale.completed",
+    "stock.changed",
+    "service.used",
+    "cost.posted"
+  ],
+  "consumes_events": [
+    "world.tick",
+    "visitor.arrived",
+    "visitor.moved",
+    "visitor.left",
+    "crew.shift_started",
+    "weather.changed"
+  ],
+  "capabilities": [
+    "cashflow_boundary",
+    "commerce_services",
+    "direct_spend",
+    "financial_evidence",
+    "induced_spend",
+    "operating_costs",
+    "prices",
+    "service_rate",
+    "stock"
+  ],
+  "notes": [
+    "Direct revenue alone cannot determine total park contribution."
+  ],
+  "canonical_contract_version": "0.3.0",
+  "determinism": {
+    "seeded_randomness_only": true,
+    "replay_safe": true
+  },
+  "declared_shortcuts": [],
+  "required_capabilities": [
+    "world_clock",
+    "evidence_packets",
+    "audience_profiles",
+    "attraction_draw",
+    "theme_zone_context",
+    "crew_task_boundary"
+  ],
+  "state_namespaces": [
+    "economy.operations"
+  ],
+  "system_ids": [
+    "economy.services",
+    "economy.transactions",
+    "economy.ledger"
+  ]
+}

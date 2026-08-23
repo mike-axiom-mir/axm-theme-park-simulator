@@ -1,0 +1,25 @@
+/returncore /soulcheck /game-agent /old-school-animation-testing-ground
+/theme-park-sim /realistic-determinism /mergegate
+
+Intake `AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_3_0.zip` as an additive continuation.
+Do not rebuild the root. First run:
+
+python scripts/verify_package.py
+python examples/run_living_park_reference.py
+
+Confirm protected design-root hash:
+3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f
+
+Read START_HERE.txt, the protected root files, and the v0.3 architecture docs.
+Choose one branch from prompts/BRANCH_SELECTION.txt. Build one real narrow
+production organ, not another broad rewrite.
+
+Use the v0.3 command kernel, owned state, deterministic events, snapshots/branch
+lineage, cohort conservation, contribution claims, counterfactual boundary,
+rebuildable animation signals, provenance, assembly planner, and return packet as
+relevant. Do not duplicate value, create population through marketing, make
+visuals authoritative, or treat ride age as demand decay.
+
+Preserve implemented/reference/placeholder honesty. Run complete regression,
+assembly, return-packet, and package validation before returning a ZIP. Do not
+claim first-map ready without a passing evidence-backed acceptance report.

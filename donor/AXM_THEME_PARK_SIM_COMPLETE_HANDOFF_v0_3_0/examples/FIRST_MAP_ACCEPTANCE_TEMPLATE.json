@@ -1,0 +1,166 @@
+{
+  "report_id": "replace-me",
+  "build_id": "replace-me",
+  "checks": [
+    {
+      "check_id": "roots_verified",
+      "category": "integrity",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "package_verifier_passes",
+      "category": "integrity",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "same_seed_same_digest",
+      "category": "determinism",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "save_reload_same_state",
+      "category": "determinism",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "one_small_map_loads",
+      "category": "playable_slice",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "entrance_and_path_work",
+      "category": "playable_slice",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "at_least_three_simple_attractions",
+      "category": "playable_slice",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "visitors_arrive_move_queue_leave",
+      "category": "playable_slice",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "one_crew_task_loop",
+      "category": "playable_slice",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "basic_cashflow_closes",
+      "category": "playable_slice",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "management_and_walk_view_same_state",
+      "category": "shared_world",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "visual_frames_may_drop_without_sim_skip",
+      "category": "performance",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "self_made_low_graphic_animation_visible",
+      "category": "animation",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "concept_art_not_claimed_as_gameplay",
+      "category": "honesty",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "known_placeholders_listed",
+      "category": "honesty",
+      "required": true,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    },
+    {
+      "check_id": "nov_dec_target_reconfirmed",
+      "category": "release",
+      "required": false,
+      "status": "not_run",
+      "evidence_refs": [],
+      "notes": [
+        "Replace with evidence-backed result."
+      ]
+    }
+  ]
+}

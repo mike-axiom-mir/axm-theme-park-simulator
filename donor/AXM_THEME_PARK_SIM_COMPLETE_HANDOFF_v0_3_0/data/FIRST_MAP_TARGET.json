@@ -1,0 +1,26 @@
+{
+  "target_window": {
+    "start": "2026-11-01",
+    "end": "2026-12-31"
+  },
+  "status": "target_not_guarantee",
+  "visual_level": "self-made low-graphic animation",
+  "minimum_slice": [
+    "compact map",
+    "entrance and paths",
+    "few simple attractions",
+    "basic visitor movement and queue",
+    "one crew or maintenance loop",
+    "basic money flow",
+    "management and inspection view",
+    "deterministic save/replay",
+    "beginner explanation"
+  ],
+  "explicitly_out_of_scope": [
+    "complete physics",
+    "full campaign library",
+    "final art",
+    "resort simulation",
+    "alien DLC"
+  ]
+}

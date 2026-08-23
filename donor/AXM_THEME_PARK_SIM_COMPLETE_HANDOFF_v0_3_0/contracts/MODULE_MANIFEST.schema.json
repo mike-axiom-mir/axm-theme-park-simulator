@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.module-manifest.schema.json",
+  "title": "AXM Theme Park Module Manifest v0.3.0",
+  "type": "object",
+  "required": [
+    "module_id",
+    "version",
+    "canonical_contract_version",
+    "status",
+    "owns",
+    "consumes",
+    "emits_events",
+    "consumes_events",
+    "capabilities",
+    "determinism",
+    "declared_shortcuts",
+    "required_capabilities",
+    "state_namespaces",
+    "system_ids"
+  ],
+  "properties": {
+    "module_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_.-]+$"
+    },
+    "version": {
+      "type": "string"
+    },
+    "canonical_contract_version": {
+      "const": "0.3.0"
+    },
+    "status": {
+      "enum": [
+        "scaffold",
+        "reference",
+        "implemented",
+        "experimental"
+      ]
+    },
+    "owns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "consumes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "emits_events": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "consumes_events": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "determinism": {
+      "type": "object",
+      "required": [
+        "seeded_randomness_only",
+        "replay_safe"
+      ],
+      "properties": {
+        "seeded_randomness_only": {
+          "const": true
+        },
+        "replay_safe": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "declared_shortcuts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "not": {
+          "enum": [
+            "age_only_demand_decay",
+            "single_global_popularity",
+            "decoration_object_count_score",
+            "automatic_forced_replacement",
+            "unseeded_random_state_change",
+            "unexplained_metric_output",
+            "adventure_state_fork",
+            "beginner_fake_simulation",
+            "silent_contract_migration",
+            "forced_single_campaign_ending",
+            "uncertainty_erasure",
+            "marketing_guest_spawn_without_audience",
+            "direct_state_mutation_outside_owner",
+            "render_state_authority",
+            "contribution_double_counting",
+            "command_without_expected_state_version",
+            "destructive_rollback_without_branch",
+            "cohort_population_creation_without_source",
+            "counterfactual_auto_commit"
+          ]
+        }
+      },
+      "uniqueItems": true
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "required_capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "state_namespaces": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "system_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

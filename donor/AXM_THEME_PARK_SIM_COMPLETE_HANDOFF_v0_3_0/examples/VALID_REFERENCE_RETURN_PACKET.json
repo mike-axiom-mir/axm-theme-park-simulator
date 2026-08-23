@@ -1,0 +1,47 @@
+{
+  "packet_id": "axm-themepark-foundation-reference-v0.3.0",
+  "branch_id": "foundation-runtime-integration",
+  "module_id": "axm.themepark.foundation",
+  "module_version": "0.3.0",
+  "foundation_contract_version": "0.3.0",
+  "canonical_root_hash": "3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f",
+  "status": "reference",
+  "implemented_capabilities": [],
+  "reference_capabilities": [
+    "deterministic_scheduler",
+    "namespace_state_store",
+    "action_gate",
+    "atomic_command_transactions",
+    "event_hash_chain",
+    "snapshot_restore",
+    "branch_lineage",
+    "audience_cohort_conservation",
+    "first_repeat_separation",
+    "causal_contribution_ledger",
+    "counterfactual_review",
+    "non_authoritative_animation_signals",
+    "population_resolution",
+    "metric_provenance",
+    "runtime_assembly",
+    "branch_return_verification",
+    "first_map_acceptance",
+    "living_reference_world",
+    "verified_snapshot_restore",
+    "cohort_population_conservation"
+  ],
+  "placeholder_capabilities": [],
+  "tests_passed": 136,
+  "tests_failed": 0,
+  "artifacts": [
+    {
+      "path": "reference_return_artifact.txt",
+      "sha256": "ef46a2c92f02bdb303e2ffe93756363eb85125867c053936e9bba48d0630759a",
+      "bytes": 69,
+      "role": "verification_fixture"
+    }
+  ],
+  "unresolved_gaps": [
+    "Production rendered map, navigation, crew loop, economy, and visible animation remain outside this reference packet."
+  ],
+  "change_request_ids": []
+}

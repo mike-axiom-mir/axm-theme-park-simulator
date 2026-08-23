@@ -1,0 +1,13 @@
+{
+  "name": "axm-theme-park-playable-3d",
+  "version": "0.4.6",
+  "private": true,
+  "type": "module",
+  "description": "Offline-first 16-bit-style 3D theme-park tycoon and walkable adventure for the AXM foundation.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.js",
+    "check": "npm run test && npm run build"
+  },
+  "devDependencies": {}
+}

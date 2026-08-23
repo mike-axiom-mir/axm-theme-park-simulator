@@ -1,0 +1,86 @@
+[
+  {
+    "path": "ARCHITECTURE.md",
+    "bytes": 1917
+  },
+  {
+    "path": "BRANCH_MAP.md",
+    "bytes": 2097
+  },
+  {
+    "path": "DECISION_LOG.md",
+    "bytes": 998
+  },
+  {
+    "path": "FOUNDATION_ROOTS.md",
+    "bytes": 4603
+  },
+  {
+    "path": "MASTER_HANDOFF.txt",
+    "bytes": 1267
+  },
+  {
+    "path": "README.md",
+    "bytes": 1680
+  },
+  {
+    "path": "TEST_REPORT.txt",
+    "bytes": 822
+  },
+  {
+    "path": "contracts/EVENT.schema.json",
+    "bytes": 977
+  },
+  {
+    "path": "contracts/FOUNDATION_CONTRACT.json",
+    "bytes": 3064
+  },
+  {
+    "path": "contracts/MODULE_MANIFEST.schema.json",
+    "bytes": 1194
+  },
+  {
+    "path": "data/REFERENCE_WEIGHTS.json",
+    "bytes": 502
+  },
+  {
+    "path": "prompts/BUILD_CHAT_A_RIDES_AND_ATTRACTIONS.md",
+    "bytes": 1945
+  },
+  {
+    "path": "prompts/BUILD_CHAT_B_VISITORS_AND_CREWS.md",
+    "bytes": 1945
+  },
+  {
+    "path": "prompts/BUILD_CHAT_C_DECORATION_AND_INFLUENCE.md",
+    "bytes": 1934
+  },
+  {
+    "path": "prompts/BUILD_CHAT_D_STORES_SERVICES_ECONOMY.md",
+    "bytes": 1976
+  },
+  {
+    "path": "src/park_foundation/__init__.py",
+    "bytes": 631
+  },
+  {
+    "path": "src/park_foundation/evaluator.py",
+    "bytes": 3744
+  },
+  {
+    "path": "src/park_foundation/event_log.py",
+    "bytes": 1230
+  },
+  {
+    "path": "src/park_foundation/models.py",
+    "bytes": 1229
+  },
+  {
+    "path": "src/park_foundation/registry.py",
+    "bytes": 1481
+  },
+  {
+    "path": "tests/test_foundation.py",
+    "bytes": 3333
+  }
+]

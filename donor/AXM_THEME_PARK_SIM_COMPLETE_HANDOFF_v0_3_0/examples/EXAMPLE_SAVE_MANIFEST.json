@@ -1,0 +1,16 @@
+{
+  "save_id": "forgotten_local_park_day_12",
+  "format_version": "0.2.0",
+  "foundation_version": "0.2.0",
+  "canonical_root_hash": "3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f",
+  "module_versions": {
+    "axm.themepark.foundation": "0.2.0",
+    "axm.themepark.rides": "0.1.0",
+    "axm.themepark.visitors_crews": "0.1.0"
+  },
+  "tick": 3456,
+  "state_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "event_log_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "parent_save_id": null,
+  "migration_history": []
+}

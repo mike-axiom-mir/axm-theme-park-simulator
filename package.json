@@ -1,0 +1,16 @@
+{
+  "name": "axm-theme-park-simulator-local",
+  "version": "0.4.6-intake.1",
+  "private": true,
+  "type": "module",
+  "description": "Standalone local intake and headless runtime for AXM Theme Park Playable Living Globe 3D v0.4.6.",
+  "scripts": {
+    "headless": "node runtime/cli.js",
+    "test:headless": "node --test intake-tests/headless_runtime.test.js",
+    "test:playable": "npm --prefix playable_3d test",
+    "build:playable": "npm --prefix playable_3d run build",
+    "verify:intake": "node tools/verify_local_intake.mjs",
+    "verify:donor": "python donor/AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_3_0/scripts/verify_package.py",
+    "check": "npm run verify:intake && npm run test:headless && npm run test:playable && npm run build:playable"
+  }
+}

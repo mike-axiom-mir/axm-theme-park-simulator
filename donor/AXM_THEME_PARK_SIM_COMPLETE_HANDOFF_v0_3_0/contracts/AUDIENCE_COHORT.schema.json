@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.audience-cohort.schema.json",
+  "title": "AXM Audience Cohort Lifecycle State v0.3.0",
+  "type": "object",
+  "required": [
+    "cohort_id",
+    "origin_zone_id",
+    "population",
+    "unaware",
+    "aware",
+    "considering",
+    "first_time_ready",
+    "previous_satisfied",
+    "loyal_repeat",
+    "disappointed",
+    "state_version"
+  ],
+  "properties": {
+    "cohort_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "origin_zone_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "population": {
+      "type": "number",
+      "minimum": 0
+    },
+    "unaware": {
+      "type": "number",
+      "minimum": 0
+    },
+    "aware": {
+      "type": "number",
+      "minimum": 0
+    },
+    "considering": {
+      "type": "number",
+      "minimum": 0
+    },
+    "first_time_ready": {
+      "type": "number",
+      "minimum": 0
+    },
+    "previous_satisfied": {
+      "type": "number",
+      "minimum": 0
+    },
+    "loyal_repeat": {
+      "type": "number",
+      "minimum": 0
+    },
+    "disappointed": {
+      "type": "number",
+      "minimum": 0
+    },
+    "state_version": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false,
+  "description": "Stage counts must sum to population; enforced by runtime validation. Recovery may repair trust but may never return a prior visitor to a first-time stage."
+}

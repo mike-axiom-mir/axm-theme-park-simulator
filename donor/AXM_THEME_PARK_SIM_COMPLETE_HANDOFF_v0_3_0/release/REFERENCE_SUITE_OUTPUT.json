@@ -1,0 +1,36 @@
+{
+  "demos": [
+    {
+      "deterministic_stdout": true,
+      "exit_code": 0,
+      "path": "examples/run_reference_demo.py",
+      "stdout_sha256": "0ed46d55b1f1db552891322e2f7699d3cb91b0a071d41dd02105583174e61b79"
+    },
+    {
+      "assembly_valid": true,
+      "demo_digest": "007bcac496a196d7419c823c3a570c275c744636954c69c576ea557b5d56f3b4",
+      "deterministic_stdout": true,
+      "exit_code": 0,
+      "path": "examples/run_runtime_integration_demo.py",
+      "stdout_sha256": "1022ae6dd4be7d0a6a77a17e8dcc0ace9387874cb9477f6857491bd656817936"
+    },
+    {
+      "deterministic_stdout": true,
+      "exit_code": 0,
+      "first_map_ready": false,
+      "path": "examples/run_living_park_reference.py",
+      "reference_digest": "3e8253ec9a169017791e4ae54dba78a7fe24fd7ad8ebd0e5b68962fdeeecbd0e",
+      "stdout_sha256": "b3cb1fcd1ec3e2c780036115971153d28e78a0e569925d5416f301024b316acb"
+    },
+    {
+      "demo_digest": "f39b9054181a0860aa9bb2f74cc6a080e2a3999d03d29738955ef18db9405cf2",
+      "deterministic_stdout": true,
+      "exit_code": 0,
+      "first_map_ready": false,
+      "path": "examples/run_first_map_reference_slice.py",
+      "same_seed_same_digest": true,
+      "stdout_sha256": "e523b24f50a8d21dfd3afcaf6b8269a95c27cb27e1e522b09b98c19e86985003"
+    }
+  ],
+  "valid": true
+}

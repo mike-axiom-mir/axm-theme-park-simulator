@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AXM Weather State",
+  "type": "object",
+  "required": [
+    "weather_id",
+    "day_index",
+    "period_index",
+    "condition",
+    "temperature_c",
+    "precipitation_mm",
+    "wind_kph",
+    "visibility"
+  ],
+  "properties": {
+    "weather_id": {
+      "type": "string"
+    },
+    "day_index": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "period_index": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "condition": {
+      "enum": [
+        "clear",
+        "overcast",
+        "rain",
+        "storm",
+        "heat",
+        "cold"
+      ]
+    },
+    "temperature_c": {
+      "type": "number"
+    },
+    "precipitation_mm": {
+      "type": "number",
+      "minimum": 0
+    },
+    "wind_kph": {
+      "type": "number",
+      "minimum": 0
+    },
+    "visibility": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "additionalProperties": false
+}

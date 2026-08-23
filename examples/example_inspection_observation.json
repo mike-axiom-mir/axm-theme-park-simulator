@@ -1,0 +1,17 @@
+{
+  "observation_id": "inspection:queue:001",
+  "tick": 1200,
+  "observer_id": "player:1",
+  "subject_ids": [
+    "queue:dragon_coaster"
+  ],
+  "state_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "findings": {
+    "shade_coverage": 0.2,
+    "visible_service_road": true
+  },
+  "evidence_refs": [
+    "camera_frame:1200:3"
+  ],
+  "mode": "adventure"
+}

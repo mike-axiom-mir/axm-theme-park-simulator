@@ -1,0 +1,40 @@
+AXM THEME PARK SIMULATOR — PACKAGE SUMMARY v0.3.0
+
+TYPE
+Complete local / next-chat handoff with protected roots, rollback releases,
+contracts, runnable reference organs, tests, concept visuals, branch prompts, and
+machine-verifiable release metadata.
+
+PROTECTED DESIGN ROOT
+3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f
+
+MAIN IMPROVEMENT
+The separate foundation organs now meet through a deterministic integration
+spine: atomic commands and events, owned state, conserved geographic audience
+cohorts, first-time/repeat visitor flow, causal value attribution, snapshots,
+non-destructive experiment forks, counterfactual review, simulation/render
+cadence, and rebuildable low-graphic animation signals. A final boundary pass
+also preserves visitor memory during recovery, rejects malformed/non-finite
+branch data, and makes ledger and animation identities stable across local runs.
+
+PROOF INCLUDED
+- 136 automated tests;
+- four reference programs with byte-identical repeated output;
+- two cross-organ living-park reference slices;
+- canonical-root, checksum, project-index, manifest, JSON, return-packet, and
+  first-map honesty verification;
+- recorded release outputs so local can compare future runs against this build.
+
+HONEST STATUS
+Foundation and integration reference: implemented and tested.
+Rendered playable first map: not implemented / not ready.
+November–December 2026: target, not guarantee.
+
+VERIFY
+python scripts/verify_package.py
+
+RUN ALL REFERENCES
+python scripts/run_reference_suite.py
+
+START
+Read START_HERE.txt, then select one branch prompt under prompts/.

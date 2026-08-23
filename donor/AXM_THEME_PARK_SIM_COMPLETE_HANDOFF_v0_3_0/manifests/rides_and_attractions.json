@@ -1,0 +1,77 @@
+{
+  "module_id": "axm.themepark.rides",
+  "version": "0.1.0",
+  "status": "scaffold",
+  "owns": [
+    "RideDefinition",
+    "Attraction",
+    "RideOperationState",
+    "RideConditionEvidence"
+  ],
+  "consumes": [
+    "WorldClock",
+    "OpeningSchedule",
+    "WeatherState",
+    "ParkIdentityIntent",
+    "EvidenceRef",
+    "ExplanationPacket",
+    "AudienceSegment",
+    "CrewMember",
+    "AtmosphereEvidence",
+    "FinancialEvidence",
+    "CommandEnvelope",
+    "ContributionClaim"
+  ],
+  "emits_events": [
+    "ride.built",
+    "ride.opened",
+    "ride.closed",
+    "ride.dispatched",
+    "ride.completed",
+    "ride.failed",
+    "ride.refurbished"
+  ],
+  "consumes_events": [
+    "world.tick",
+    "weather.changed",
+    "crew.task_completed",
+    "visitor.queue_joined"
+  ],
+  "capabilities": [
+    "attraction_draw",
+    "attraction_geometry",
+    "attraction_operation",
+    "capacity",
+    "condition",
+    "cycle_time",
+    "first_experience",
+    "physics_adapter_boundary",
+    "reliability",
+    "repeat_properties"
+  ],
+  "notes": [
+    "No global popularity and no age-only demand decay."
+  ],
+  "canonical_contract_version": "0.3.0",
+  "determinism": {
+    "seeded_randomness_only": true,
+    "replay_safe": true
+  },
+  "declared_shortcuts": [],
+  "required_capabilities": [
+    "world_clock",
+    "evidence_packets",
+    "audience_profiles",
+    "crew_task_boundary",
+    "atmosphere_evidence",
+    "financial_evidence"
+  ],
+  "state_namespaces": [
+    "rides.core"
+  ],
+  "system_ids": [
+    "rides.operation",
+    "rides.dispatch",
+    "rides.condition"
+  ]
+}

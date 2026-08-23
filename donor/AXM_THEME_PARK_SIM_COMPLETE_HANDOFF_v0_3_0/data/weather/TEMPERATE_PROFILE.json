@@ -1,0 +1,17 @@
+{
+  "climate_id": "temperate_reference",
+  "conditions": {
+    "clear": 0.35,
+    "overcast": 0.3,
+    "rain": 0.2,
+    "storm": 0.05,
+    "heat": 0.05,
+    "cold": 0.05
+  },
+  "base_temperature_c": 16.0,
+  "temperature_variation_c": 10.0,
+  "notes": [
+    "Deterministic reference profile, not a climate-accurate simulation.",
+    "Future map profiles may override weights and seasonal ranges."
+  ]
+}

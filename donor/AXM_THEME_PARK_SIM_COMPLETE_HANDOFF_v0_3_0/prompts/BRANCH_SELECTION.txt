@@ -1,0 +1,13 @@
+A — rides and attractions
+B — visitors and crews
+C — decoration, atmosphere, and influence
+D — stores, food, services, and economy
+E — campaigns and adventure inspection
+F — low-graphic animation testing ground
+
+Suggested first paired work:
+- B establishes people, memory, queues, and crews.
+- A establishes attraction operation, capacity, condition, and experience.
+- Agree their shared events before either grows too deep.
+
+C and D can then consume stable movement and attraction evidence.

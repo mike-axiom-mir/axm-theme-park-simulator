@@ -1,0 +1,238 @@
+
+=== Tourist demand — beginner view ===
+{
+  "profile_id": "beginner",
+  "subject_id": "classic_coaster:tourists",
+  "metric_id": "reachable_demand",
+  "result": 0.8112,
+  "unit": "normalized_segment_demand",
+  "state_version": 12,
+  "causes": {
+    "first_time_support": 0.95,
+    "audience_fit": 0.18000000000000002,
+    "geographic_reach": 0.18000000000000002
+  },
+  "player_options": [],
+  "tradeoffs": [
+    "Broader reach can increase crowd, staffing, and service pressure."
+  ],
+  "uncertainty_notes": [],
+  "confidence": 0.9,
+  "missing_evidence": []
+}
+
+=== Local demand — advanced view ===
+{
+  "profile_id": "advanced",
+  "subject_id": "classic_coaster:locals",
+  "metric_id": "reachable_demand",
+  "result": 0.6113625000000001,
+  "unit": "normalized_segment_demand",
+  "state_version": 12,
+  "causes": {
+    "repeat_support": 0.5850000000000001,
+    "geographic_reach": 0.19,
+    "audience_fit": 0.16000000000000003,
+    "awareness": 0.1425,
+    "expectation_delivery": 0.135,
+    "first_time_support": 0.1,
+    "travel_friction_inverse": 0.095,
+    "price_fit": 0.09000000000000001,
+    "marketing_fit": 0.08000000000000002,
+    "access_availability_factor": 1.0,
+    "context_fit_factor": 1.0,
+    "market_score": 0.8925000000000001,
+    "experience_access_factor": 0.685
+  },
+  "player_options": [],
+  "tradeoffs": [
+    "Broader reach can increase crowd, staffing, and service pressure."
+  ],
+  "uncertainty_notes": [],
+  "confidence": 0.9,
+  "missing_evidence": [],
+  "evidence_refs": [],
+  "assumptions": [
+    "Inputs describe one audience segment and one context.",
+    "Attraction age is intentionally not a demand input."
+  ],
+  "all_causes": {
+    "geographic_reach": 0.19,
+    "awareness": 0.1425,
+    "audience_fit": 0.16000000000000003,
+    "travel_friction_inverse": 0.095,
+    "price_fit": 0.09000000000000001,
+    "marketing_fit": 0.08000000000000002,
+    "expectation_delivery": 0.135,
+    "market_score": 0.8925000000000001,
+    "first_time_support": 0.1,
+    "repeat_support": 0.5850000000000001,
+    "experience_access_factor": 0.685,
+    "access_availability_factor": 1.0,
+    "context_fit_factor": 1.0
+  }
+}
+
+=== Whole-park contribution ===
+{
+  "profile_id": "advanced",
+  "subject_id": "classic_boat_ride",
+  "metric_id": "net_contribution",
+  "result": 65.0,
+  "unit": "reference_value_points",
+  "state_version": 12,
+  "causes": {
+    "visit_attraction_value": 25,
+    "operating_cost": -22,
+    "identity_value": 20,
+    "induced_spend": 18,
+    "heritage_value": 15,
+    "duration_value": 14,
+    "maintenance_cost": -10,
+    "crowd_balance_value": 8,
+    "staffing_cost": -8,
+    "direct_revenue": 5,
+    "land_opportunity_cost": -0.0,
+    "risk_cost": -0.0,
+    "strategic_resilience_value": 0.0
+  },
+  "player_options": [],
+  "tradeoffs": [
+    "High indirect or heritage value can justify low direct revenue.",
+    "Opportunity cost matters, but it is not a demolition command."
+  ],
+  "uncertainty_notes": [],
+  "confidence": 0.8,
+  "missing_evidence": [],
+  "evidence_refs": [],
+  "assumptions": [
+    "Reference value points are not final currency balance."
+  ],
+  "all_causes": {
+    "direct_revenue": 5,
+    "induced_spend": 18,
+    "visit_attraction_value": 25,
+    "duration_value": 14,
+    "identity_value": 20,
+    "crowd_balance_value": 8,
+    "heritage_value": 15,
+    "strategic_resilience_value": 0.0,
+    "operating_cost": -22,
+    "maintenance_cost": -10,
+    "staffing_cost": -8,
+    "risk_cost": -0.0,
+    "land_opportunity_cost": -0.0
+  }
+}
+
+=== Active attendance balance ===
+{
+  "profile_id": "beginner",
+  "subject_id": "park:afternoon",
+  "metric_id": "active_attendance_balance",
+  "result": 0.914074074074074,
+  "unit": "normalized_operational_balance",
+  "state_version": 12,
+  "causes": {
+    "occupancy_ratio": 0.9111111111111111,
+    "hourly_margin": 1130.0,
+    "viability_ratio": 1.64
+  },
+  "player_options": [],
+  "tradeoffs": [
+    "Higher attendance can improve finances while harming comfort and service."
+  ],
+  "uncertainty_notes": [],
+  "confidence": 0.85,
+  "missing_evidence": []
+}
+
+=== Maintain / evolve / replace review ===
+{
+  "action_scores": {
+    "maintain": 0.7825000000000001,
+    "evolve": 0.6455,
+    "replace": 0.118
+  },
+  "review_order": [
+    "maintain",
+    "evolve",
+    "replace"
+  ],
+  "rule": "Review priority only; the player chooses."
+}
+
+=== Identity alignment with honest missing evidence ===
+{
+  "profile_id": "advanced",
+  "subject_id": "park",
+  "metric_id": "identity_alignment",
+  "result": 0.80625,
+  "unit": "normalized_alignment",
+  "state_version": 12,
+  "causes": {
+    "heritage": 0.27,
+    "family_fit": 0.2,
+    "financial_stability": 0.175
+  },
+  "player_options": [
+    "Gather evidence for missing identity priorities before major changes."
+  ],
+  "tradeoffs": [
+    "slower expansion"
+  ],
+  "uncertainty_notes": [
+    "Alignment is based only on published evidence; missing priorities are not assumed bad."
+  ],
+  "confidence": 0.8,
+  "missing_evidence": [
+    "comfort"
+  ],
+  "evidence_refs": [],
+  "assumptions": [
+    "Player-selected identity: Historic Family Park"
+  ],
+  "all_causes": {
+    "heritage": 0.27,
+    "financial_stability": 0.175,
+    "family_fit": 0.2
+  }
+}
+
+=== World context ===
+{
+  "tick": 300,
+  "day_index": 1,
+  "minute_of_day": 60,
+  "season": "spring",
+  "park_open": false,
+  "weather": {
+    "weather_id": "temperate_reference:1:0",
+    "day_index": 1,
+    "period_index": 0,
+    "condition": "overcast",
+    "temperature_c": 7.1,
+    "precipitation_mm": 0.14,
+    "wind_kph": 5.01,
+    "visibility": 0.85
+  }
+}
+
+=== Eligible campaign futures ===
+[
+  {
+    "outcome_id": "living_heritage",
+    "label": "Living Heritage"
+  },
+  {
+    "outcome_id": "family_renewal",
+    "label": "Family Renewal"
+  }
+]
+
+=== Deterministic event log ===
+{
+  "valid_hash_chain": true,
+  "event_log_hash": "956401aa54431bc7eeb92a512ed6a1927006e16312bb6319f0a8e414692577a8",
+  "canonical_root_hash": "3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f"
+}

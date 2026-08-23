@@ -1,0 +1,67 @@
+{
+  "module_id": "axm.themepark.animation",
+  "version": "0.1.0",
+  "status": "scaffold",
+  "owns": [
+    "VisualAsset",
+    "AnimationClip",
+    "RenderAdapter",
+    "VisualDebugOverlay",
+    "AnimationSignal"
+  ],
+  "consumes": [
+    "WorldClock",
+    "WeatherState",
+    "Attraction",
+    "Visitor",
+    "CrewMember",
+    "ThemeZone",
+    "ObservationPacket",
+    "SimulationState",
+    "ParkEvent"
+  ],
+  "emits_events": [
+    "visual.asset_registered",
+    "animation.previewed",
+    "visual.pass_completed"
+  ],
+  "consumes_events": [
+    "world.tick",
+    "visitor.moved",
+    "ride.dispatched",
+    "weather.changed"
+  ],
+  "capabilities": [
+    "low_graphic_animation",
+    "sprite_or_lowpoly_adapter",
+    "state_visualization",
+    "visual_provenance",
+    "visual_state_adapter",
+    "non_authoritative_animation_signals",
+    "rebuildable_visual_state"
+  ],
+  "notes": [
+    "Concept visuals are not gameplay captures."
+  ],
+  "canonical_contract_version": "0.3.0",
+  "determinism": {
+    "seeded_randomness_only": true,
+    "replay_safe": true
+  },
+  "declared_shortcuts": [],
+  "required_capabilities": [
+    "authoritative_state_store",
+    "world_clock",
+    "attraction_operation",
+    "audience_profiles",
+    "theme_zone_context",
+    "authoritative_observation"
+  ],
+  "state_namespaces": [
+    "visual.animation"
+  ],
+  "system_ids": [
+    "animation.interpolate",
+    "animation.render_debug"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "AXM Save Manifest",
+  "required": [
+    "save_id",
+    "snapshot_id",
+    "snapshot_hash",
+    "contract_version",
+    "module_versions",
+    "event_count"
+  ],
+  "properties": {
+    "save_id": {
+      "type": "string"
+    },
+    "snapshot_id": {
+      "type": "string"
+    },
+    "snapshot_hash": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64
+    },
+    "contract_version": {
+      "type": "string"
+    },
+    "module_versions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "event_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "previous_save_id": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

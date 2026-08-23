@@ -1,0 +1,583 @@
+{
+  "contract_id": "axm.themepark.foundation",
+  "contract_version": "0.3.0",
+  "canonical_root_hash": "3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f",
+  "canonical_root_files": {
+    "FOUNDATION_ROOTS.md": "362beabe1e99a8dbfea41da8419384f05d0bd75098418fb68ab268cb98ea8366",
+    "ARCHITECTURE.md": "4f5e9ad4f07b763ec573c0cdfd87f6d4cf3aefef5288bd90e862f0107d368c4b",
+    "BRANCH_MAP.md": "8bed3ce7f6a9a2ef84721a44d963706a0fc349dca39f29d764f895b4b875156a",
+    "DECISION_LOG.md": "587c7541468d98732b09e9bbbd9e684bcfb323f610f6b5bff8f579a71ff93a19"
+  },
+  "canonical_entities": {
+    "Park": {
+      "required": [
+        "id",
+        "name",
+        "identity_intent_id",
+        "geography_id",
+        "state_version"
+      ],
+      "owner": "foundation/shared"
+    },
+    "ParkIdentityIntent": {
+      "required": [
+        "identity_id",
+        "name",
+        "priority_weights",
+        "target_audiences",
+        "protected_elements"
+      ],
+      "owner": "foundation/shared"
+    },
+    "WorldClock": {
+      "required": [
+        "tick",
+        "tick_minutes"
+      ],
+      "owner": "foundation/runtime"
+    },
+    "OpeningSchedule": {
+      "required": [
+        "schedule_id",
+        "weekday_windows"
+      ],
+      "owner": "foundation/world"
+    },
+    "WeatherState": {
+      "required": [
+        "weather_id",
+        "day_index",
+        "period_index",
+        "condition",
+        "temperature_c",
+        "wind_kph"
+      ],
+      "owner": "foundation/world"
+    },
+    "GeographicMarket": {
+      "required": [
+        "id",
+        "origin_zones",
+        "transport_access",
+        "population_evidence"
+      ],
+      "owner": "foundation/shared"
+    },
+    "AudienceSegment": {
+      "required": [
+        "id",
+        "origin_zone_id",
+        "motivations",
+        "budget_profile",
+        "awareness",
+        "first_time_share",
+        "repeat_preferences"
+      ],
+      "owner": "visitors"
+    },
+    "Attraction": {
+      "required": [
+        "id",
+        "provider_module",
+        "experience_tags",
+        "capacity_profile",
+        "condition_evidence",
+        "operating_cost_profile"
+      ],
+      "owner": "rides",
+      "forbidden": [
+        "global_popularity_decay",
+        "age_based_demand_penalty"
+      ]
+    },
+    "ExperienceContext": {
+      "required": [
+        "park_id",
+        "audience_segment_id",
+        "tick",
+        "weather_id",
+        "price_context",
+        "crowding_context",
+        "state_version"
+      ],
+      "owner": "foundation/shared"
+    },
+    "EvidenceRef": {
+      "required": [
+        "evidence_id",
+        "source_module",
+        "state_version",
+        "status",
+        "reliability",
+        "summary"
+      ],
+      "owner": "foundation/evidence"
+    },
+    "ExplanationPacket": {
+      "required": [
+        "subject_id",
+        "metric_id",
+        "result",
+        "causes",
+        "confidence",
+        "evidence_refs",
+        "missing_evidence",
+        "player_options",
+        "tradeoffs",
+        "state_version"
+      ],
+      "owner": "foundation/evidence"
+    },
+    "ObservationPacket": {
+      "required": [
+        "observation_id",
+        "observer_id",
+        "mode",
+        "subject_id",
+        "tick",
+        "state_version",
+        "facts",
+        "evidence_refs",
+        "blind_spots"
+      ],
+      "owner": "campaign/adventure"
+    },
+    "CampaignDefinition": {
+      "required": [
+        "campaign_id",
+        "name",
+        "outcome_paths",
+        "multiple_valid_outcomes"
+      ],
+      "owner": "campaign"
+    },
+    "CampaignState": {
+      "required": [
+        "campaign_id",
+        "phase",
+        "state_version",
+        "metrics",
+        "completed_outcomes"
+      ],
+      "owner": "campaign"
+    },
+    "SaveManifest": {
+      "required": [
+        "save_id",
+        "format_version",
+        "foundation_version",
+        "canonical_root_hash",
+        "module_versions",
+        "tick",
+        "state_hash",
+        "event_log_hash",
+        "migration_history"
+      ],
+      "owner": "foundation/runtime"
+    },
+    "MigrationPlan": {
+      "required": [
+        "migration_id",
+        "from_version",
+        "to_version",
+        "transformations",
+        "before_root_hash",
+        "after_root_hash",
+        "requires_user_approval",
+        "rollback_save_id"
+      ],
+      "owner": "foundation/runtime"
+    },
+    "ChangeRequest": {
+      "required": [
+        "change_request_id",
+        "reason",
+        "affected_roots",
+        "before_hashes",
+        "after_hashes",
+        "evidence",
+        "rollback_plan",
+        "approval_status"
+      ],
+      "owner": "foundation/root-integrity"
+    },
+    "SimulationState": {
+      "required": [
+        "world_id",
+        "world_seed",
+        "tick",
+        "state_version",
+        "branch_id",
+        "module_states"
+      ],
+      "notes": "Authoritative module-owned state envelope; foundation hashes and routes but does not reinterpret private payloads."
+    },
+    "CommandEnvelope": {
+      "required": [
+        "command_id",
+        "command_type",
+        "actor_id",
+        "target_module",
+        "expected_state_version",
+        "tick",
+        "payload"
+      ],
+      "notes": "Every state-changing request declares its expected authoritative state version."
+    },
+    "EventIntent": {
+      "required": [
+        "event_type",
+        "target_ids",
+        "payload",
+        "evidence_refs"
+      ],
+      "notes": "Pure domain event request; IDs, seeds, versions, and command linkage are attached by the kernel."
+    },
+    "CommandPlan": {
+      "required": [
+        "accepted",
+        "event_intents",
+        "tick_advance",
+        "reasons"
+      ],
+      "notes": "Pure command decision. Rejected plans cannot emit events or advance time."
+    },
+    "StateSnapshot": {
+      "required": [
+        "snapshot_id",
+        "world_id",
+        "branch_id",
+        "tick",
+        "state_version",
+        "state_hash",
+        "event_log_hash",
+        "canonical_root_hash"
+      ],
+      "notes": "Tamper-evident no-loss checkpoint with explicit branch lineage."
+    },
+    "BranchLineage": {
+      "required": [
+        "branch_id",
+        "parent_branch_id",
+        "fork_snapshot_id",
+        "created_by"
+      ],
+      "notes": "Experiments fork explicitly and never silently replace their parent."
+    },
+    "AudienceCohortState": {
+      "required": [
+        "cohort_id",
+        "origin_zone_id",
+        "population",
+        "unaware",
+        "aware",
+        "considering",
+        "first_time_ready",
+        "previous_satisfied",
+        "loyal_repeat",
+        "disappointed"
+      ],
+      "notes": "Aggregated lifecycle state that conserves population, separates first-time reach from repeat behavior, and never erases prior exposure during trust recovery."
+    },
+    "CohortForces": {
+      "required": [
+        "awareness_rate",
+        "consideration_rate",
+        "readiness_rate",
+        "first_visit_rate",
+        "repeat_visit_rate",
+        "repeat_strength",
+        "expectation_delivery",
+        "loyalty_rate",
+        "recovery_rate",
+        "visit_capacity"
+      ],
+      "notes": "Causal rates applied to a fixed audience cohort; marketing cannot create population."
+    },
+    "MarketStepResult": {
+      "required": [
+        "prior_state",
+        "next_state",
+        "transitions",
+        "first_time_demand",
+        "repeat_demand",
+        "first_time_visits",
+        "repeat_visits",
+        "unmet_first_time_demand",
+        "unmet_repeat_demand",
+        "conservation_error"
+      ],
+      "notes": "Explainable audience transition result with explicit capacity and conservation evidence."
+    },
+    "ContributionClaim": {
+      "required": [
+        "claim_id",
+        "subject_id",
+        "beneficiary_id",
+        "causal_event_id",
+        "channel",
+        "amount",
+        "direction",
+        "attribution_share",
+        "source_module",
+        "state_version"
+      ],
+      "notes": "Causal value attribution with a maximum total share of 1.0 per real value occurrence."
+    },
+    "ContributionAudit": {
+      "required": [
+        "claim_count",
+        "nominal_benefits",
+        "nominal_costs",
+        "nominal_net",
+        "evidence_adjusted_net",
+        "by_channel",
+        "by_subject",
+        "unallocated_shares",
+        "warnings",
+        "errors"
+      ],
+      "notes": "Audit output that exposes unallocated causal shares rather than inventing missing attribution."
+    },
+    "AnimationSignal": {
+      "required": [
+        "signal_id",
+        "source_event_id",
+        "entity_id",
+        "clip_id",
+        "start_tick",
+        "duration_ticks",
+        "state_version"
+      ],
+      "notes": "JSON-safe, non-authoritative visual signal derived from committed event evidence; identity includes the authoritative state version."
+    },
+    "CounterfactualProjection": {
+      "required": [
+        "projection_id",
+        "plan_id",
+        "target_id",
+        "action",
+        "baseline_state_hash",
+        "baseline_state_version",
+        "projected_metrics",
+        "confidence"
+      ],
+      "notes": "Read-only planning evidence. Counterfactuals never commit authoritative state."
+    }
+  },
+  "canonical_metrics": {
+    "reachable_demand": {
+      "segment_specific": true,
+      "inputs": [
+        "geographic_reach",
+        "awareness",
+        "audience_fit",
+        "travel_friction_inverse",
+        "price_fit",
+        "marketing_fit",
+        "expectation_delivery",
+        "first_time_share",
+        "repeat_strength",
+        "access_availability",
+        "context_fit"
+      ],
+      "forbidden_inputs": [
+        "attraction_age"
+      ]
+    },
+    "atmosphere_influence": {
+      "context_specific": true,
+      "inputs": [
+        "coherence",
+        "visibility",
+        "sensory_integration",
+        "queue_ride_integration",
+        "audience_theme_fit",
+        "maintenance",
+        "transition_quality",
+        "environmental_comfort",
+        "clutter",
+        "contradiction",
+        "theme_intensity"
+      ],
+      "forbidden_inputs": [
+        "decoration_object_count"
+      ]
+    },
+    "net_contribution": {
+      "inputs": [
+        "direct_revenue",
+        "induced_spend",
+        "visit_attraction_value",
+        "duration_value",
+        "identity_value",
+        "crowd_balance_value",
+        "heritage_value",
+        "strategic_resilience_value",
+        "operating_cost",
+        "maintenance_cost",
+        "staffing_cost",
+        "risk_cost",
+        "land_opportunity_cost"
+      ]
+    },
+    "active_attendance_balance": {
+      "inputs": [
+        "active_visitors",
+        "minimum_viable_attendance",
+        "comfortable_capacity",
+        "service_capacity",
+        "attraction_capacity",
+        "operating_cost_per_hour",
+        "revenue_per_active_visitor_hour"
+      ]
+    },
+    "identity_alignment": {
+      "inputs": [
+        "park_identity_intent",
+        "published_evidence"
+      ],
+      "uncertainty_required": true
+    },
+    "cohort_visit_flow": {
+      "inputs": [
+        "awareness_rate",
+        "consideration_rate",
+        "readiness_rate",
+        "first_visit_rate",
+        "repeat_visit_rate",
+        "repeat_strength",
+        "expectation_delivery",
+        "loyalty_rate",
+        "recovery_rate",
+        "visit_capacity"
+      ],
+      "invariants": [
+        "population_conservation",
+        "marketing_does_not_create_population",
+        "first_time_and_repeat_are_separate"
+      ]
+    },
+    "causal_contribution_ledger": {
+      "inputs": [
+        "causal_event_id",
+        "beneficiary_id",
+        "channel",
+        "amount",
+        "direction",
+        "attribution_share"
+      ],
+      "invariants": [
+        "allocation_share_lte_1",
+        "same_occurrence_same_base_amount",
+        "no_silent_double_counting"
+      ]
+    },
+    "counterfactual_review": {
+      "inputs": [
+        "baseline_metrics",
+        "projected_metrics",
+        "priority_weights",
+        "confidence",
+        "coverage"
+      ],
+      "invariants": [
+        "no_state_commit",
+        "no_automatic_selection",
+        "costs_remain_visible"
+      ]
+    }
+  },
+  "canonical_actions": [
+    "maintain",
+    "evolve",
+    "replace",
+    "retarget",
+    "refurbish",
+    "preserve",
+    "seasonal_overlay",
+    "capacity_upgrade",
+    "close_temporarily_for_safety",
+    "inspect",
+    "change_opening_schedule",
+    "capture_snapshot",
+    "fork_branch",
+    "restore_snapshot",
+    "simulate_market_period",
+    "compare_counterfactuals"
+  ],
+  "forbidden_shortcuts": [
+    "age_only_demand_decay",
+    "single_global_popularity",
+    "decoration_object_count_score",
+    "automatic_forced_replacement",
+    "unseeded_random_state_change",
+    "unexplained_metric_output",
+    "adventure_state_fork",
+    "beginner_fake_simulation",
+    "silent_contract_migration",
+    "forced_single_campaign_ending",
+    "uncertainty_erasure",
+    "marketing_guest_spawn_without_audience",
+    "direct_state_mutation_outside_owner",
+    "render_state_authority",
+    "contribution_double_counting",
+    "command_without_expected_state_version",
+    "destructive_rollback_without_branch",
+    "cohort_population_creation_without_source",
+    "counterfactual_auto_commit"
+  ],
+  "branch_ownership": {
+    "rides": [
+      "RideDefinition",
+      "Attraction",
+      "RideOperationState",
+      "RideConditionEvidence"
+    ],
+    "visitors_crews": [
+      "Visitor",
+      "VisitorGroup",
+      "AudienceSegment",
+      "CrewMember",
+      "QueueDecision",
+      "AudienceCohortState",
+      "CohortForces",
+      "MarketStepResult"
+    ],
+    "decoration_influence": [
+      "SceneryEntity",
+      "ThemeZone",
+      "AtmosphereEvidence"
+    ],
+    "stores_economy": [
+      "Store",
+      "FoodOffer",
+      "ServiceEntity",
+      "StockState",
+      "FinancialEvidence"
+    ],
+    "campaign_adventure": [
+      "CampaignDefinition",
+      "CampaignState",
+      "ObservationPacket"
+    ],
+    "animation": [
+      "VisualAsset",
+      "AnimationClip",
+      "RenderAdapter",
+      "VisualDebugOverlay",
+      "AnimationSignal"
+    ],
+    "foundation_core": [
+      "SimulationState",
+      "CommandEnvelope",
+      "StateSnapshot",
+      "BranchLineage",
+      "ContributionClaim",
+      "CounterfactualProjection",
+      "EventIntent",
+      "CommandPlan",
+      "ContributionAudit"
+    ]
+  }
+}

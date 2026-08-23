@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.simulation-cadence.schema.json",
+  "title": "AXM Simulation and Render Cadence v0.3.0",
+  "type": "object",
+  "required": [
+    "profile_id",
+    "simulation_tick_ms",
+    "render_frame_ms",
+    "lane_intervals_ticks",
+    "snapshot_interval_ticks",
+    "max_catchup_ticks",
+    "authoritative_clock"
+  ],
+  "properties": {
+    "profile_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "simulation_tick_ms": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "render_frame_ms": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "lane_intervals_ticks": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+    "snapshot_interval_ticks": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "max_catchup_ticks": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "authoritative_clock": {
+      "const": "simulation"
+    }
+  },
+  "additionalProperties": false
+}

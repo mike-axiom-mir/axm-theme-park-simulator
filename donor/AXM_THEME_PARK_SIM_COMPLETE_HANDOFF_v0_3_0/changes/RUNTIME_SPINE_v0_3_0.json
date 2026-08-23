@@ -1,0 +1,12 @@
+{
+  "change_id": "AXM-TP-RUNTIME-SPINE-0.3.0",
+  "date": "2026-08-12",
+  "root_change": false,
+  "canonical_root_hash_before": "3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f",
+  "canonical_root_hash_after": "3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f",
+  "summary": "Additive runtime integration and living-park reference: scheduling, state ownership, atomic command/event/reducer transactions, snapshots, conserved audience cohorts, causal contribution attribution, counterfactual review, animation boundaries, assembly validation, return packets, and acceptance gates.",
+  "protected_statement": "No canonical root file was changed in this improvement round.",
+  "approval_required": false,
+  "living_reference": "examples/run_living_park_reference.py",
+  "validation": "136 automated tests pass before final archive verification; four demos repeat exactly."
+}

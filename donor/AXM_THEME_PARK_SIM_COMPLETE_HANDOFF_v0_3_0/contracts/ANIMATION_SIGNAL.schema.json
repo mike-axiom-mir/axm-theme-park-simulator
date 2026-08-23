@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.animation-signal.schema.json",
+  "title": "AXM Rebuildable Animation Signal v0.3.0",
+  "type": "object",
+  "required": [
+    "signal_id",
+    "source_event_id",
+    "entity_id",
+    "clip_id",
+    "start_tick",
+    "duration_ticks",
+    "state_version",
+    "parameters",
+    "authoritative",
+    "rebuildable"
+  ],
+  "properties": {
+    "signal_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "entity_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "clip_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "start_tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "duration_ticks": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "state_version": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "parameters": {
+      "type": "object"
+    },
+    "authoritative": {
+      "const": false
+    },
+    "rebuildable": {
+      "const": true
+    }
+  },
+  "additionalProperties": false,
+  "description": "Non-authoritative, rebuildable, JSON-safe visual signal. Its deterministic identity includes the committed state version as well as the source event and clip parameters."
+}

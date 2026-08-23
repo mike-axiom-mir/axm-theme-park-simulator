@@ -1,0 +1,138 @@
+{
+  "contract_version": "0.1.0",
+  "canonical_entities": {
+    "Park": {
+      "required": [
+        "id",
+        "name",
+        "identity_intent",
+        "geography_id",
+        "state_version"
+      ],
+      "notes": "Authoritative park aggregate; domain details are referenced, not embedded."
+    },
+    "GeographicMarket": {
+      "required": [
+        "id",
+        "origin_zones",
+        "transport_access",
+        "population_evidence"
+      ],
+      "notes": "Defines reachable audiences and travel friction."
+    },
+    "AudienceSegment": {
+      "required": [
+        "id",
+        "origin_zone_id",
+        "motivations",
+        "budget_profile",
+        "awareness",
+        "prior_exposure",
+        "repeat_preferences"
+      ],
+      "notes": "Novelty and repeat desire belong here or on individual visitors."
+    },
+    "Attraction": {
+      "required": [
+        "id",
+        "provider_module",
+        "experience_tags",
+        "capacity_profile",
+        "condition_evidence",
+        "operating_cost_profile"
+      ],
+      "forbidden": [
+        "global_popularity_decay",
+        "age_based_demand_penalty"
+      ]
+    },
+    "ExperienceContext": {
+      "required": [
+        "park_id",
+        "audience_segment_id",
+        "time_context",
+        "weather_context",
+        "price_context",
+        "crowding_context"
+      ]
+    },
+    "ContributionPacket": {
+      "required": [
+        "entity_id",
+        "direct_value",
+        "indirect_value",
+        "costs",
+        "net_contribution",
+        "causes",
+        "evidence_refs",
+        "uncertainty"
+      ]
+    },
+    "ExplanationPacket": {
+      "required": [
+        "subject_id",
+        "result",
+        "causes",
+        "evidence_refs",
+        "missing_evidence",
+        "player_options",
+        "tradeoffs"
+      ]
+    }
+  },
+  "canonical_metrics": {
+    "reachable_demand": {
+      "inputs": [
+        "geographic_reach",
+        "awareness",
+        "audience_fit",
+        "travel_friction",
+        "price_fit",
+        "marketing_fit"
+      ],
+      "must_be_segment_specific": true
+    },
+    "experience_value": {
+      "inputs": [
+        "core_experience",
+        "repeat_strength",
+        "operations",
+        "atmosphere",
+        "comfort",
+        "expectation_delivery"
+      ],
+      "must_be_context_specific": true
+    },
+    "net_contribution": {
+      "inputs": [
+        "direct_revenue",
+        "induced_spend",
+        "visit_attraction_value",
+        "duration_value",
+        "identity_value",
+        "crowd_balance_value",
+        "operating_cost",
+        "maintenance_cost",
+        "staffing_cost"
+      ]
+    }
+  },
+  "canonical_actions": [
+    "maintain",
+    "evolve",
+    "replace",
+    "retarget",
+    "refurbish",
+    "preserve",
+    "seasonal_overlay",
+    "capacity_upgrade"
+  ],
+  "forbidden_shortcuts": [
+    "age_only_demand_decay",
+    "single_global_popularity",
+    "decoration_object_count_score",
+    "automatic_forced_replacement",
+    "unseeded_random_state_change",
+    "unexplained_metric_output"
+  ]
+}

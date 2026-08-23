@@ -1,0 +1,20 @@
+INTAKE MODE — AXM THEME PARK v0.3.0
+
+1. Extract without overwriting prior releases.
+2. Run `python scripts/verify_package.py`.
+3. Run `python examples/run_living_park_reference.py` twice and compare digest.
+4. Confirm canonical design-root hash remains:
+   3ec57d2a387943cd0ade4a4f3e4de0ebd85c0885b84e0e0c9d74c776463ffa0f
+5. Read START_HERE.txt and the v0.3 architecture docs.
+6. Do not rewrite canonical root files.
+7. Select exactly one branch.
+8. Declare owned state, command handlers, reducers, events, systems, metrics,
+   contribution claims, evidence, and visual signals as relevant.
+9. Use no skippable authoritative system and no direct cross-owner mutation.
+10. Conserve audience population and separate first-time from repeat flow.
+11. Do not allocate more than 100% of one causal value occurrence.
+12. Fork uncertain/irreversible experiments instead of replacing the parent.
+13. Return a machine-verifiable Branch Return Packet.
+14. Run complete tests, deterministic replay, snapshot restore, and assembly.
+15. Label every capability implemented, reference, or placeholder.
+16. Do not claim first-map ready without a passing acceptance report.

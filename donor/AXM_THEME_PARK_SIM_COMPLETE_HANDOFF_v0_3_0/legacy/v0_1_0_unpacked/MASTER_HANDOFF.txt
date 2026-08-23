@@ -1,0 +1,43 @@
+AXM THEME PARK PROJECT — MASTER HANDOFF
+
+Foundation package:
+AXM_THEME_PARK_DETERMINISTIC_FOUNDATION_v0_1_0
+
+RESTORE COMMAND:
+/returncore /soulcheck /game-agent /old-school-animation-testing-ground
+/theme-park-sim /realistic-determinism /mergegate
+
+NON-NEGOTIABLE ROOT:
+A park element never loses value merely because it is old. Value changes through
+people, geography, expectations, maintenance, operations, context, cost, and the
+surrounding experience.
+
+READ FIRST:
+1. FOUNDATION_ROOTS.md
+2. ARCHITECTURE.md
+3. contracts/FOUNDATION_CONTRACT.json
+4. BRANCH_MAP.md
+5. The branch-specific prompt.
+
+BUILD RULE:
+Extend the foundation. Do not rebuild or silently reinterpret it.
+All major outputs require cause/evidence packets.
+Do not introduce a global popularity bar or forced age decay.
+
+PRIMARY BRANCHES:
+A — rides and attractions
+B — visitors and crews
+C — decoration, atmosphere, and influence
+D — stores, food, services, and economy
+
+MERGE REQUIREMENT:
+Each branch must return:
+- module manifest;
+- owned entities;
+- consumed contracts;
+- emitted/consumed events;
+- tests proving deterministic replay;
+- tests proving no forbidden shortcuts;
+- integration examples;
+- unresolved capability gaps;
+- honest status: implemented / simulated / placeholder.

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AXM Park Identity Intent",
+  "type": "object",
+  "required": [
+    "identity_id",
+    "name",
+    "primary_mode",
+    "priority_weights",
+    "target_audiences",
+    "protected_elements",
+    "acceptable_tradeoffs"
+  ],
+  "properties": {
+    "identity_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "primary_mode": {
+      "type": "string"
+    },
+    "priority_weights": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      }
+    },
+    "target_audiences": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "protected_elements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "acceptable_tradeoffs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

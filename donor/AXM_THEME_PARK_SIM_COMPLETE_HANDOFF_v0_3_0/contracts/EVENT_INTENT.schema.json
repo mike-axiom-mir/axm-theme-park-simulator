@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.event-intent.schema.json",
+  "title": "AXM Pure Event Intent v0.3.0",
+  "type": "object",
+  "required": ["event_type", "target_ids", "payload", "evidence_refs"],
+  "properties": {
+    "event_type": {"type": "string", "minLength": 1},
+    "target_ids": {"type": "array", "items": {"type": "string"}},
+    "payload": {"type": "object"},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  },
+  "additionalProperties": false,
+  "description": "A handler decision before event IDs, seeds, and module versions are attached by the kernel."
+}

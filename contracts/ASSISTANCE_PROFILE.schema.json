@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "AXM Assistance Profile",
+  "required": [
+    "profile_id",
+    "detail_level",
+    "recommendation_limit",
+    "auto_pause",
+    "show_confidence",
+    "show_alternatives"
+  ],
+  "properties": {
+    "profile_id": {
+      "type": "string"
+    },
+    "detail_level": {
+      "enum": [
+        "beginner",
+        "standard",
+        "expert"
+      ]
+    },
+    "recommendation_limit": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "auto_pause": {
+      "type": "boolean"
+    },
+    "show_confidence": {
+      "type": "boolean"
+    },
+    "show_alternatives": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.namespace-update.schema.json",
+  "title": "AXM Namespace Update v0.3.0",
+  "type": "object",
+  "required": [
+    "update_id",
+    "module_id",
+    "namespace",
+    "base_version",
+    "new_state",
+    "reason_event_ids"
+  ],
+  "properties": {
+    "update_id": {
+      "type": "string"
+    },
+    "module_id": {
+      "type": "string"
+    },
+    "namespace": {
+      "type": "string"
+    },
+    "base_version": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "new_state": {
+      "type": "object"
+    },
+    "reason_event_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

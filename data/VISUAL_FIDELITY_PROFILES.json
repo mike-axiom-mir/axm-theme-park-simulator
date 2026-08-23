@@ -1,0 +1,29 @@
+{
+  "profiles": [
+    {
+      "profile_id": "low_graphic_v1",
+      "visible_guest_limit": 120,
+      "animation_step_hz": 12,
+      "shadow_detail": 0,
+      "texture_scale": 0.5,
+      "lod_level": 3
+    },
+    {
+      "profile_id": "balanced",
+      "visible_guest_limit": 500,
+      "animation_step_hz": 24,
+      "shadow_detail": 1,
+      "texture_scale": 1.0,
+      "lod_level": 2
+    },
+    {
+      "profile_id": "future_high",
+      "visible_guest_limit": 2000,
+      "animation_step_hz": 60,
+      "shadow_detail": 3,
+      "texture_scale": 2.0,
+      "lod_level": 1
+    }
+  ],
+  "authoritative_state_hash_must_match": true
+}

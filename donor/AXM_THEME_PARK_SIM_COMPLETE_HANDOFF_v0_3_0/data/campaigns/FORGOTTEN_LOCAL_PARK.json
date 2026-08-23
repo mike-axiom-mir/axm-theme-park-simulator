@@ -1,0 +1,94 @@
+{
+  "campaign_id": "forgotten_local_park",
+  "name": "The Forgotten Local Park",
+  "description": "A small aging park with loyal older visitors, weak finances, and a history worth understanding.",
+  "multiple_valid_outcomes": true,
+  "starting_context": {
+    "geography": "regional town edge",
+    "identity_tension": [
+      "heritage",
+      "family renewal",
+      "financial survival"
+    ],
+    "protected_assets": [
+      "original entrance",
+      "classic boat ride"
+    ],
+    "constraints": [
+      "limited capital",
+      "aging maintenance shop",
+      "small catchment"
+    ]
+  },
+  "outcome_paths": [
+    {
+      "outcome_id": "living_heritage",
+      "label": "Living Heritage Park",
+      "conditions": [
+        {
+          "metric": "heritage_preservation",
+          "operator": "gte",
+          "value": 0.75
+        },
+        {
+          "metric": "financial_stability",
+          "operator": "gte",
+          "value": 0.6
+        },
+        {
+          "metric": "local_trust",
+          "operator": "gte",
+          "value": 0.7
+        }
+      ],
+      "epilogue": "The park keeps its history alive while becoming stable enough for another generation.",
+      "postgame_hook": null
+    },
+    {
+      "outcome_id": "modern_family_renewal",
+      "label": "Modern Family Renewal",
+      "conditions": [
+        {
+          "metric": "family_fit",
+          "operator": "gte",
+          "value": 0.75
+        },
+        {
+          "metric": "financial_stability",
+          "operator": "gte",
+          "value": 0.65
+        },
+        {
+          "metric": "service_quality",
+          "operator": "gte",
+          "value": 0.65
+        }
+      ],
+      "epilogue": "The park becomes a dependable regional family day without erasing every trace of its past.",
+      "postgame_hook": null
+    },
+    {
+      "outcome_id": "seasonal_festival_park",
+      "label": "Seasonal Festival Park",
+      "conditions": [
+        {
+          "metric": "event_strength",
+          "operator": "gte",
+          "value": 0.8
+        },
+        {
+          "metric": "seasonal_profitability",
+          "operator": "gte",
+          "value": 0.7
+        },
+        {
+          "metric": "offseason_cost_control",
+          "operator": "gte",
+          "value": 0.65
+        }
+      ],
+      "epilogue": "The park survives by becoming a focused seasonal gathering place.",
+      "postgame_hook": null
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "axm.themepark.branch-return-packet.schema.json",
+  "title": "AXM Branch Return Packet v0.3.0",
+  "type": "object",
+  "required": [
+    "packet_id",
+    "branch_id",
+    "module_id",
+    "module_version",
+    "foundation_contract_version",
+    "canonical_root_hash",
+    "status",
+    "implemented_capabilities",
+    "reference_capabilities",
+    "placeholder_capabilities",
+    "tests_passed",
+    "tests_failed",
+    "artifacts",
+    "unresolved_gaps",
+    "change_request_ids"
+  ],
+  "properties": {
+    "packet_id": {
+      "type": "string"
+    },
+    "branch_id": {
+      "type": "string"
+    },
+    "module_id": {
+      "type": "string"
+    },
+    "module_version": {
+      "type": "string"
+    },
+    "foundation_contract_version": {
+      "const": "0.3.0"
+    },
+    "canonical_root_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "status": {
+      "enum": [
+        "scaffold",
+        "reference",
+        "implemented",
+        "experimental"
+      ]
+    },
+    "implemented_capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "reference_capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "placeholder_capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "tests_passed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "tests_failed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "sha256",
+          "bytes",
+          "role"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "role": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "unresolved_gaps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "change_request_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

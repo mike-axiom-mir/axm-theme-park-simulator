@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AXM Canonical Change Request",
+  "type": "object",
+  "required": [
+    "change_request_id",
+    "reason",
+    "affected_roots",
+    "before_hashes",
+    "after_hashes",
+    "evidence",
+    "rollback_plan",
+    "approval_status"
+  ],
+  "properties": {
+    "change_request_id": {
+      "type": "string"
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "affected_roots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "before_hashes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{64}$"
+      }
+    },
+    "after_hashes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{64}$"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "rollback_plan": {
+      "type": "string",
+      "minLength": 1
+    },
+    "approval_status": {
+      "enum": [
+        "proposed",
+        "review",
+        "approved",
+        "rejected"
+      ]
+    },
+    "approved_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
