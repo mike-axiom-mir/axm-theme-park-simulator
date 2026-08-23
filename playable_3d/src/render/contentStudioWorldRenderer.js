@@ -1,15 +1,19 @@
 import { WorldRenderer as StaffAwareWorldRenderer } from "./staffAwareWorldRenderer.js";
 import { catalogDefinition, rotatedFootprint } from "../core/catalog.js";
+import { WORLD_CONTENT_IDS } from "../core/worldContentCatalog.js";
 import { createGalleonModel } from "./extraAttractions.js";
+import { createWorldContentModel } from "./worldContentModels.js";
 
 const SPECIAL_ATTRACTION_FACTORIES = Object.freeze({
-  galleon: createGalleonModel
+  galleon: createGalleonModel,
+  ...Object.fromEntries(WORLD_CONTENT_IDS.map((id) => [id, createWorldContentModel]))
 });
 
 /**
- * Additive content seam for rides that have dedicated models outside the
- * preserved v0.4.6 models.js file. Simulation/catalog authority remains in the
- * existing core; this layer only swaps the renderer model for known ids.
+ * Additive content seam for rides, attractions, facilities and stores that have
+ * dedicated models outside the preserved v0.4.6 models.js file. Simulation and
+ * catalog authority remain in core; this layer only swaps render models for
+ * explicitly registered ids.
  */
 export class WorldRenderer extends StaffAwareWorldRenderer {
   syncWorld() {
