@@ -1,5 +1,8 @@
 import { hashString } from "./random.js";
-import { calendarView, calendarYear, normalizeHistoricalTimeline } from "./historicalTimeline.js";
+import {
+  advanceCareerOperatingDay, calendarView, calendarYear, careerOperatingDay,
+  normalizeHistoricalTimeline
+} from "./historicalTimeline.js";
 
 export const HISTORICAL_ECONOMY_SCHEMA = "axm.themepark.historical-payments/v1";
 export const CASH_COLLECTION_INTERVAL_DAYS = 7;
@@ -204,12 +207,12 @@ export function processPaymentIncomeEvents(state, events = []) {
 }
 
 export function weeklyCollectionDue(state) {
-  const day = Math.max(1, integer(state.clock?.day, 1));
+  const day = careerOperatingDay(state);
   return day > 1 && (day - 1) % CASH_COLLECTION_INTERVAL_DAYS === 0;
 }
 
 export function daysUntilWeeklyCollection(state) {
-  const day = Math.max(1, integer(state.clock?.day, 1));
+  const day = careerOperatingDay(state);
   const elapsed = (day - 1) % CASH_COLLECTION_INTERVAL_DAYS;
   return elapsed === 0 && day > 1 ? CASH_COLLECTION_INTERVAL_DAYS : CASH_COLLECTION_INTERVAL_DAYS - elapsed;
 }
@@ -220,10 +223,10 @@ export function collectVaultToBank(state, { reason = "weekly-car" } = {}) {
   if (!amount) return 0;
   state.payments.officeVault = 0;
   state.economy.cash = roundMoney((state.economy.cash ?? 0) + amount);
-  state.payments.lastCollectionDay = state.clock?.day ?? 1;
+  state.payments.lastCollectionDay = careerOperatingDay(state);
   if (reason === "weekly-car") state.payments.ledger.weeklyCollections += 1;
   appendEvent(state, reason === "weekly-car" ? "payment.cash.weekly_collection" : "payment.cash.bank_deposit",
-    "park-office-vault", { amount, reason });
+    "park-office-vault", { amount, reason, careerOperatingDay: careerOperatingDay(state) });
   if (reason === "weekly-car") notice(state, `Weekly cash collection deposited €${amount.toFixed(2)} into the park bank account.`, "good");
   return amount;
 }
@@ -233,7 +236,7 @@ function observeYearChange(state) {
   const year = calendarYear(state);
   if (year === state.payments.lastObservedYear) return;
   state.payments.lastObservedYear = year;
-  appendEvent(state, "timeline.year.started", "park", { year });
+  appendEvent(state, "timeline.year.started", "park", { year, careerOperatingDay: careerOperatingDay(state) });
   const newlyAvailable = Object.values(PAYMENT_TECHNOLOGY)
     .filter((item) => item.minYear === year && !state.payments.completedTechnology.includes(item.id));
   if (newlyAvailable.length) {
@@ -241,12 +244,29 @@ function observeYearChange(state) {
   }
 }
 
+/**
+ * Historical operating days belong to the whole career. Map-local Day 1 may be
+ * restarted by a scenario loader without resetting this counter, the year or the
+ * weekly cash-truck rhythm.
+ */
+export function processHistoricalOperatingDayTransition(state, { source = "operating-day" } = {}) {
+  normalizeHistoricalEconomyState(state);
+  const transition = advanceCareerOperatingDay(state, { source });
+  appendEvent(state, "timeline.career_operating_day.started", "park", transition);
+  observeYearChange(state);
+  if (weeklyCollectionDue(state) && state.payments.lastCollectionDay !== careerOperatingDay(state)) {
+    collectVaultToBank(state, { reason: "weekly-car" });
+  }
+  return transition;
+}
+
 export function processHistoricalEconomyAfterTick(state, events = []) {
   normalizeHistoricalEconomyState(state);
   processPaymentIncomeEvents(state, events);
-  observeYearChange(state);
-  if (events.some((entry) => entry.type === "clock.day.started") && weeklyCollectionDue(state)) {
-    collectVaultToBank(state, { reason: "weekly-car" });
+  if (events.some((entry) => entry.type === "clock.day.started")) {
+    processHistoricalOperatingDayTransition(state, { source: "clock.day.started" });
+  } else {
+    observeYearChange(state);
   }
   return state;
 }
