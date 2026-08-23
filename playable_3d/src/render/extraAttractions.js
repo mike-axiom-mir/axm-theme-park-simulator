@@ -125,9 +125,11 @@ function addEvolutionVisuals(group) {
     if (nextLevel >= 2) {
       for (const [x, z] of [[-4, -2], [4, -2], [-4, 2], [4, 2]]) {
         const post = cylinder(0.05, 0.07, 1.35, 5, 0x46525c, 0.68);
-        post.position.set(x, 0, z);
+        post.position.x = x;
+        post.position.z = z;
         const lamp = sphere(0.14, 0xffdc78, 1.48);
-        lamp.position.set(x, 0, z);
+        lamp.position.x = x;
+        lamp.position.z = z;
         lamp.material = material(0x5a481f, { emissive: 0xffd15f, emissiveIntensity: 1.5 });
         root.add(post, lamp);
       }
@@ -158,7 +160,8 @@ export function createGalleonModel(entity) {
   const supportColor = 0x4e5961;
   for (const x of [-3.35, 3.35]) {
     const front = box(0.24, 6.7, 0.24, supportColor, 3.25);
-    front.position.set(x, 0, 1.55);
+    front.position.x = x;
+    front.position.z = 1.55;
     front.rotation.z = x < 0 ? -0.22 : 0.22;
     const back = front.clone();
     back.position.z = -1.55;
@@ -233,7 +236,9 @@ export function createGalleonModel(entity) {
 
   const conditionLight = sphere(0.16, 0xe86d77, 0.48);
   conditionLight.name = "galleon-condition-warning";
-  conditionLight.position.set(4.15, 0, 2.15);
+  conditionLight.position.x = 4.15;
+  conditionLight.position.z = 2.15;
+  conditionLight.visible = !entity.open || Number(entity.condition) < 35;
   conditionLight.material = material(0x5b2027, { emissive: 0xef5865, emissiveIntensity: 1.8 });
   group.add(conditionLight);
 
