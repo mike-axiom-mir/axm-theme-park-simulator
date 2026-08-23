@@ -55,6 +55,14 @@ export const STYLE_SUPERPOWERS = Object.freeze({
     visualMode: "lanterns",
     moment: "The chorus becomes more luminous in the evening and at night."
   }),
+  cartoon: power({
+    id: "toonburst",
+    themeId: "cartoon",
+    label: "Toonburst",
+    summary: "Family, playful thrill, food and toy-like anchors synchronize squash, stretch and comic pop motion.",
+    visualMode: "toon",
+    moment: "Busy daytime hours make Toonburst feel bouncier; the effect remains presentation-only."
+  }),
   future: power({
     id: "pulse-grid",
     themeId: "future",
