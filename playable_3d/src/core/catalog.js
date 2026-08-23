@@ -39,6 +39,14 @@ export const CATALOG = {
     comfort: 0.81, familyFit: 0.88, thrillFit: 0.44, explorerFit: 0.9,
     color: 0x63c7d5
   }),
+  galleon: ride({
+    id: "galleon", category: "Rides", label: "Moonwake Galleon", icon: "◒",
+    description: "A swinging ship that bridges family spectacle and real thrill without consuming coaster-scale land.",
+    cost: 4300, footprint: [5, 3], capacity: 12, cycleMinutes: 8,
+    operatingCost: 12, ridePrice: 3, firstValue: 0.84, repeatValue: 0.75,
+    intensity: 0.72, comfort: 0.64, familyFit: 0.72, thrillFit: 0.86,
+    explorerFit: 0.74, color: 0xd8894f
+  }),
   coaster: ride({
     id: "coaster", category: "Rides", label: "Comet Coaster", icon: "⌁",
     description: "A compact steel coaster: high first-experience value and destination draw.",
@@ -125,7 +133,7 @@ export const CAMPAIGN_LEVELS = Object.freeze([
     level: 2,
     label: "Neighbourhood favourite",
     requirement: "Welcome 20 guests and hold rating 55",
-    unlocks: ["wheel", "drinks"]
+    unlocks: ["wheel", "galleon", "drinks"]
   },
   {
     level: 3,
