@@ -1,4 +1,5 @@
 export const GUEST_BODY_LANGUAGE_SCHEMA = "axm.themepark.guest-body-language/v1";
+export const GUEST_WEATHER_GESTURE_SCHEMA = "axm.themepark.guest-weather-gesture/v1";
 
 const clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, value));
 const finite = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
@@ -11,6 +12,12 @@ const POSE_METADATA = Object.freeze({
   disappointed: Object.freeze({ label: "Subdued", reason: "low happiness" }),
   resting: Object.freeze({ label: "Resting", reason: "seated recovery" }),
   service: Object.freeze({ label: "At service", reason: "current interaction" })
+});
+
+const WEATHER_METADATA = Object.freeze({
+  none: Object.freeze({ label: "No weather gesture", reason: "conditions are mild" }),
+  rainCover: Object.freeze({ label: "Covering from rain", reason: "active precipitation" }),
+  heatFan: Object.freeze({ label: "Fanning in the heat", reason: "warm conditions while waiting" })
 });
 
 /**
@@ -58,6 +65,46 @@ export function deriveGuestBodyLanguage(visitor) {
 export function describeGuestBodyLanguage(visitor) {
   const descriptor = deriveGuestBodyLanguage(visitor);
   const metadata = POSE_METADATA[descriptor.pose] ?? POSE_METADATA.neutral;
+  return Object.freeze({
+    ...descriptor,
+    label: metadata.label,
+    reason: metadata.reason,
+    strength: Math.round(descriptor.intensity * 100)
+  });
+}
+
+/**
+ * Weather gestures are presentation-only and deliberately separate from mood.
+ * They never alter needs, movement speed, route choice, spending, or happiness.
+ */
+export function deriveGuestWeatherGesture(visitor, weather) {
+  const state = String(visitor?.state ?? "idle");
+  const precipitation = clamp(finite(weather?.precipitation));
+  const temperature = finite(weather?.temperature, 18);
+  let gesture = "none";
+  let intensity = 0;
+
+  if (!["riding", "resting", "usingService", "departed"].includes(state)) {
+    if (precipitation >= 0.25) {
+      gesture = "rainCover";
+      intensity = clamp((precipitation - 0.2) / 0.8);
+    } else if (temperature >= 23 && ["idle", "queueing"].includes(state)) {
+      gesture = "heatFan";
+      intensity = clamp((temperature - 22) / 8);
+    }
+  }
+
+  return Object.freeze({
+    schema: GUEST_WEATHER_GESTURE_SCHEMA,
+    visitorId: String(visitor?.id ?? ""),
+    gesture,
+    intensity
+  });
+}
+
+export function describeGuestWeatherGesture(visitor, weather) {
+  const descriptor = deriveGuestWeatherGesture(visitor, weather);
+  const metadata = WEATHER_METADATA[descriptor.gesture] ?? WEATHER_METADATA.none;
   return Object.freeze({
     ...descriptor,
     label: metadata.label,
