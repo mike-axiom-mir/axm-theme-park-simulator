@@ -1,6 +1,6 @@
 export const HISTORICAL_TIMELINE_SCHEMA = "axm.themepark.historical-timeline/v1";
 export const HISTORICAL_START_YEAR = 1980;
-export const HISTORICAL_OPERATING_DAYS_PER_YEAR = 4;
+export const HISTORICAL_OPERATING_DAYS_PER_YEAR = 8;
 
 const integer = (value, fallback = 0) => Number.isFinite(Number(value)) ? Math.floor(Number(value)) : fallback;
 
