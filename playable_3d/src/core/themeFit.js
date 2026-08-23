@@ -39,15 +39,17 @@ export const THEME_TAG_LABELS = Object.freeze({
   future: "future",
   garden: "garden",
   indoor: "indoor",
+  medieval: "medieval",
   retail: "retail",
   scenic: "scenic",
   storybook: "storybook",
   thrill: "thrill",
-  water: "water"
+  water: "water",
+  western: "western"
 });
 
 const TAG_ORDER = Object.freeze([
-  "water", "garden", "adventure", "storybook", "fantasy", "future",
+  "water", "garden", "adventure", "western", "medieval", "storybook", "fantasy", "future",
   "family", "thrill", "scenic", "indoor", "food", "retail", "care", "flexible"
 ]);
 
@@ -151,6 +153,20 @@ export function themeTagsForDefinition(definition) {
   if (tags.has("storybook") && ["scenic", "indoor", "garden", "adventure", "water"]
     .some((tag) => tags.has(tag))) tags.add("fantasy");
   if (tags.has("garden") && tags.has("adventure") && tags.has("scenic")) tags.add("fantasy");
+
+  // Western uses grounded frontier evidence already present in rides: rail is a
+  // direct signature, while river/adventure attractions qualify only when they
+  // also have scenic family/thrill evidence. Food/retail can still be compatible
+  // without becoming signature anchors by default.
+  if (definition?.visualFamily === "train") tags.add("western");
+  if (definition?.theme === "river"
+    && tags.has("adventure") && tags.has("scenic")
+    && (tags.has("family") || tags.has("thrill"))) tags.add("western");
+
+  // Medieval deliberately overlaps some Storybook/Fantasy attractions because a
+  // single dark/story ride can be framed as a keep, dungeon or market tale. The
+  // signature still requires combined story evidence rather than any family ride.
+  if (tags.has("storybook") && (tags.has("indoor") || tags.has("adventure"))) tags.add("medieval");
 
   if (!tags.size) tags.add("flexible");
   return Object.freeze(TAG_ORDER.filter((tag) => tags.has(tag)));
