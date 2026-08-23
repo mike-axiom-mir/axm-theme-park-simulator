@@ -6,4 +6,4 @@
  * The state-integrity guard can therefore remain stable while the style stack
  * grows underneath it.
  */
-export { WorldRenderer } from "./medievalStyleWorldRenderer.js";
+export { WorldRenderer } from "./festivalTechStyleWorldRenderer.js";
