@@ -161,6 +161,10 @@ function applyGuestBodyLanguage(model, visitor, time) {
   parts.torso.rotation.z = 0;
   parts.head.rotation.x = 0;
   parts.head.rotation.z = 0;
+  if (armLeft && armRight) {
+    armLeft.rotation.z = 0;
+    armRight.rotation.z = 0;
+  }
 
   const descriptor = deriveGuestBodyLanguage(visitor);
   const amount = descriptor.intensity;
