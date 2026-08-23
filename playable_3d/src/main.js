@@ -6,7 +6,12 @@ import {
 import {
   applyUpgradeAction, normalizeUpgradeState
 } from "./core/upgrades.js";
-import { advanceOneMinuteWithUpgrades } from "./core/upgradeRuntime.js";
+import {
+  applyHistoricalEconomyAction, getHistoricalEconomyView, normalizeHistoricalEconomyState
+} from "./core/historicalEconomy.js";
+import {
+  advanceOneMinuteWithHistoricalEconomy, simulateMinutesWithHistoricalEconomy
+} from "./core/historicalEconomyRuntime.js";
 import {
   deserializeGame, loadFromSlot, saveToSlot, serializeGame, slotMetadata
 } from "./core/save.js";
@@ -16,6 +21,7 @@ import { GameInterface } from "./ui/interface.js";
 import { CoasterStudioUI } from "./ui/coasterStudioUI.js";
 import { ResearchLabUI } from "./ui/researchLabUI.js";
 import { UpgradeBayUI } from "./ui/upgradeBayUI.js";
+import { CashOfficeUI } from "./ui/cashOfficeUI.js";
 import { deriveOpeningSignal } from "./presentation/openingSequence.js";
 
 const canvas = document.getElementById("game-canvas");
@@ -46,7 +52,7 @@ topActions?.prepend(upgradeButton);
 topActions?.prepend(researchButton);
 topActions?.prepend(visionButton);
 
-let state = normalizeUpgradeState(normalizeResearchState(createNewGame()));
+let state = normalizeHistoricalEconomyState(normalizeUpgradeState(normalizeResearchState(createNewGame())));
 let speed = 1;
 let accumulator = 0;
 let lastTime = performance.now();
@@ -58,6 +64,7 @@ const RESEARCH_ACTIONS = new Set(["completeResearch", "growEntity", "growPark"])
 const UPGRADE_ACTIONS = new Set([
   "installEntityUpgrade", "removeEntityUpgrade", "installParkUpgrade", "removeParkUpgrade"
 ]);
+const HISTORICAL_ECONOMY_ACTIONS = new Set(["completePaymentTechnology", "manualBankRun"]);
 
 function guardedStorage(callback, fallback = null) {
   try { return callback(); } catch { return fallback; }
@@ -70,9 +77,19 @@ function act(action, { quiet = false } = {}) {
       ? applyResearchAction(state, action)
       : UPGRADE_ACTIONS.has(action?.type)
         ? applyUpgradeAction(state, action)
-        : applyAction(state, action);
+        : HISTORICAL_ECONOMY_ACTIONS.has(action?.type)
+          ? applyHistoricalEconomyAction(state, action)
+          : applyAction(state, action);
   if (!result.ok && !quiet) ui.toast(result.reason ?? "That action could not be completed.", "error");
   if (result.ok) {
+    if (result.timeCostMinutes > 0) {
+      simulateMinutesWithHistoricalEconomy(state, result.timeCostMinutes);
+      if (state.operations?.dayReport) {
+        speed = 0;
+        accumulator = 0;
+        ui.setSpeed(0);
+      }
+    }
     state.stateHash = stateHash(state);
     world.syncWorld();
     ui.render(state);
@@ -82,7 +99,7 @@ function act(action, { quiet = false } = {}) {
 }
 
 function replaceState(nextState) {
-  state = normalizeUpgradeState(normalizeResearchState(nextState));
+  state = normalizeHistoricalEconomyState(normalizeUpgradeState(normalizeResearchState(nextState)));
   speed = state.operations?.dayReport ? 0 : 1;
   accumulator = 0;
   ui.resetTransientState();
@@ -235,11 +252,16 @@ const upgradeBay = new UpgradeBayUI({
   onAction: (action) => act(action, { quiet: true }),
   onMessage: (message, tone = "info") => ui.toast(message, tone)
 });
+const cashOffice = new CashOfficeUI({
+  getState: () => state,
+  onAction: (action) => act(action, { quiet: true }),
+  onMessage: (message, tone = "info") => ui.toast(message, tone)
+});
 
 coasterStudio.dialog.addEventListener("keydown", (event) => event.stopPropagation());
 
 function closeToolDialogs(except = null) {
-  for (const tool of [coasterStudio, researchLab, upgradeBay]) {
+  for (const tool of [coasterStudio, researchLab, upgradeBay, cashOffice]) {
     if (tool !== except) tool.close();
   }
 }
@@ -247,9 +269,10 @@ function closeToolDialogs(except = null) {
 studioButton.addEventListener("click", () => { closeToolDialogs(coasterStudio); coasterStudio.open(); });
 researchButton.addEventListener("click", () => { closeToolDialogs(researchLab); researchLab.open(); });
 upgradeButton.addEventListener("click", () => { closeToolDialogs(upgradeBay); upgradeBay.open(); });
+cashOffice.button.addEventListener("click", () => closeToolDialogs(cashOffice));
 
 function toolDialogOpen() {
-  return coasterStudio.dialog.open || researchLab.dialog.open || upgradeBay.dialog.open;
+  return coasterStudio.dialog.open || researchLab.dialog.open || upgradeBay.dialog.open || cashOffice.dialog.open;
 }
 
 function renderParkVisionStatus(status, { announce = false } = {}) {
@@ -309,6 +332,7 @@ globalThis.__AXM_GAME__ = Object.freeze({
     coasterStudioOpen: coasterStudio.dialog.open,
     researchLabOpen: researchLab.dialog.open,
     upgradeBayOpen: upgradeBay.dialog.open,
+    cashOfficeOpen: cashOffice.dialog.open,
     research: (() => {
       const view = getResearchView(state);
       return { insight: view.insight, lifetimeInsight: view.lifetimeInsight, completed: view.completed.length, parkGrowth: view.parkGrowth };
@@ -317,6 +341,17 @@ globalThis.__AXM_GAME__ = Object.freeze({
       park: state.upgrades?.park?.length ?? 0,
       entity: (state.world.entities ?? []).reduce((sum, entity) => sum + (entity.installedUpgrades?.length ?? 0), 0)
     },
+    payments: (() => {
+      const view = getHistoricalEconomyView(state);
+      return {
+        year: view.calendar.year,
+        bankAvailable: view.bankAvailable,
+        officeVault: view.officeVault,
+        acceptedElectronicShare: view.acceptedElectronicShare,
+        electronicFees: view.ledger.electronicFees,
+        technology: view.completedTechnology.length
+      };
+    })(),
     visuals: world.getVisualHealth()
   })
 });
@@ -329,7 +364,7 @@ function gameLoop(now) {
     const millisecondsPerMinute = 620;
     let safety = 0;
     while (accumulator >= millisecondsPerMinute && safety++ < 40) {
-      advanceOneMinuteWithUpgrades(state);
+      advanceOneMinuteWithHistoricalEconomy(state);
       accumulator -= millisecondsPerMinute;
       if (state.operations?.dayReport) {
         speed = 0;
@@ -344,6 +379,7 @@ function gameLoop(now) {
     if (world.getParkVisionStatus().active) renderParkVisionStatus(world.getParkVisionStatus());
     if (researchLab.dialog.open) researchLab.render();
     if (upgradeBay.dialog.open) upgradeBay.render();
+    if (cashOffice.dialog.open) cashOffice.render();
     lastUiUpdate = now;
   }
   if (now - lastAutosave > 45000) {
