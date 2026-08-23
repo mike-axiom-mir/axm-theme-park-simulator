@@ -87,6 +87,30 @@ export const STYLE_SUPERPOWERS = Object.freeze({
     visualMode: "keep",
     moment: "Evening and night strengthen Bannerwake's torch-and-banner presentation only."
   }),
+  halloween: power({
+    id: "hauntfall",
+    themeId: "halloween",
+    label: "Hauntfall",
+    summary: "Dark-ride, indoor story and thrill anchors wake pumpkins, crooked lanterns, bats and rolling purple fog.",
+    visualMode: "haunt",
+    moment: "Dusk, night and rain make Hauntfall denser and brighter without changing guest or ride simulation."
+  }),
+  christmas: power({
+    id: "snowglow",
+    themeId: "christmas",
+    label: "Snowglow",
+    summary: "Family, story, rail, food and scenic anchors wake evergreen lights, ornaments and a shared winter-market glow.",
+    visualMode: "snowglow",
+    moment: "Evening and night make Snowglow sparkle more strongly; the snow language remains presentation-only."
+  }),
+  newyear: power({
+    id: "countdown-burst",
+    themeId: "newyear",
+    label: "Countdown Burst",
+    summary: "Future, scenic and thrill anchors synchronize gold rings, countdown markers, confetti and midnight firework shapes.",
+    visualMode: "countdown",
+    moment: "Late evening and the park's midnight boundary intensify Countdown Burst without changing time progression."
+  }),
   future: power({
     id: "pulse-grid",
     themeId: "future",
@@ -94,6 +118,22 @@ export const STYLE_SUPERPOWERS = Object.freeze({
     summary: "Future, indoor, thrill and scenic anchors synchronize restrained rings and signal nodes.",
     visualMode: "grid",
     moment: "The signal grid becomes more legible after dusk when luminous accents matter most."
+  }),
+  robotica: power({
+    id: "servo-surge",
+    themeId: "robotica",
+    label: "Servo Surge",
+    summary: "Mechanical ride anchors synchronize gear rings, piston strokes, servo nodes and industrial signal lights.",
+    visualMode: "servo",
+    moment: "Active daytime operation makes Servo Surge look busier, while all effects remain render-only."
+  }),
+  software: power({
+    id: "codewave",
+    themeId: "software",
+    label: "Codewave",
+    summary: "Simulator, information and network-like anchors form a moving lattice of data nodes, code glyphs and logic pulses.",
+    visualMode: "codewave",
+    moment: "Night and indoor-oriented content make Codewave more luminous without implying any hidden AI control."
   }),
   waterfront: power({
     id: "tidecall",
