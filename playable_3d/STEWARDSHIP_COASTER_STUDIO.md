@@ -150,6 +150,18 @@ A future bridge should only be added after local testing defines:
 Until that bridge exists, exported designs are portable design artifacts rather
 than installed park entities.
 
+## Source-hardening already performed in chat
+
+During this pass, several source-level defects were caught and repaired before
+local intake:
+
+- newly inserted middle-of-circuit nodes now remain selected correctly;
+- Studio keyboard input is stopped from bubbling into park hotkeys;
+- Galleon support and evolution meshes no longer lose their intended vertical
+  position through later `position.set(..., 0, ...)` calls;
+- the Galleon condition warning is initialized correctly on its first frame;
+- condition/evolution visual parity was added before the local visual gate.
+
 ## Focused tests added
 
 `tests/coaster-studio.test.js` covers source-level contracts for:
