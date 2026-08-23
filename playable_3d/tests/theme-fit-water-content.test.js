@@ -155,6 +155,7 @@ test("theme-fit and water visuals stay layered outside preserved simulation", ()
   const simulation = read("../src/core/simulation.js");
   const specialContent = read("../src/render/specialContentWorldRenderer.js");
   const fitRenderer = read("../src/render/waterfrontIdentityWorldRenderer.js");
+  const finalStyle = read("../src/render/finalStyleWorldRenderer.js");
   const stateGuard = read("../src/render/stateSafeParkIdentityWorldRenderer.js");
 
   assert.match(catalog, /WATER_DISTRICT_CATALOG/);
@@ -164,6 +165,7 @@ test("theme-fit and water visuals stay layered outside preserved simulation", ()
   assert.match(fitRenderer, /theme-fit-status/);
   assert.match(fitRenderer, /theme-fit-dressing-root/);
   assert.match(fitRenderer, /advisoryOnly: true/);
-  assert.match(stateGuard, /waterfrontIdentityWorldRenderer/);
+  assert.match(finalStyle, /medievalStyleWorldRenderer/);
+  assert.match(stateGuard, /finalStyleWorldRenderer/);
   assert.doesNotMatch(simulation, /themeFit|waterfront|WATER_DISTRICT_CATALOG/);
 });
