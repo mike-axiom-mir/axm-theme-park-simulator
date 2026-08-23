@@ -5,6 +5,7 @@ const finite = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(
 
 const POSE_METADATA = Object.freeze({
   neutral: Object.freeze({ label: "Neutral", reason: "no urgent posture cue" }),
+  delighted: Object.freeze({ label: "Delighted", reason: "high happiness" }),
   impatient: Object.freeze({ label: "Impatient", reason: "long queue" }),
   tired: Object.freeze({ label: "Tired", reason: "low energy" }),
   disappointed: Object.freeze({ label: "Subdued", reason: "low happiness" }),
@@ -40,6 +41,9 @@ export function deriveGuestBodyLanguage(visitor) {
   } else if (happiness < 45) {
     pose = "disappointed";
     intensity = clamp((45 - happiness) / 30);
+  } else if ((state === "idle" || state === "walking") && happiness > 82) {
+    pose = "delighted";
+    intensity = clamp((happiness - 82) / 18);
   }
 
   return Object.freeze({
