@@ -32,16 +32,21 @@ export const THEME_FIT_STATES = Object.freeze({
 export const THEME_TAG_LABELS = Object.freeze({
   adventure: "adventure",
   care: "guest care",
+  christmas: "Christmas",
   family: "family",
   fantasy: "fantasy",
   flexible: "flexible",
   food: "food & drink",
   future: "future",
   garden: "garden",
+  halloween: "Halloween",
   indoor: "indoor",
   medieval: "medieval",
+  newyear: "New Year",
   retail: "retail",
+  robotica: "Robotica",
   scenic: "scenic",
+  software: "AI / software",
   storybook: "storybook",
   thrill: "thrill",
   water: "water",
@@ -49,7 +54,8 @@ export const THEME_TAG_LABELS = Object.freeze({
 });
 
 const TAG_ORDER = Object.freeze([
-  "water", "garden", "adventure", "western", "medieval", "storybook", "fantasy", "future",
+  "water", "garden", "adventure", "western", "medieval", "storybook", "fantasy",
+  "halloween", "christmas", "newyear", "future", "robotica", "software",
   "family", "thrill", "scenic", "indoor", "food", "retail", "care", "flexible"
 ]);
 
@@ -108,6 +114,13 @@ const INFLUENCE_TAGS = Object.freeze({
   care: Object.freeze(["care"])
 });
 
+const ROBOTICA_FAMILIES = new Set([
+  "bumpers", "bounceTower", "swing", "dropTower", "drivers"
+]);
+const SOFTWARE_FAMILIES = new Set([
+  "simulator", "cinema", "monorail", "observation", "charging", "info"
+]);
+
 function addTags(set, values) {
   for (const value of values ?? []) {
     const tag = String(value ?? "").trim().toLowerCase();
@@ -156,17 +169,37 @@ export function themeTagsForDefinition(definition) {
 
   // Western uses grounded frontier evidence already present in rides: rail is a
   // direct signature, while river/adventure attractions qualify only when they
-  // also have scenic family/thrill evidence. Food/retail can still be compatible
-  // without becoming signature anchors by default.
+  // also have scenic family/thrill evidence.
   if (definition?.visualFamily === "train") tags.add("western");
   if (definition?.theme === "river"
     && tags.has("adventure") && tags.has("scenic")
     && (tags.has("family") || tags.has("thrill"))) tags.add("western");
 
   // Medieval deliberately overlaps some Storybook/Fantasy attractions because a
-  // single dark/story ride can be framed as a keep, dungeon or market tale. The
-  // signature still requires combined story evidence rather than any family ride.
+  // single dark/story ride can be framed as a keep, dungeon or market tale.
   if (tags.has("storybook") && (tags.has("indoor") || tags.has("adventure"))) tags.add("medieval");
+
+  // Seasonal themes behave like full themed lands, not calendar locks. Existing
+  // content can be dressed seasonally when its evidence fits the land language.
+  if (definition?.visualFamily === "darkride" || (tags.has("storybook") && tags.has("indoor"))) {
+    tags.add("halloween");
+  }
+  if (definition?.visualFamily === "train"
+    || (tags.has("storybook") && tags.has("family")
+      && ["garden", "scenic", "food", "retail"].some((tag) => tags.has(tag)))) {
+    tags.add("christmas");
+  }
+  if ((tags.has("future") && (tags.has("scenic") || tags.has("thrill")))
+    || definition?.influence === "light") {
+    tags.add("newyear");
+  }
+
+  // Robotica is the physical-machine branch of the future vocabulary: visible
+  // mechanics, kinetic rides and servo-like motion. Software is deliberately a
+  // separate data/logic branch built from simulator, information and network-like
+  // attraction families.
+  if (ROBOTICA_FAMILIES.has(definition?.visualFamily)) tags.add("robotica");
+  if (SOFTWARE_FAMILIES.has(definition?.visualFamily)) tags.add("software");
 
   if (!tags.size) tags.add("flexible");
   return Object.freeze(TAG_ORDER.filter((tag) => tags.has(tag)));
