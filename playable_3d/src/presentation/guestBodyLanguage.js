@@ -3,6 +3,15 @@ export const GUEST_BODY_LANGUAGE_SCHEMA = "axm.themepark.guest-body-language/v1"
 const clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, value));
 const finite = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
 
+const POSE_METADATA = Object.freeze({
+  neutral: Object.freeze({ label: "Neutral", reason: "no urgent posture cue" }),
+  impatient: Object.freeze({ label: "Impatient", reason: "long queue" }),
+  tired: Object.freeze({ label: "Tired", reason: "low energy" }),
+  disappointed: Object.freeze({ label: "Subdued", reason: "low happiness" }),
+  resting: Object.freeze({ label: "Resting", reason: "seated recovery" }),
+  service: Object.freeze({ label: "At service", reason: "current interaction" })
+});
+
 /**
  * Derive a render-only posture from visitor evidence already owned by simulation.
  * The visitor object is never mutated and the returned descriptor is frozen.
@@ -38,5 +47,17 @@ export function deriveGuestBodyLanguage(visitor) {
     visitorId: String(visitor?.id ?? ""),
     pose,
     intensity
+  });
+}
+
+/** Human-readable projection of the same descriptor used by the renderer. */
+export function describeGuestBodyLanguage(visitor) {
+  const descriptor = deriveGuestBodyLanguage(visitor);
+  const metadata = POSE_METADATA[descriptor.pose] ?? POSE_METADATA.neutral;
+  return Object.freeze({
+    ...descriptor,
+    label: metadata.label,
+    reason: metadata.reason,
+    strength: Math.round(descriptor.intensity * 100)
   });
 }
