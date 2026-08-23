@@ -95,6 +95,7 @@ test("style superpowers stay in additive presentation layering and do not leak i
   const westernRenderer = read("../src/render/westernStyleWorldRenderer.js");
   const medievalRenderer = read("../src/render/medievalStyleWorldRenderer.js");
   const seasonalTechRenderer = read("../src/render/festivalTechStyleWorldRenderer.js");
+  const seasonalMotionGuard = read("../src/render/festivalTechMotionGuardWorldRenderer.js");
   const finalStyle = read("../src/render/finalStyleWorldRenderer.js");
   const stateGuard = read("../src/render/stateSafeParkIdentityWorldRenderer.js");
   const simulation = read("../src/core/simulation.js");
@@ -120,7 +121,8 @@ test("style superpowers stay in additive presentation layering and do not leak i
   assert.match(seasonalTechRenderer, /newyear-countdown-burst/);
   assert.match(seasonalTechRenderer, /robotica-servo-surge/);
   assert.match(seasonalTechRenderer, /software-codewave/);
-  assert.match(finalStyle, /festivalTechStyleWorldRenderer/);
+  assert.match(seasonalMotionGuard, /FestivalTechStyleWorldRenderer/);
+  assert.match(finalStyle, /festivalTechMotionGuardWorldRenderer/);
   assert.match(stateGuard, /finalStyleWorldRenderer/);
   assert.doesNotMatch(simulation, /styleSuperpowers|styleSuperpowerPlan|Frontier Rush|Bannerwake|Hauntfall|Snowglow|Countdown Burst|Servo Surge|Codewave|festivalTechStyleWorldRenderer/);
 });
