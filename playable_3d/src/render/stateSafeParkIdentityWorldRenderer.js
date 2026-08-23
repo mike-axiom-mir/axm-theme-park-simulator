@@ -24,18 +24,45 @@ export class WorldRenderer extends ParkIdentityWorldRenderer {
       documentRef.querySelector?.(".top-actions")?.prepend(button);
       this.districtStyleButton = button;
     }
+    this.syncDistrictStyleButton();
+  }
+
+  syncDistrictStyleButton() {
+    if (this.districtStyleButton) this.districtStyleButton.disabled = !this.selectedEntityId;
   }
 
   setState(state) {
     normalizeDistrictState(state);
     state.stateHash = stateHash(state);
     super.setState(state);
-    if (this.districtStyleButton) this.districtStyleButton.disabled = !this.selectedEntityId;
+    this.syncDistrictStyleButton();
   }
 
   selectEntity(entityId) {
     super.selectEntity(entityId);
-    if (this.districtStyleButton) this.districtStyleButton.disabled = !entityId;
+    this.syncDistrictStyleButton();
+  }
+
+  selectVisitor(visitorId) {
+    super.selectVisitor(visitorId);
+    this.syncDistrictStyleButton();
+  }
+
+  selectStaff(staffId) {
+    super.selectStaff(staffId);
+    this.syncDistrictStyleButton();
+  }
+
+  setBuildTool(...args) {
+    const result = super.setBuildTool(...args);
+    this.syncDistrictStyleButton();
+    return result;
+  }
+
+  setRemovePathTool(...args) {
+    const result = super.setRemovePathTool(...args);
+    this.syncDistrictStyleButton();
+    return result;
   }
 
   cycleSelectedDistrictTheme() {
