@@ -1,4 +1,4 @@
-import { WorldRenderer as FantasyStyleWorldRenderer } from "./fantasyStyleWorldRenderer.js";
+import { WorldRenderer as FinalStyleWorldRenderer } from "./finalStyleWorldRenderer.js";
 import { normalizeDistrictState } from "../core/districts.js";
 import { stateHash } from "../core/random.js";
 
@@ -7,8 +7,11 @@ import { stateHash } from "../core/random.js";
  * preserved simulation to know about style-only district state, while loaded
  * saves are already normalized by save.js. Re-hashing here prevents a renderer
  * default from ever leaving stateHash stale.
+ *
+ * finalStyleWorldRenderer.js is a stable routing seam so future style layers do
+ * not need to keep rewriting this integrity guard.
  */
-export class WorldRenderer extends FantasyStyleWorldRenderer {
+export class WorldRenderer extends FinalStyleWorldRenderer {
   constructor(canvas, callbacks = {}) {
     super(canvas, callbacks);
     const documentRef = globalThis.document;
