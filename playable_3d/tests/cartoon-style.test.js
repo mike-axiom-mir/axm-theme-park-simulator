@@ -17,10 +17,10 @@ function entity(id, catalogId, x, z) {
   return { id, catalogId, x, z, rotation: 0 };
 }
 
-test("Cartoon is a first-class district identity between Storybook and Future", () => {
+test("Cartoon remains a first-class district identity after Storybook", () => {
   assert.ok(DISTRICT_THEME_IDS.includes("cartoon"));
   assert.equal(DISTRICT_THEME_IDS[DISTRICT_THEME_IDS.indexOf("storybook") + 1], "cartoon");
-  assert.equal(DISTRICT_THEME_IDS[DISTRICT_THEME_IDS.indexOf("cartoon") + 1], "future");
+  assert.equal(DISTRICT_THEME_IDS[DISTRICT_THEME_IDS.indexOf("cartoon") + 1], "fantasy");
   assert.equal(DISTRICT_THEMES.cartoon.label, "Cartoon");
   assert.ok(DISTRICT_THEMES.cartoon.preferredTags.includes("family"));
   assert.ok(DISTRICT_THEMES.cartoon.preferredTags.includes("thrill"));
@@ -75,6 +75,7 @@ test("two playful signature anchors unleash Toonburst", () => {
 
 test("Cartoon rendering stays additive, bounded and outside preserved simulation", () => {
   const cartoonRenderer = read("../src/render/cartoonStyleWorldRenderer.js");
+  const fantasyRenderer = read("../src/render/fantasyStyleWorldRenderer.js");
   const stateGuard = read("../src/render/stateSafeParkIdentityWorldRenderer.js");
   const simulation = read("../src/core/simulation.js");
 
@@ -83,6 +84,7 @@ test("Cartoon rendering stays additive, bounded and outside preserved simulation
   assert.match(cartoonRenderer, /cartoon-toonburst/);
   assert.match(cartoonRenderer, /squash/);
   assert.match(cartoonRenderer, /setQuality/);
-  assert.match(stateGuard, /CartoonStyleWorldRenderer/);
+  assert.match(fantasyRenderer, /CartoonStyleWorldRenderer/);
+  assert.match(stateGuard, /FantasyStyleWorldRenderer/);
   assert.doesNotMatch(simulation, /toonburst|cartoonStyleWorldRenderer|cartoon-style-dressing-root/);
 });
