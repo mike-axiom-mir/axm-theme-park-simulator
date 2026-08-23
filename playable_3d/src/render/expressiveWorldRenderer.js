@@ -2,7 +2,8 @@ import * as THREE from "../../vendor/three.module.min.js";
 import { WorldRenderer as BaseWorldRenderer } from "./worldRenderer.js";
 import { guestSignalFor } from "../presentation/guestSignals.js";
 import {
-  deriveGuestBodyLanguage, describeGuestBodyLanguage
+  deriveGuestBodyLanguage, describeGuestBodyLanguage,
+  deriveGuestWeatherGesture, describeGuestWeatherGesture
 } from "../presentation/guestBodyLanguage.js";
 
 export const PARK_VISION_MARKER_LIMIT = 40;
@@ -211,6 +212,32 @@ function applyGuestBodyLanguage(model, visitor, time) {
   model.userData.guestBodyLanguage = descriptor;
 }
 
+function applyGuestWeatherGesture(model, visitor, weather, time) {
+  const parts = model?.userData?.personParts ?? {};
+  const [armLeft, armRight] = model?.userData?.arms ?? [];
+  const descriptor = deriveGuestWeatherGesture(visitor, weather);
+  if (!parts.torso || !parts.head || !armLeft || !armRight) return descriptor;
+  const amount = descriptor.intensity;
+  const phase = visitorPhase(visitor.id);
+
+  if (descriptor.gesture === "rainCover") {
+    const shake = Math.sin(time * 5.2 + phase) * 0.08 * amount;
+    parts.torso.rotation.x += 0.08 * amount;
+    parts.head.rotation.x += 0.1 * amount;
+    armLeft.rotation.x = -1.05 - shake;
+    armRight.rotation.x = -1.05 + shake;
+    armLeft.rotation.z = -0.34 * amount;
+    armRight.rotation.z = 0.34 * amount;
+  } else if (descriptor.gesture === "heatFan") {
+    armRight.rotation.x = -0.72 + Math.sin(time * 6.4 + phase) * 0.34 * amount;
+    armRight.rotation.z = 0.2 * amount;
+    parts.head.rotation.z += Math.sin(time * 2 + phase) * 0.04 * amount;
+  }
+
+  model.userData.guestWeatherGesture = descriptor;
+  return descriptor;
+}
+
 /**
  * Presentation-only extension. Authoritative visitor state remains owned by the
  * base renderer's state reference and simulation; this class only alters meshes,
@@ -272,8 +299,10 @@ export class WorldRenderer extends BaseWorldRenderer {
     const visitor = this.state.visitors.find((item) => item.id === visitorId);
     if (!visitor) return;
     const cue = describeGuestBodyLanguage(visitor);
+    const weatherCue = describeGuestWeatherGesture(visitor, this.state.weather);
     const strength = cue.pose === "neutral" ? "" : ` · ${cue.strength}%`;
-    this.callbacks.onWorldMessage?.(`Body language: ${cue.label} · ${cue.reason}${strength}`);
+    const weatherText = weatherCue.gesture === "none" ? "" : ` · Weather: ${weatherCue.label}`;
+    this.callbacks.onWorldMessage?.(`Body language: ${cue.label} · ${cue.reason}${strength}${weatherText}`);
   }
 
   syncVisitors(time) {
@@ -283,6 +312,7 @@ export class WorldRenderer extends BaseWorldRenderer {
       const model = this.visitorModels.get(visitor.id);
       if (!model?.visible) continue;
       applyGuestBodyLanguage(model, visitor, time);
+      applyGuestWeatherGesture(model, visitor, this.state.weather, time);
     }
   }
 
