@@ -73,6 +73,7 @@ test("two Fantasy signature anchors unleash Aetherveil", () => {
 test("Fantasy rendering stays additive, bounded and outside preserved simulation", () => {
   const fantasyRenderer = read("../src/render/fantasyStyleWorldRenderer.js");
   const westernRenderer = read("../src/render/westernStyleWorldRenderer.js");
+  const legacyRenderer = read("../src/render/legacyStyleUpgradeWorldRenderer.js");
   const finalStyle = read("../src/render/finalStyleWorldRenderer.js");
   const stateGuard = read("../src/render/stateSafeParkIdentityWorldRenderer.js");
   const simulation = read("../src/core/simulation.js");
@@ -84,7 +85,8 @@ test("Fantasy rendering stays additive, bounded and outside preserved simulation
   assert.match(fantasyRenderer, /magicBoost/);
   assert.match(fantasyRenderer, /setQuality/);
   assert.match(westernRenderer, /FantasyStyleWorldRenderer/);
-  assert.match(finalStyle, /gildedStyleWorldRenderer/);
+  assert.match(legacyRenderer, /GildedStyleWorldRenderer/);
+  assert.match(finalStyle, /legacyStyleUpgradeWorldRenderer/);
   assert.match(stateGuard, /finalStyleWorldRenderer/);
   assert.doesNotMatch(simulation, /aetherveil|fantasyStyleWorldRenderer|fantasy-style-dressing-root/);
 });
