@@ -32,12 +32,10 @@ test("Fantasy tags derive from existing story/place evidence instead of a parall
   const canalTags = themeTagsForDefinition(catalogDefinition("canalcruise"));
   const cascadeTags = themeTagsForDefinition(catalogDefinition("cascadegarden"));
   const bumpersTags = themeTagsForDefinition(catalogDefinition("bumpers"));
-
   assert.ok(labyrinthTags.includes("fantasy"));
   assert.ok(canalTags.includes("fantasy"));
   assert.ok(cascadeTags.includes("fantasy"));
   assert.equal(bumpersTags.includes("fantasy"), false);
-
   assert.equal(evaluateThemeFit(catalogDefinition("lanternmaze"), "fantasy").status, "signature");
   assert.equal(evaluateThemeFit(catalogDefinition("canalcruise"), "fantasy").status, "signature");
 });
@@ -47,14 +45,12 @@ test("Fantasy style changes presentation state only and persists through current
   const cash = state.economy.cash;
   const rating = state.park.rating;
   const visitorCount = state.visitors.length;
-
   const result = applyDistrictAction(state, { type: "setDistrictTheme", districtId: "west", themeId: "fantasy" });
   assert.equal(result.ok, true, result.reason);
   assert.equal(state.districts.themes.west, "fantasy");
   assert.equal(state.economy.cash, cash);
   assert.equal(state.park.rating, rating);
   assert.equal(state.visitors.length, visitorCount);
-
   const restored = deserializeGame(serializeGame(state));
   assert.equal(restored.districts.themes.west, "fantasy");
 });
@@ -65,10 +61,7 @@ test("two Fantasy signature anchors unleash Aetherveil", () => {
     entity("fantasy-labyrinth", "lanternmaze", 13, 1),
     entity("fantasy-canal", "canalcruise", 16, 2)
   ];
-  assert.equal(applyDistrictAction(state, {
-    type: "setDistrictTheme", districtId: "north", themeId: "fantasy"
-  }).ok, true);
-
+  assert.equal(applyDistrictAction(state, { type: "setDistrictTheme", districtId: "north", themeId: "fantasy" }).ok, true);
   const power = styleSuperpowerForDistrict(state, "north");
   assert.equal(power.id, "aetherveil");
   assert.equal(power.visualMode, "arcana");
@@ -83,7 +76,6 @@ test("Fantasy rendering stays additive, bounded and outside preserved simulation
   const finalStyle = read("../src/render/finalStyleWorldRenderer.js");
   const stateGuard = read("../src/render/stateSafeParkIdentityWorldRenderer.js");
   const simulation = read("../src/core/simulation.js");
-
   assert.match(fantasyRenderer, /FANTASY_ROOT_LIMIT = 4/);
   assert.match(fantasyRenderer, /CartoonStyleWorldRenderer/);
   assert.match(fantasyRenderer, /fantasy-style-dressing-root/);
@@ -92,7 +84,7 @@ test("Fantasy rendering stays additive, bounded and outside preserved simulation
   assert.match(fantasyRenderer, /magicBoost/);
   assert.match(fantasyRenderer, /setQuality/);
   assert.match(westernRenderer, /FantasyStyleWorldRenderer/);
-  assert.match(finalStyle, /medievalStyleWorldRenderer/);
+  assert.match(finalStyle, /gildedStyleWorldRenderer/);
   assert.match(stateGuard, /finalStyleWorldRenderer/);
   assert.doesNotMatch(simulation, /aetherveil|fantasyStyleWorldRenderer|fantasy-style-dressing-root/);
 });
