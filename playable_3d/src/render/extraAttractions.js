@@ -104,6 +104,45 @@ function addFrontage(group, definition) {
   };
 }
 
+function addEvolutionVisuals(group) {
+  const root = new THREE.Group();
+  root.name = "galleon-evolution-dressing";
+  group.add(root);
+  let appliedLevel = -1;
+
+  const sync = (level) => {
+    const nextLevel = Math.max(0, Math.min(3, Math.floor(Number(level) || 0)));
+    if (nextLevel === appliedLevel) return;
+    appliedLevel = nextLevel;
+    while (root.children.length) root.remove(root.children[0]);
+    delete root.userData.beacon;
+
+    if (nextLevel >= 1) {
+      const crest = box(1.7, 0.34, 0.12, 0xf0c766, 6.55);
+      crest.position.z = -0.22;
+      root.add(crest);
+    }
+    if (nextLevel >= 2) {
+      for (const [x, z] of [[-4, -2], [4, -2], [-4, 2], [4, 2]]) {
+        const post = cylinder(0.05, 0.07, 1.35, 5, 0x46525c, 0.68);
+        post.position.set(x, 0, z);
+        const lamp = sphere(0.14, 0xffdc78, 1.48);
+        lamp.position.set(x, 0, z);
+        lamp.material = material(0x5a481f, { emissive: 0xffd15f, emissiveIntensity: 1.5 });
+        root.add(post, lamp);
+      }
+    }
+    if (nextLevel >= 3) {
+      const beacon = sphere(0.28, 0xffdf7c, 7.1);
+      beacon.material = material(0x634f20, { emissive: 0xffd15f, emissiveIntensity: 1.9 });
+      root.add(beacon);
+      root.userData.beacon = beacon;
+    }
+  };
+
+  return { root, sync };
+}
+
 export function createGalleonModel(entity) {
   const definition = catalogDefinition(entity.catalogId);
   if (definition.id !== "galleon") throw new Error(`Unsupported extra attraction: ${definition.id}`);
@@ -192,6 +231,15 @@ export function createGalleonModel(entity) {
     bulbs.push(bulb);
   }
 
+  const conditionLight = sphere(0.16, 0xe86d77, 0.48);
+  conditionLight.name = "galleon-condition-warning";
+  conditionLight.position.set(4.15, 0, 2.15);
+  conditionLight.material = material(0x5b2027, { emissive: 0xef5865, emissiveIntensity: 1.8 });
+  group.add(conditionLight);
+
+  const evolution = addEvolutionVisuals(group);
+  evolution.sync(entity.evolutionLevel);
+
   const rideAnchor = new THREE.Object3D();
   rideAnchor.position.set(0.3, 1.38, 0);
   ship.add(rideAnchor);
@@ -217,6 +265,12 @@ export function createGalleonModel(entity) {
       bulb.visible = motion.open;
       bulb.scale.setScalar(0.82 + Math.sin(time * 5.3 + index * 0.72) * 0.18 * (0.3 + motion.boardingPulse));
     });
+    conditionLight.visible = !liveEntity.open || Number(liveEntity.condition) < 35;
+    conditionLight.scale.setScalar(0.88 + Math.sin(time * 5.1) * 0.12);
+    evolution.sync(liveEntity.evolutionLevel);
+    if (evolution.root.userData.beacon) {
+      evolution.root.userData.beacon.scale.setScalar(0.9 + Math.sin(time * 2.4) * 0.1);
+    }
     updateFrontage(time, motion);
   };
 
