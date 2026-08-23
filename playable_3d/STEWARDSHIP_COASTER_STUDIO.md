@@ -17,7 +17,7 @@ Current declared park behavior:
 - footprint: 5 × 3;
 - capacity: 12;
 - cycle: 8 minutes;
-- operating cost: €12 per operating-hour charge cycle;
+- operating-cost declaration: €12, consumed by the existing park operating-cost cadence;
 - ride price: €3 default;
 - family/thrill crossover profile;
 - normal queue, economy, condition, maintenance, evolution and ride-cycle logic
