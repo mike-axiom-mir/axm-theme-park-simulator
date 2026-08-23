@@ -6,4 +6,4 @@
  * hardware and player-selectable district styling; simulation authority remains
  * outside render code.
  */
-export { WorldRenderer } from "./parkIdentityWorldRenderer.js";
+export { WorldRenderer } from "./stateSafeParkIdentityWorldRenderer.js";
