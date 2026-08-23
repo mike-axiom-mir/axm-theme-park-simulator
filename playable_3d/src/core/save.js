@@ -2,6 +2,7 @@ import { stateHash } from "./random.js";
 import { CAMPAIGN_LEVELS, catalogDefinition, catalogIdsThroughLevel } from "./catalog.js";
 import { createAdventureState } from "./adventure.js";
 import { normalizeStaffState } from "./staff.js";
+import { normalizeResearchState } from "./research.js";
 
 export const SAVE_VERSION = 3;
 const PREFIX = "axm-theme-park-v042-slot-";
@@ -63,6 +64,7 @@ export function migrateState(input) {
   }
   const legacyLitter = Math.max(0, Number(state.park?.litter) || 0);
   normalizeStaffState(state);
+  normalizeResearchState(state);
   if (!state.world.litter.length && legacyLitter > 0) {
     state.world.litter.push({
       id: `litter-${state.world.nextLitterId++}`,
