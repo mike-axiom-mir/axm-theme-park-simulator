@@ -174,6 +174,17 @@ function applyGuestBodyLanguage(model, visitor, time) {
       armLeft.rotation.x = -0.12 - shift * 0.18 * amount;
       armRight.rotation.x = -0.12 + shift * 0.18 * amount;
     }
+  } else if (descriptor.pose === "delighted") {
+    const bounce = Math.max(0, Math.sin(time * 5.4 + phase));
+    parts.torso.position.y += bounce * 0.055 * amount;
+    parts.head.position.y += bounce * 0.075 * amount;
+    parts.head.rotation.z = Math.sin(time * 2.7 + phase) * 0.055 * amount;
+    if (armLeft && armRight) {
+      armLeft.rotation.x = -0.35 - bounce * 0.7 * amount;
+      armRight.rotation.x = -0.35 - bounce * 0.7 * amount;
+      armLeft.rotation.z = -0.18 * amount;
+      armRight.rotation.z = 0.18 * amount;
+    }
   } else if (descriptor.pose === "tired") {
     const breath = Math.sin(time * 1.7 + phase);
     parts.torso.rotation.x = 0.12 + 0.12 * amount;
