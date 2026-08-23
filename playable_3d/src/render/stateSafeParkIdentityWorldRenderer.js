@@ -14,4 +14,9 @@ export class WorldRenderer extends ParkIdentityWorldRenderer {
     state.stateHash = stateHash(state);
     super.setState(state);
   }
+
+  cycleSelectedDistrictTheme() {
+    if (globalThis.document?.querySelector?.("dialog[open]")) return false;
+    return super.cycleSelectedDistrictTheme();
+  }
 }
