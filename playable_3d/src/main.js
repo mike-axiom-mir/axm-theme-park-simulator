@@ -1,4 +1,5 @@
 import { createNewGame, advanceOneMinute, applyAction } from "./core/simulation.js";
+import { applyStaffDevelopmentAction } from "./core/staff.js";
 import {
   deserializeGame, loadFromSlot, saveToSlot, serializeGame, slotMetadata
 } from "./core/save.js";
@@ -23,17 +24,22 @@ let lastTime = performance.now();
 let lastUiUpdate = 0;
 let lastAutosave = performance.now();
 
+const STAFF_DEVELOPMENT_ACTIONS = new Set(["trainStaff", "setStaffZone", "cycleStaffZone"]);
+
 function guardedStorage(callback, fallback = null) {
   try { return callback(); } catch { return fallback; }
 }
 
 function act(action, { quiet = false } = {}) {
-  const result = applyAction(state, action);
+  const result = STAFF_DEVELOPMENT_ACTIONS.has(action?.type)
+    ? applyStaffDevelopmentAction(state, action)
+    : applyAction(state, action);
   if (!result.ok && !quiet) ui.toast(result.reason ?? "That action could not be completed.", "error");
   if (result.ok) {
     state.stateHash = stateHash(state);
     world.syncWorld();
     ui.render(state);
+    if (result.message && !quiet) ui.toast(result.message, "good");
   }
   return result;
 }
@@ -84,6 +90,7 @@ const world = new WorldRenderer(canvas, {
   onSelectEntity: (entityId) => ui.openInspector(entityId),
   onSelectVisitor: (visitorId) => ui.openVisitorInspector(visitorId),
   onSelectStaff: (staffId) => ui.openStaffInspector(staffId),
+  onStaffDevelopment: (action) => act(action),
   onCloseInspector: () => world.selectEntity(null),
   onBuildRotation: (rotation) => ui.toast(`Build rotation ${rotation * 90}°`, "info"),
   onCancelBuild: () => ui.cancelBuild(),
