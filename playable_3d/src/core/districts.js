@@ -3,7 +3,8 @@ import { GRID_SIZE, catalogDefinition, rotatedFootprint } from "./catalog.js";
 export const DISTRICT_SCHEMA = "axm.themepark.districts/v1";
 export const DISTRICT_IDS = Object.freeze(["north", "east", "south", "west"]);
 export const DISTRICT_THEME_IDS = Object.freeze([
-  "neutral", "garden", "adventure", "storybook", "cartoon", "fantasy", "future", "waterfront"
+  "neutral", "garden", "adventure", "storybook", "cartoon", "fantasy",
+  "western", "medieval", "future", "waterfront"
 ]);
 
 export const DISTRICT_DEFINITIONS = Object.freeze({
@@ -62,6 +63,20 @@ export const DISTRICT_THEMES = Object.freeze({
     summary: "Enchanted ruins, crystals, floating runes, moonlit growth and magical scenic landmarks.",
     signatureTags: ["fantasy"],
     preferredTags: ["fantasy", "scenic", "storybook", "garden", "indoor", "adventure", "water"]
+  }),
+  western: districtTheme({
+    id: "western",
+    label: "Western",
+    summary: "Timber storefronts, rail details, dusty trails, lanterns, water towers and frontier fairground motion.",
+    signatureTags: ["western"],
+    preferredTags: ["western", "adventure", "scenic", "family", "thrill", "retail", "food"]
+  }),
+  medieval: districtTheme({
+    id: "medieval",
+    label: "Medieval",
+    summary: "Stone keeps, timber market stalls, banners, courtyards, towers and warm torchlight.",
+    signatureTags: ["medieval"],
+    preferredTags: ["medieval", "storybook", "adventure", "scenic", "family", "indoor", "thrill", "retail"]
   }),
   future: districtTheme({
     id: "future",
