@@ -77,12 +77,15 @@ test("district style persists through current saves and legacy saves default cle
 
 test("visible upgrade and district presentation stays layered outside preserved simulation", () => {
   const compatibilitySeam = read("../src/render/contentStudioWorldRenderer.js");
+  const stateGuard = read("../src/render/stateSafeParkIdentityWorldRenderer.js");
   const contentBase = read("../src/render/specialContentWorldRenderer.js");
   const renderer = read("../src/render/parkIdentityWorldRenderer.js");
   const save = read("../src/core/save.js");
   const simulation = read("../src/core/simulation.js");
 
-  assert.match(compatibilitySeam, /parkIdentityWorldRenderer/);
+  assert.match(compatibilitySeam, /stateSafeParkIdentityWorldRenderer/);
+  assert.match(stateGuard, /normalizeDistrictState/);
+  assert.match(stateGuard, /stateHash/);
   assert.match(contentBase, /SPECIAL_ATTRACTION_FACTORIES/);
   assert.match(renderer, /specialContentWorldRenderer/);
   assert.match(renderer, /applyDistrictAction/);
