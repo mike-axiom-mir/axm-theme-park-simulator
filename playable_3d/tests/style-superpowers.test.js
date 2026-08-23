@@ -56,6 +56,7 @@ test("each styled identity has a distinct superpower that can be earned by match
     ["garden", "bloomwake", ["lilypond", "mistgarden"]],
     ["adventure", "trailblaze", ["cascadegarden", "ponchopier"]],
     ["storybook", "lantern-chorus", ["canalcruise", "lagoonshow"]],
+    ["cartoon", "toonburst", ["bumpers", "cloudhop"]],
     ["future", "pulse-grid", ["tidalturn", "lagoonshow"]],
     ["waterfront", "tidecall", ["canalcruise", "lilypond"]]
   ];
@@ -81,6 +82,7 @@ test("superpower planning is read-only and bounded to the four existing district
 
 test("style superpowers stay in presentation layering and do not leak into preserved simulation", () => {
   const renderer = read("../src/render/styleSuperpowerWorldRenderer.js");
+  const cartoonRenderer = read("../src/render/cartoonStyleWorldRenderer.js");
   const stateGuard = read("../src/render/stateSafeParkIdentityWorldRenderer.js");
   const simulation = read("../src/core/simulation.js");
 
@@ -93,6 +95,9 @@ test("style superpowers stay in presentation layering and do not leak into prese
   assert.match(renderer, /Pulse Grid|createPulseGrid/);
   assert.match(renderer, /Tidecall|createTidecall/);
   assert.match(renderer, /weather\?\.type/);
-  assert.match(stateGuard, /styleSuperpowerWorldRenderer/);
-  assert.doesNotMatch(simulation, /styleSuperpowers|styleSuperpowerPlan|Bloomwake|Tidecall/);
+  assert.match(cartoonRenderer, /StyleSuperpowerWorldRenderer/);
+  assert.match(cartoonRenderer, /cartoon-toonburst/);
+  assert.match(cartoonRenderer, /bounded-render-only-cartoon-style/);
+  assert.match(stateGuard, /cartoonStyleWorldRenderer/);
+  assert.doesNotMatch(simulation, /styleSuperpowers|styleSuperpowerPlan|Bloomwake|Tidecall|Toonburst|cartoonStyleWorldRenderer/);
 });
