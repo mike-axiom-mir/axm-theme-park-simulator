@@ -2,7 +2,9 @@ import { GRID_SIZE, catalogDefinition, rotatedFootprint } from "./catalog.js";
 
 export const DISTRICT_SCHEMA = "axm.themepark.districts/v1";
 export const DISTRICT_IDS = Object.freeze(["north", "east", "south", "west"]);
-export const DISTRICT_THEME_IDS = Object.freeze(["neutral", "garden", "adventure", "storybook", "future"]);
+export const DISTRICT_THEME_IDS = Object.freeze([
+  "neutral", "garden", "adventure", "storybook", "future", "waterfront"
+]);
 
 export const DISTRICT_DEFINITIONS = Object.freeze({
   north: Object.freeze({ id: "north", label: "North district" }),
@@ -11,12 +13,56 @@ export const DISTRICT_DEFINITIONS = Object.freeze({
   west: Object.freeze({ id: "west", label: "West district" })
 });
 
+const frozenTags = (values = []) => Object.freeze([...values]);
+const districtTheme = (data) => Object.freeze({
+  ...data,
+  signatureTags: frozenTags(data.signatureTags),
+  preferredTags: frozenTags(data.preferredTags)
+});
+
 export const DISTRICT_THEMES = Object.freeze({
-  neutral: Object.freeze({ id: "neutral", label: "Neutral", summary: "Keep the park element's own identity without added district dressing." }),
-  garden: Object.freeze({ id: "garden", label: "Garden", summary: "Low-key planting, leaf and warm-lantern accents." }),
-  adventure: Object.freeze({ id: "adventure", label: "Adventure", summary: "Pennants, timber-toned trim and expedition accents." }),
-  storybook: Object.freeze({ id: "storybook", label: "Storybook", summary: "Playful lantern and jewel-like fairytale accents." }),
-  future: Object.freeze({ id: "future", label: "Future", summary: "Clean rings, signal nodes and restrained luminous accents." })
+  neutral: districtTheme({
+    id: "neutral",
+    label: "Neutral",
+    summary: "Keep each park element's own identity without added district dressing.",
+    signatureTags: [],
+    preferredTags: []
+  }),
+  garden: districtTheme({
+    id: "garden",
+    label: "Garden",
+    summary: "Planting, ponds, shade, family comfort and warm-lantern atmosphere.",
+    signatureTags: ["garden"],
+    preferredTags: ["garden", "scenic", "family", "water", "care"]
+  }),
+  adventure: districtTheme({
+    id: "adventure",
+    label: "Adventure",
+    summary: "Timber, expedition details, water action, movement and bolder thrill landmarks.",
+    signatureTags: ["adventure"],
+    preferredTags: ["adventure", "thrill", "water", "family", "scenic"]
+  }),
+  storybook: districtTheme({
+    id: "storybook",
+    label: "Storybook",
+    summary: "Playful lanterns, fairytale framing, family rides and indoor story experiences.",
+    signatureTags: ["storybook"],
+    preferredTags: ["storybook", "family", "indoor", "scenic", "garden"]
+  }),
+  future: districtTheme({
+    id: "future",
+    label: "Future",
+    summary: "Clean rings, signal nodes, kinetic rides, indoor worlds and restrained luminous accents.",
+    signatureTags: ["future"],
+    preferredTags: ["future", "thrill", "indoor", "scenic", "water"]
+  }),
+  waterfront: districtTheme({
+    id: "waterfront",
+    label: "Waterfront",
+    summary: "Boardwalk timber, reeds, mist, harbour lights and attractions shaped around water.",
+    signatureTags: ["water"],
+    preferredTags: ["water", "scenic", "family", "garden", "adventure", "food", "care"]
+  })
 });
 
 const safeTheme = (value) => DISTRICT_THEME_IDS.includes(value) ? value : "neutral";
@@ -100,7 +146,12 @@ function setDistrictTheme(state, districtId, themeId) {
   if (!DISTRICT_IDS.includes(districtId)) return { ok: false, reason: "That district does not exist." };
   if (!DISTRICT_THEME_IDS.includes(themeId)) return { ok: false, reason: "That district theme does not exist." };
   const previousTheme = state.districts.themes[districtId];
-  if (previousTheme === themeId) return { ok: false, reason: `${DISTRICT_DEFINITIONS[districtId].label} already uses ${DISTRICT_THEMES[themeId].label}.` };
+  if (previousTheme === themeId) {
+    return {
+      ok: false,
+      reason: `${DISTRICT_DEFINITIONS[districtId].label} already uses ${DISTRICT_THEMES[themeId].label}.`
+    };
+  }
   state.districts.themes[districtId] = themeId;
   state.districts.revision += 1;
   appendEvent(state, districtId, previousTheme, themeId);
@@ -123,7 +174,9 @@ export function applyDistrictAction(state, action = {}) {
     return setDistrictTheme(state, districtId, action.themeId);
   }
   if (action.type === "cycleDistrictTheme") {
-    if (!DISTRICT_IDS.includes(districtId)) return { ok: false, reason: "Select a park element inside a district first." };
+    if (!DISTRICT_IDS.includes(districtId)) {
+      return { ok: false, reason: "Select a park element inside a district first." };
+    }
     const current = state.districts.themes[districtId];
     const next = DISTRICT_THEME_IDS[(DISTRICT_THEME_IDS.indexOf(current) + 1) % DISTRICT_THEME_IDS.length];
     return setDistrictTheme(state, districtId, next);

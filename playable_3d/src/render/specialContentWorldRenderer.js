@@ -1,12 +1,15 @@
 import { WorldRenderer as StaffAwareWorldRenderer } from "./staffAwareWorldRenderer.js";
 import { catalogDefinition, rotatedFootprint } from "../core/catalog.js";
 import { WORLD_CONTENT_IDS } from "../core/worldContentCatalog.js";
+import { WATER_DISTRICT_CONTENT_IDS } from "../core/waterDistrictCatalog.js";
 import { createGalleonModel } from "./extraAttractions.js";
 import { createWorldContentModel } from "./worldContentModels.js";
+import { createWaterDistrictModel } from "./waterDistrictModels.js";
 
 const SPECIAL_ATTRACTION_FACTORIES = Object.freeze({
   galleon: createGalleonModel,
-  ...Object.fromEntries(WORLD_CONTENT_IDS.map((id) => [id, createWorldContentModel]))
+  ...Object.fromEntries(WORLD_CONTENT_IDS.map((id) => [id, createWorldContentModel])),
+  ...Object.fromEntries(WATER_DISTRICT_CONTENT_IDS.map((id) => [id, createWaterDistrictModel]))
 });
 
 /**

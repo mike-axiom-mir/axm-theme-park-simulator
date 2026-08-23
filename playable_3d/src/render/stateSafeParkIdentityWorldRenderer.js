@@ -1,4 +1,4 @@
-import { WorldRenderer as ParkIdentityWorldRenderer } from "./parkIdentityWorldRenderer.js";
+import { WorldRenderer as WaterfrontIdentityWorldRenderer } from "./waterfrontIdentityWorldRenderer.js";
 import { normalizeDistrictState } from "../core/districts.js";
 import { stateHash } from "../core/random.js";
 
@@ -8,7 +8,7 @@ import { stateHash } from "../core/random.js";
  * saves are already normalized by save.js. Re-hashing here prevents a renderer
  * default from ever leaving stateHash stale.
  */
-export class WorldRenderer extends ParkIdentityWorldRenderer {
+export class WorldRenderer extends WaterfrontIdentityWorldRenderer {
   constructor(canvas, callbacks = {}) {
     super(canvas, callbacks);
     const documentRef = globalThis.document;

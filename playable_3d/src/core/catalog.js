@@ -1,4 +1,5 @@
 import { WORLD_CONTENT_CATALOG } from "./worldContentCatalog.js";
+import { WATER_DISTRICT_CATALOG } from "./waterDistrictCatalog.js";
 
 export const GRID_SIZE = 30;
 export const TILE_SIZE = 2;
@@ -120,7 +121,8 @@ export const CATALOG = {
     cost: 65, footprint: [1, 1], capacity: 2, serviceMinutes: 14, need: "rest",
     theme: "neutral", influence: "rest", color: 0x8b5e3c
   },
-  ...WORLD_CONTENT_CATALOG
+  ...WORLD_CONTENT_CATALOG,
+  ...WATER_DISTRICT_CATALOG
 };
 
 export const BUILD_CATEGORIES = ["Paths", "Rides", "Attractions", "Services", "Stores", "Scenery"];
@@ -132,9 +134,10 @@ export const CAMPAIGN_LEVELS = Object.freeze([
     requirement: "Inherited with the park",
     unlocks: [
       "path", "queue", "carousel", "spinner", "twirlcups", "bumpers", "cloudhop",
-      "littleloop", "gardendrift", "acornplay", "snacks", "toilets", "refill",
-      "hellohub", "familynest", "memorymarket", "sugarcloud", "swirlcart", "popcornplanet",
-      "tree", "lantern", "fountain", "bench"
+      "littleloop", "gardendrift", "acornplay", "mistgarden", "snacks", "toilets", "refill",
+      "harbourfizz", "watersidegazebo", "hellohub", "familynest", "memorymarket",
+      "sugarcloud", "swirlcart", "popcornplanet", "tree", "lantern", "fountain", "bench",
+      "lilypond", "reedbank", "boardwalkdeck"
     ]
   },
   {
@@ -143,8 +146,9 @@ export const CAMPAIGN_LEVELS = Object.freeze([
     requirement: "Welcome 20 guests and hold rating 55",
     unlocks: [
       "wheel", "galleon", "starflyers", "sunbeam", "logdash", "lanternmaze", "skyribbon",
-      "cloudcinema", "tinytown", "drinks", "quietcove", "stash", "wagonwheels", "chargegrove",
-      "toytinker", "parkthreads", "snapshotshop", "nameit"
+      "cloudcinema", "tinytown", "canalcruise", "tidalturn", "lagoonshow", "drinks",
+      "quietcove", "stash", "wagonwheels", "chargegrove", "toytinker", "parkthreads",
+      "snapshotshop", "nameit", "ponchopier", "cascadegarden", "harbourlight"
     ]
   },
   {
