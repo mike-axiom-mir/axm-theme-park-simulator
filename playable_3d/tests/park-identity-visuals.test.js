@@ -86,6 +86,8 @@ test("visible upgrade and district presentation stays layered outside preserved 
   assert.match(compatibilitySeam, /stateSafeParkIdentityWorldRenderer/);
   assert.match(stateGuard, /normalizeDistrictState/);
   assert.match(stateGuard, /stateHash/);
+  assert.match(stateGuard, /district-style-button/);
+  assert.match(stateGuard, /dialog\[open\]/);
   assert.match(contentBase, /SPECIAL_ATTRACTION_FACTORIES/);
   assert.match(renderer, /specialContentWorldRenderer/);
   assert.match(renderer, /applyDistrictAction/);
