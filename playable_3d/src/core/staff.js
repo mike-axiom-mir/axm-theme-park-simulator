@@ -1,6 +1,7 @@
 import { cellKey, findPath, reachablePathKeys } from "./pathfinding.js";
 import {
-  normalizeStaffDevelopment, STAFF_ZONE_LABELS, staffTrainingProfile, staffZoneContainsCell
+  nextStaffZone, normalizeStaffDevelopment, STAFF_ZONE_IDS, STAFF_ZONE_LABELS,
+  staffTrainingCost, staffTrainingProfile, staffZoneContainsCell
 } from "./staffManagement.js";
 
 const ROLE_FROM_COUNT = { cleaners: "cleaner", mechanics: "mechanic" };
@@ -8,6 +9,7 @@ const COUNT_FROM_ROLE = { cleaner: "cleaners", mechanic: "mechanics" };
 
 const cloneCell = (cell) => [Number(cell?.[0] ?? 0), Number(cell?.[1] ?? 0)];
 const distance = (a, b) => Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
+const roundMoney = (value) => Math.round(Number(value) * 100) / 100;
 
 function stableNumber(value) {
   let hash = 2166136261;
@@ -16,6 +18,18 @@ function stableNumber(value) {
     hash = Math.imul(hash, 16777619);
   }
   return hash >>> 0;
+}
+
+function appendStaffEvent(state, type, subjectId, data = {}) {
+  state.eventLog ??= [];
+  state.eventLog.push({
+    sequence: state.eventLog.length + 1,
+    tick: Number(state.tick) || 0,
+    type,
+    subjectId,
+    data
+  });
+  if (state.eventLog.length > 400) state.eventLog.splice(0, state.eventLog.length - 400);
 }
 
 function freshAgent(state, role) {
@@ -162,6 +176,59 @@ export function resetStaffAssignment(agent, thought = null) {
   agent.idleMinutes = 0;
   if (thought) agent.lastThought = thought;
   return true;
+}
+
+/**
+ * Bounded authoritative staff-development actions. This is deliberately kept
+ * beside staff routing so training/zoning cannot become a parallel staff engine.
+ */
+export function applyStaffDevelopmentAction(state, action = {}) {
+  normalizeStaffState(state);
+  const agent = state.staffAgents.find((item) => item.id === action.staffId);
+  if (!agent) return { ok: false, reason: "Crew member not found." };
+
+  if (action.type === "trainStaff") {
+    const cost = staffTrainingCost(agent);
+    if (cost === null) return { ok: false, reason: "This crew member already has maximum training." };
+    if ((state.economy?.cash ?? 0) < cost) return { ok: false, reason: `Training requires €${cost}.` };
+    state.economy.cash = roundMoney(state.economy.cash - cost);
+    state.economy.todayCosts = roundMoney((state.economy.todayCosts ?? 0) + cost);
+    state.economy.lifetimeCosts = roundMoney((state.economy.lifetimeCosts ?? 0) + cost);
+    agent.trainingLevel += 1;
+    agent.trainingSpent = roundMoney(agent.trainingSpent + cost);
+    const profile = staffTrainingProfile(agent);
+    resetStaffAssignment(agent, `Training level ${agent.trainingLevel} complete. Ready for a stronger shift.`);
+    appendStaffEvent(state, "staff.training.completed", agent.id, {
+      level: agent.trainingLevel,
+      cost,
+      movePerMinute: profile.movePerMinute,
+      cleanerCapacity: profile.cleanerCapacity,
+      mechanicRepair: profile.mechanicRepair
+    });
+    return {
+      ok: true,
+      message: `${agent.role === "cleaner" ? "Cleaner" : "Mechanic"} training L${agent.trainingLevel} complete · €${cost}.`,
+      staffId: agent.id,
+      level: agent.trainingLevel,
+      cost
+    };
+  }
+
+  if (action.type === "setStaffZone" || action.type === "cycleStaffZone") {
+    const requested = action.type === "cycleStaffZone" ? nextStaffZone(agent.zone) : action.zone;
+    if (!STAFF_ZONE_IDS.includes(requested)) return { ok: false, reason: "Unknown crew work zone." };
+    agent.zone = requested;
+    resetStaffAssignment(agent, `Assigned to ${STAFF_ZONE_LABELS[agent.zone].toLowerCase()}.`);
+    appendStaffEvent(state, "staff.zone.changed", agent.id, { zone: agent.zone });
+    return {
+      ok: true,
+      message: `${agent.role === "cleaner" ? "Cleaner" : "Mechanic"} zone · ${STAFF_ZONE_LABELS[agent.zone]}.`,
+      staffId: agent.id,
+      zone: agent.zone
+    };
+  }
+
+  return { ok: false, reason: `Unknown staff development action: ${action.type}` };
 }
 
 function pathKeys(state) {
