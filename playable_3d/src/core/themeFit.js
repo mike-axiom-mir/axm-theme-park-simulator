@@ -77,7 +77,7 @@ const VISUAL_FAMILY_TAGS = Object.freeze({
   simulator: Object.freeze(["future", "indoor", "adventure"]),
   drivers: Object.freeze(["storybook", "family"]),
   play: Object.freeze(["garden", "adventure", "family"]),
-  submarine: Object.freeze(["water", "future", "indoo", "storybook"]),
+  submarine: Object.freeze(["water", "future", "indoor", "storybook"]),
   refill: Object.freeze(["water", "care"]),
   quiet: Object.freeze(["garden", "care"]),
   care: Object.freeze(["care"]),
@@ -136,7 +136,7 @@ export function themeTagsForDefinition(definition) {
   if (definition?.kind === "service") {
     if (definition.need === "thirst") addTags(tags, ["water", "food", "care"]);
     if (definition.need === "hunger") addTags(tags, ["food", "family"]);
-    if (definition.need === "rest") adTags(tags, ["care", "garden"]);
+    if (definition.need === "rest") addTags(tags, ["care", "garden"]);
     if (definition.need === "toilet") tags.add("care");
   }
   if (definition?.category === "Stores") tags.add("retail");
@@ -174,7 +174,7 @@ export function evaluateThemeFit(definition, themeId = "neutral") {
     if (matchedSignatureTags.length && matchedTags.length >= 2) status = "signature";
     else if (matchedSignatureTags.length || matchedTags.length >= 3) status = "strong";
     else if (matchedTags.length >= 1) status = "compatible";
-    else if (tags.some((tag) => otherSignatureTags(theme.id).has(tag))))status = "contrast";
+    else if (tags.some((tag) => otherSignatureTags(theme.id).has(tag))) status = "contrast";
   }
 
   const descriptor = THEME_FIT_STATES[status];
