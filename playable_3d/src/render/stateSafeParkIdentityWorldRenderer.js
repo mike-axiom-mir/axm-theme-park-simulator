@@ -1,4 +1,4 @@
-import { WorldRenderer as CartoonStyleWorldRenderer } from "./cartoonStyleWorldRenderer.js";
+import { WorldRenderer as FantasyStyleWorldRenderer } from "./fantasyStyleWorldRenderer.js";
 import { normalizeDistrictState } from "../core/districts.js";
 import { stateHash } from "../core/random.js";
 
@@ -8,7 +8,7 @@ import { stateHash } from "../core/random.js";
  * saves are already normalized by save.js. Re-hashing here prevents a renderer
  * default from ever leaving stateHash stale.
  */
-export class WorldRenderer extends CartoonStyleWorldRenderer {
+export class WorldRenderer extends FantasyStyleWorldRenderer {
   constructor(canvas, callbacks = {}) {
     super(canvas, callbacks);
     const documentRef = globalThis.document;
