@@ -17,10 +17,10 @@ function entity(id, catalogId, x, z) {
   return { id, catalogId, x, z, rotation: 0 };
 }
 
-test("Fantasy is a first-class district identity between Cartoon and Future", () => {
+test("Fantasy remains a first-class district identity after Cartoon", () => {
   assert.ok(DISTRICT_THEME_IDS.includes("fantasy"));
   assert.equal(DISTRICT_THEME_IDS[DISTRICT_THEME_IDS.indexOf("cartoon") + 1], "fantasy");
-  assert.equal(DISTRICT_THEME_IDS[DISTRICT_THEME_IDS.indexOf("fantasy") + 1], "future");
+  assert.equal(DISTRICT_THEME_IDS[DISTRICT_THEME_IDS.indexOf("fantasy") + 1], "western");
   assert.equal(DISTRICT_THEMES.fantasy.label, "Fantasy");
   assert.deepEqual(DISTRICT_THEMES.fantasy.signatureTags, ["fantasy"]);
   assert.ok(DISTRICT_THEMES.fantasy.preferredTags.includes("scenic"));
@@ -79,7 +79,8 @@ test("two Fantasy signature anchors unleash Aetherveil", () => {
 
 test("Fantasy rendering stays additive, bounded and outside preserved simulation", () => {
   const fantasyRenderer = read("../src/render/fantasyStyleWorldRenderer.js");
-  const cartoonRenderer = read("../src/render/cartoonStyleWorldRenderer.js");
+  const westernRenderer = read("../src/render/westernStyleWorldRenderer.js");
+  const finalStyle = read("../src/render/finalStyleWorldRenderer.js");
   const stateGuard = read("../src/render/stateSafeParkIdentityWorldRenderer.js");
   const simulation = read("../src/core/simulation.js");
 
@@ -90,7 +91,8 @@ test("Fantasy rendering stays additive, bounded and outside preserved simulation
   assert.match(fantasyRenderer, /bounded-render-only-fantasy-style/);
   assert.match(fantasyRenderer, /magicBoost/);
   assert.match(fantasyRenderer, /setQuality/);
-  assert.match(cartoonRenderer, /StyleSuperpowerWorldRenderer/);
-  assert.match(stateGuard, /FantasyStyleWorldRenderer/);
+  assert.match(westernRenderer, /FantasyStyleWorldRenderer/);
+  assert.match(finalStyle, /medievalStyleWorldRenderer/);
+  assert.match(stateGuard, /finalStyleWorldRenderer/);
   assert.doesNotMatch(simulation, /aetherveil|fantasyStyleWorldRenderer|fantasy-style-dressing-root/);
 });
