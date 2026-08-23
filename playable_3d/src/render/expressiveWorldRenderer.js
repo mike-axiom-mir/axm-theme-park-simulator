@@ -1,5 +1,7 @@
 import { WorldRenderer as BaseWorldRenderer } from "./worldRenderer.js";
-import { deriveGuestBodyLanguage } from "../presentation/guestBodyLanguage.js";
+import {
+  deriveGuestBodyLanguage, describeGuestBodyLanguage
+} from "../presentation/guestBodyLanguage.js";
 
 function visitorPhase(visitorId) {
   const text = String(visitorId ?? "guest");
@@ -56,9 +58,20 @@ function applyGuestBodyLanguage(model, visitor, time) {
 
 /**
  * Presentation-only extension. Authoritative visitor state remains owned by the
- * base renderer's state reference and simulation; this class only alters meshes.
+ * base renderer's state reference and simulation; this class only alters meshes
+ * and emits an explanatory UI message when a guest is explicitly selected.
  */
 export class WorldRenderer extends BaseWorldRenderer {
+  selectVisitor(visitorId) {
+    super.selectVisitor(visitorId);
+    if (!visitorId || !this.state) return;
+    const visitor = this.state.visitors.find((item) => item.id === visitorId);
+    if (!visitor) return;
+    const cue = describeGuestBodyLanguage(visitor);
+    const strength = cue.pose === "neutral" ? "" : ` · ${cue.strength}%`;
+    this.callbacks.onWorldMessage?.(`Body language: ${cue.label} · ${cue.reason}${strength}`);
+  }
+
   syncVisitors(time) {
     super.syncVisitors(time);
     if (!this.state) return;
