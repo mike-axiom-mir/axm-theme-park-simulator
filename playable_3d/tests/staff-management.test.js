@@ -36,6 +36,7 @@ test("training spends real park cash and improves bounded work capacity", () => 
   assert.equal(first.cost, 180);
   assert.equal(state.economy.cash, beforeCash - 180);
   assert.equal(state.economy.todayCosts, 180);
+  assert.equal(state.economy.lifetimeCosts, 180);
   assert.equal(cleaner.trainingLevel, 1);
   assert.equal(cleaner.trainingSpent, 180);
 
@@ -43,6 +44,7 @@ test("training spends real park cash and improves bounded work capacity", () => 
   assert.ok(afterProfile.movePerMinute > beforeProfile.movePerMinute);
   assert.ok(afterProfile.cleanerCapacity > beforeProfile.cleanerCapacity);
   assert.equal(state.eventLog.at(-1).type, "staff.training.completed");
+  assert.equal(state.eventLog.at(-1).data.cost, 180);
 
   assert.equal(applyStaffDevelopmentAction(state, { type: "trainStaff", staffId: cleaner.id }).ok, true);
   assert.equal(applyStaffDevelopmentAction(state, { type: "trainStaff", staffId: cleaner.id }).ok, true);
@@ -109,7 +111,7 @@ test("staff development survives existing save version through normalizer defaul
   assert.equal(restoredCleaner.zone, "north");
 });
 
-test("playable wiring routes staff development without expanding base simulation authority", () => {
+test("playable wiring routes staff development without expanding renderer authority", () => {
   const main = read("../src/main.js");
   const staffRenderer = read("../src/render/staffAwareWorldRenderer.js");
   const staff = read("../src/core/staff.js");
@@ -120,6 +122,8 @@ test("playable wiring routes staff development without expanding base simulation
   assert.match(staffRenderer, /KeyT/);
   assert.match(staffRenderer, /KeyZ/);
   assert.match(staffRenderer, /onStaffDevelopment/);
+  assert.match(staffRenderer, /staff-development-visual/);
+  assert.match(staffRenderer, /OctahedronGeometry/);
   assert.match(staff, /staff\.training\.completed/);
   assert.match(staff, /staff\.zone\.changed/);
   assert.doesNotMatch(staffRenderer, /economy\.cash\s*=/);
