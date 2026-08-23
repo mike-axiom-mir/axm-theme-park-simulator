@@ -196,6 +196,7 @@ const ui = new GameInterface({
 const coasterStudio = new CoasterStudioUI({
   onMessage: (message) => ui.toast(message, "info")
 });
+coasterStudio.dialog.addEventListener("keydown", (event) => event.stopPropagation());
 studioButton.addEventListener("click", () => coasterStudio.open());
 
 function renderParkVisionStatus(status, { announce = false } = {}) {
