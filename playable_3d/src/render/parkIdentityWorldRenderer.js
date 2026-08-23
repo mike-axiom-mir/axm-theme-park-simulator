@@ -1,7 +1,8 @@
 import * as THREE from "../../vendor/three.module.min.js";
-import { WorldRenderer as ContentStudioWorldRenderer } from "./contentStudioWorldRenderer.js";
+import { WorldRenderer as SpecialContentWorldRenderer } from "./specialContentWorldRenderer.js";
 import { GRID_SIZE, catalogDefinition, rotatedFootprint } from "../core/catalog.js";
-import { DISTRICT_THEMES, districtThemeForEntity } from "../core/districts.js";
+import { DISTRICT_THEMES, applyDistrictAction, districtThemeForEntity } from "../core/districts.js";
+import { stateHash } from "../core/random.js";
 
 const MODULE_COLORS = Object.freeze({
   "quick-load-gate": 0xf0c766,
@@ -238,10 +239,10 @@ function createParkUpgradeVisual(upgradeId) {
 
 /**
  * Final presentation layer for source stewardship. Installed upgrades remain
- * authoritative in core/upgrades.js and district choices remain style-only in
- * core/districts.js. This layer only makes those committed choices visible.
+ * authoritative in core/upgrades.js. District choices remain style-only and are
+ * committed through core/districts.js from this bounded presentation seam.
  */
-export class WorldRenderer extends ContentStudioWorldRenderer {
+export class WorldRenderer extends SpecialContentWorldRenderer {
   constructor(canvas, callbacks = {}) {
     super(canvas, callbacks);
     this.parkUpgradeVisualRoot = new THREE.Group();
@@ -257,11 +258,18 @@ export class WorldRenderer extends ContentStudioWorldRenderer {
   }
 
   cycleSelectedDistrictTheme() {
-    if (!this.selectedEntityId) {
+    if (!this.selectedEntityId || !this.state) {
       this.callbacks.onWorldMessage?.("Select a park element first · Y changes the style of its district.");
       return false;
     }
-    this.callbacks.onDistrictTheme?.({ type: "cycleDistrictTheme", entityId: this.selectedEntityId });
+    const result = applyDistrictAction(this.state, { type: "cycleDistrictTheme", entityId: this.selectedEntityId });
+    if (!result.ok) {
+      this.callbacks.onWorldMessage?.(result.reason ?? "That district style could not be changed.");
+      return false;
+    }
+    this.state.stateHash = stateHash(this.state);
+    this.syncWorld();
+    this.callbacks.onWorldMessage?.(result.message);
     return true;
   }
 
