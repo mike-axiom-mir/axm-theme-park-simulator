@@ -66,21 +66,27 @@ test("guest body language is deterministic, frozen and does not mutate visitor e
 
 test("committed activity poses take priority over softer mood cues", () => {
   assert.equal(deriveGuestBodyLanguage(visitor({
-    state: "resting", energy: 0.1, happiness: 10, activityRemaining: 80
+    state: "resting", energy: 0.1, happiness: 95, activityRemaining: 80
   })).pose, "resting");
   assert.equal(deriveGuestBodyLanguage(visitor({
-    state: "usingService", energy: 0.1, happiness: 10
+    state: "usingService", energy: 0.1, happiness: 95
   })).pose, "service");
+  assert.equal(deriveGuestBodyLanguage(visitor({
+    state: "queueing", activityRemaining: 50, happiness: 95
+  })).pose, "impatient");
 });
 
-test("tired and disappointed postures reuse existing simulation thresholds", () => {
-  const tired = deriveGuestBodyLanguage(visitor({ energy: 0.39, happiness: 20 }));
+test("negative and positive posture thresholds remain explicit", () => {
+  const tired = deriveGuestBodyLanguage(visitor({ energy: 0.39, happiness: 95 }));
   const disappointed = deriveGuestBodyLanguage(visitor({ energy: 0.8, happiness: 30 }));
+  const delighted = deriveGuestBodyLanguage(visitor({ state: "walking", happiness: 91 }));
   const neutral = deriveGuestBodyLanguage(visitor({ energy: 0.58, happiness: 45 }));
   assert.equal(tired.pose, "tired");
   assert.ok(closeTo(tired.intensity, 0.5));
   assert.equal(disappointed.pose, "disappointed");
   assert.ok(closeTo(disappointed.intensity, 0.5));
+  assert.equal(delighted.pose, "delighted");
+  assert.ok(closeTo(delighted.intensity, 0.5));
   assert.equal(neutral.pose, "neutral");
 });
 
@@ -92,6 +98,11 @@ test("human-readable cue is derived from the exact same body-language descriptor
   assert.equal(cue.reason, "long queue");
   assert.equal(cue.strength, 50);
   assert.ok(Object.isFrozen(cue));
+
+  const delighted = describeGuestBodyLanguage(visitor({ state: "walking", happiness: 91 }));
+  assert.equal(delighted.label, "Delighted");
+  assert.equal(delighted.reason, "high happiness");
+  assert.equal(delighted.strength, 50);
 
   const neutral = describeGuestBodyLanguage(visitor());
   assert.equal(neutral.label, "Neutral");
@@ -151,6 +162,7 @@ test("expressive renderer remains presentation-only and explains explicit select
   assert.match(renderer, /super\.syncVisitors\(time\)/);
   assert.match(renderer, /super\.syncStaffAndLitter\(time\)/);
   assert.match(renderer, /super\.selectVisitor\(visitorId\)/);
+  assert.match(renderer, /descriptor\.pose === "delighted"/);
   assert.match(renderer, /deriveGuestBodyLanguage/);
   assert.match(renderer, /describeGuestBodyLanguage/);
   assert.match(renderer, /deriveParkVisionPlan/);
