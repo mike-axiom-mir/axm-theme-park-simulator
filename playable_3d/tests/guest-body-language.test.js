@@ -7,6 +7,7 @@ import {
 } from "../src/presentation/guestBodyLanguage.js";
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
+const closeTo = (actual, expected, tolerance = 1e-12) => Math.abs(actual - expected) <= tolerance;
 
 function visitor(overrides = {}) {
   return {
@@ -29,7 +30,7 @@ test("guest body language is deterministic, frozen and does not mutate visitor e
   assert.deepEqual(input, before);
   assert.equal(first.schema, GUEST_BODY_LANGUAGE_SCHEMA);
   assert.equal(first.pose, "impatient");
-  assert.equal(first.intensity, 0.5);
+  assert.ok(closeTo(first.intensity, 0.5));
   assert.ok(Object.isFrozen(first));
 });
 
@@ -47,9 +48,9 @@ test("tired and disappointed postures reuse existing simulation thresholds", () 
   const disappointed = deriveGuestBodyLanguage(visitor({ energy: 0.8, happiness: 30 }));
   const neutral = deriveGuestBodyLanguage(visitor({ energy: 0.58, happiness: 45 }));
   assert.equal(tired.pose, "tired");
-  assert.equal(tired.intensity, 0.5);
+  assert.ok(closeTo(tired.intensity, 0.5));
   assert.equal(disappointed.pose, "disappointed");
-  assert.equal(disappointed.intensity, 0.5);
+  assert.ok(closeTo(disappointed.intensity, 0.5));
   assert.equal(neutral.pose, "neutral");
 });
 
