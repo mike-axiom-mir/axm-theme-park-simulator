@@ -142,6 +142,14 @@ export const STYLE_SUPERPOWERS = Object.freeze({
     summary: "Water, scenic and family anchors wake a shared ripple, mist and harbour-light rhythm.",
     visualMode: "tide",
     moment: "Rain and evening conditions strengthen Tidecall's presentation without creating a gameplay bonus."
+  }),
+  gilded: power({
+    id: "grand-radiance",
+    themeId: "gilded",
+    label: "Grand Radiance",
+    summary: "Luxury, retail, hospitality and scenic anchors synchronize fountains, crown rings, jewel lights and shameless gold sparkle.",
+    visualMode: "grandeur",
+    moment: "Evening makes Grand Radiance glow harder, but the district remains pure showmanship with no hidden wealth multiplier."
   })
 });
 
