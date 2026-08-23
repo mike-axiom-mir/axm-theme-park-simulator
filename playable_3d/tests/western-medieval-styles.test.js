@@ -17,14 +17,12 @@ function entity(id, catalogId, x, z) {
   return { id, catalogId, x, z, rotation: 0 };
 }
 
-test("Western and Medieval are first-class styles between Fantasy and Future", () => {
+test("Western and Medieval remain first-class styles immediately after Fantasy", () => {
   const fantasyIndex = DISTRICT_THEME_IDS.indexOf("fantasy");
   const westernIndex = DISTRICT_THEME_IDS.indexOf("western");
   const medievalIndex = DISTRICT_THEME_IDS.indexOf("medieval");
-  const futureIndex = DISTRICT_THEME_IDS.indexOf("future");
   assert.equal(westernIndex, fantasyIndex + 1);
   assert.equal(medievalIndex, westernIndex + 1);
-  assert.equal(futureIndex, medievalIndex + 1);
   assert.equal(DISTRICT_THEMES.western.label, "Western");
   assert.equal(DISTRICT_THEMES.medieval.label, "Medieval");
   assert.deepEqual(DISTRICT_THEMES.western.signatureTags, ["western"]);
@@ -98,9 +96,12 @@ test("two Medieval signatures unleash Bannerwake", () => {
   assert.ok(power.topTags.includes("medieval"));
 });
 
-test("historical renderers stay additive, bounded and behind the stable final-style seam", () => {
+test("historical renderers remain correctly chained beneath later themed lands", () => {
   const western = read("../src/render/westernStyleWorldRenderer.js");
   const medieval = read("../src/render/medievalStyleWorldRenderer.js");
+  const seasonal = read("../src/render/festivalTechStyleWorldRenderer.js");
+  const motionGuard = read("../src/render/festivalTechMotionGuardWorldRenderer.js");
+  const gilded = read("../src/render/gildedStyleWorldRenderer.js");
   const finalStyle = read("../src/render/finalStyleWorldRenderer.js");
   const guard = read("../src/render/stateSafeParkIdentityWorldRenderer.js");
   const simulation = read("../src/core/simulation.js");
@@ -112,7 +113,10 @@ test("historical renderers stay additive, bounded and behind the stable final-st
   assert.match(medieval, /WesternStyleWorldRenderer/);
   assert.match(medieval, /bounded-render-only-medieval-style/);
   assert.match(medieval, /medieval-bannerwake/);
-  assert.match(finalStyle, /medievalStyleWorldRenderer/);
+  assert.match(seasonal, /MedievalStyleWorldRenderer/);
+  assert.match(motionGuard, /FestivalTechStyleWorldRenderer/);
+  assert.match(gilded, /FestivalTechMotionGuardWorldRenderer/);
+  assert.match(finalStyle, /gildedStyleWorldRenderer/);
   assert.match(guard, /FinalStyleWorldRenderer/);
-  assert.doesNotMatch(simulation, /frontier-rush|bannerwake|westernStyleWorldRenderer|medievalStyleWorldRenderer/);
+  assert.doesNotMatch(simulation, /frontier-rush|bannerwake|westernStyleWorldRenderer|medievalStyleWorldRenderer|gildedStyleWorldRenderer/);
 });
