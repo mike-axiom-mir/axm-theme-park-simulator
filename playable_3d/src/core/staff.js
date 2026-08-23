@@ -1,4 +1,7 @@
 import { cellKey, findPath, reachablePathKeys } from "./pathfinding.js";
+import {
+  normalizeStaffDevelopment, STAFF_ZONE_LABELS, staffTrainingProfile, staffZoneContainsCell
+} from "./staffManagement.js";
 
 const ROLE_FROM_COUNT = { cleaners: "cleaner", mechanics: "mechanic" };
 const COUNT_FROM_ROLE = { cleaner: "cleaners", mechanic: "mechanics" };
@@ -30,6 +33,9 @@ function freshAgent(state, role) {
     workMinutes: 0,
     cooldown: 0,
     idleMinutes: 0,
+    trainingLevel: 0,
+    trainingSpent: 0,
+    zone: "all",
     lastCompletedJob: null,
     lastThought: role === "cleaner" ? "Keeping an eye on the paths." : "Listening for rides that need care."
   };
@@ -68,6 +74,7 @@ export function normalizeStaffState(state) {
     agent.workMinutes ??= 0;
     agent.cooldown ??= 0;
     agent.idleMinutes ??= 0;
+    normalizeStaffDevelopment(agent);
     agent.lastCompletedJob ??= null;
     agent.lastThought ??= agent.role === "cleaner" ? "Keeping an eye on the paths." : "Listening for rides that need care.";
     const match = /staff-(\d+)/.exec(agent.id);
@@ -140,12 +147,29 @@ export function resetStaffForDay(state) {
     agent.routeProgress = 0;
     agent.cooldown = 0;
     agent.idleMinutes = 0;
-    agent.lastThought = agent.role === "cleaner" ? "Starting the morning path check." : "Beginning the morning ride check."
+    agent.lastThought = agent.role === "cleaner" ? "Starting the morning path check." : "Beginning the morning ride check.";
   }
+}
+
+export function resetStaffAssignment(agent, thought = null) {
+  if (!agent) return false;
+  agent.state = "idle";
+  agent.targetId = null;
+  agent.route = [cloneCell(agent.cell)];
+  agent.routeIndex = 0;
+  agent.routeProgress = 0;
+  agent.cooldown = 0;
+  agent.idleMinutes = 0;
+  if (thought) agent.lastThought = thought;
+  return true;
 }
 
 function pathKeys(state) {
   return new Set((state.world.paths ?? []).map((path) => cellKey(path.x, path.z)));
+}
+
+function inAgentZone(state, agent, cell) {
+  return staffZoneContainsCell(agent.zone, cell, state.world.size);
 }
 
 function routeAgent(state, agent, targetCell, targetId, workingState) {
@@ -162,11 +186,13 @@ function routeAgent(state, agent, targetCell, targetId, workingState) {
 
 function pickCleanerJob(state, agent) {
   const candidates = (state.world.litter ?? [])
-    .filter((pile) => pile.amount > 0)
+    .filter((pile) => pile.amount > 0 && inAgentZone(state, agent, pile.cell))
     .sort((a, b) => distance(agent.cell, a.cell) - distance(agent.cell, b.cell) || a.id.localeCompare(b.id));
   for (const pile of candidates) {
     if (routeAgent(state, agent, pile.cell, pile.id, "walking-to-litter")) {
-      agent.lastThought = "Heading to a visible litter spot.";
+      agent.lastThought = agent.zone === "all"
+        ? "Heading to a visible litter spot."
+        : `Heading to litter inside my ${STAFF_ZONE_LABELS[agent.zone].toLowerCase()} work zone.`;
       return true;
     }
   }
@@ -175,11 +201,14 @@ function pickCleanerJob(state, agent) {
 
 function pickMechanicJob(state, agent) {
   const candidates = (state.world.entities ?? [])
-    .filter((entity) => entity.kind === "ride" && entity.accessCell && entity.condition < 58)
+    .filter((entity) => entity.kind === "ride" && entity.accessCell && entity.condition < 58
+      && inAgentZone(state, agent, entity.accessCell))
     .sort((a, b) => a.condition - b.condition || distance(agent.cell, a.accessCell) - distance(agent.cell, b.accessCell) || a.id.localeCompare(b.id));
   for (const entity of candidates) {
     if (routeAgent(state, agent, entity.accessCell, entity.id, "walking-to-ride")) {
-      agent.lastThought = "Routing to a ride that has evidence of wear.";
+      agent.lastThought = agent.zone === "all"
+        ? "Routing to a ride that has evidence of wear."
+        : `Routing to worn equipment inside my ${STAFF_ZONE_LABELS[agent.zone].toLowerCase()} work zone.`;
       return true;
     }
   }
@@ -189,18 +218,27 @@ function pickMechanicJob(state, agent) {
 function assignPatrol(state, agent) {
   agent.idleMinutes += 1;
   if (agent.idleMinutes < 10) return;
-  const reachable = [...reachablePathKeys(pathKeys(state), state.world.entrance, state.world.size)].sort();
-  if (!reachable.length) return;
+  const reachable = [...reachablePathKeys(pathKeys(state), state.world.entrance, state.world.size)]
+    .filter((key) => inAgentZone(state, agent, key.split(",").map(Number)))
+    .sort();
+  if (!reachable.length) {
+    agent.lastThought = `No connected patrol path reaches my ${STAFF_ZONE_LABELS[agent.zone].toLowerCase()} work zone.`;
+    return;
+  }
   const patrolIndex = (stableNumber(agent.id) + Math.floor(state.tick / 10)) % reachable.length;
   const target = reachable[patrolIndex].split(",").map(Number);
   if (routeAgent(state, agent, target, `patrol-${reachable[patrolIndex]}`, "patrolling")) {
-    agent.lastThought = agent.role === "cleaner" ? "Patrolling the connected paths." : "Walking a preventive inspection round.";
+    const zoneText = agent.zone === "all" ? "connected paths" : STAFF_ZONE_LABELS[agent.zone].toLowerCase();
+    agent.lastThought = agent.role === "cleaner"
+      ? `Patrolling ${zoneText}.`
+      : `Walking a preventive inspection round through ${zoneText}.`;
   }
 }
 
 function walkAgent(agent) {
   if (!agent.route?.length || agent.routeIndex >= agent.route.length - 1) return true;
-  agent.routeProgress += 0.48;
+  const profile = staffTrainingProfile(agent);
+  agent.routeProgress += profile.movePerMinute;
   if (agent.routeProgress < 1) return false;
   agent.routeProgress -= 1;
   agent.routeIndex += 1;
@@ -211,34 +249,55 @@ function walkAgent(agent) {
 function finishCleanerJob(state, agent, hooks) {
   const pile = state.world.litter.find((item) => item.id === agent.targetId);
   if (!pile || pile.amount <= 0) return false;
-  const removed = Math.min(1, pile.amount);
+  const profile = staffTrainingProfile(agent);
+  const removed = Math.min(profile.cleanerCapacity, pile.amount);
   pile.amount -= removed;
   state.park.litter = Math.max(0, state.park.litter - removed);
   if (pile.amount <= 0.001) state.world.litter.splice(state.world.litter.indexOf(pile), 1);
   agent.jobsCompleted += 1;
   state.operations.todayCleanups += 1;
-  agent.lastThought = "Cleared litter where guests actually left it.";
+  agent.lastThought = agent.trainingLevel
+    ? `Cleared ${removed.toFixed(1)} litter with level ${agent.trainingLevel} training.`
+    : "Cleared litter where guests actually left it.";
   agent.lastCompletedJob = agent.lastThought;
-  hooks.event?.(state, "staff.cleaner.completed", agent.id, { pileId: pile.id, amount: removed, cell: cloneCell(agent.cell) });
+  hooks.event?.(state, "staff.cleaner.completed", agent.id, {
+    pileId: pile.id,
+    amount: removed,
+    cell: cloneCell(agent.cell),
+    trainingLevel: agent.trainingLevel,
+    zone: agent.zone
+  });
   return true;
 }
 
 function finishMechanicJob(state, agent, hooks) {
   const entity = state.world.entities.find((item) => item.id === agent.targetId);
   if (!entity || entity.kind !== "ride" || entity.condition >= 58 || state.economy.cash < 28) return false;
+  const profile = staffTrainingProfile(agent);
   hooks.charge?.(state, 28, "Routine mechanical care");
-  entity.condition = Math.min(100, entity.condition + 5);
+  const before = entity.condition;
+  entity.condition = Math.min(100, entity.condition + profile.mechanicRepair);
   agent.jobsCompleted += 1;
   state.operations.todayRepairs += 1;
-  agent.lastThought = "Completed paid care without replacing the ride.";
+  agent.lastThought = agent.trainingLevel
+    ? `Completed level ${agent.trainingLevel} paid care without replacing the ride.`
+    : "Completed paid care without replacing the ride.";
   agent.lastCompletedJob = agent.lastThought;
-  hooks.event?.(state, "staff.mechanic.completed", agent.id, { entityId: entity.id, condition: entity.condition, cost: 28 });
+  hooks.event?.(state, "staff.mechanic.completed", agent.id, {
+    entityId: entity.id,
+    condition: entity.condition,
+    restored: entity.condition - before,
+    cost: 28,
+    trainingLevel: agent.trainingLevel,
+    zone: agent.zone
+  });
   return true;
 }
 
 export function advanceStaffAgents(state, hooks = {}) {
   normalizeStaffState(state);
   for (const agent of state.staffAgents) {
+    const profile = staffTrainingProfile(agent);
     agent.workMinutes += 1;
     if (agent.cooldown > 0) {
       agent.cooldown -= 1;
@@ -257,7 +316,7 @@ export function advanceStaffAgents(state, hooks = {}) {
       agent.route = [cloneCell(agent.cell)];
       agent.routeIndex = 0;
       agent.routeProgress = 0;
-      agent.cooldown = worked ? 2 : 0;
+      agent.cooldown = worked ? profile.cooldownMinutes : 0;
     }
   }
   return state.staffAgents;
@@ -266,6 +325,7 @@ export function advanceStaffAgents(state, hooks = {}) {
 export function getStaffInsight(state, staffId) {
   const agent = state.staffAgents?.find((item) => item.id === staffId);
   if (!agent) return null;
+  normalizeStaffDevelopment(agent);
   const targetRide = agent.role === "mechanic"
     ? state.world.entities.find((entity) => entity.id === agent.targetId) ?? null : null;
   const targetLitter = agent.role === "cleaner"
@@ -276,5 +336,13 @@ export function getStaffInsight(state, staffId) {
     "walking-to-litter": "Routing to a litter spot",
     "walking-to-ride": "Routing to a worn ride"
   }[agent.state] ?? agent.state;
-  return { agent, activity, targetRide, targetLitter, rosterCount: state.staff?.[COUNT_FROM_ROLE[agent.role]] ?? 0 };
+  return {
+    agent,
+    activity,
+    targetRide,
+    targetLitter,
+    rosterCount: state.staff?.[COUNT_FROM_ROLE[agent.role]] ?? 0,
+    zoneLabel: STAFF_ZONE_LABELS[agent.zone],
+    training: staffTrainingProfile(agent)
+  };
 }
