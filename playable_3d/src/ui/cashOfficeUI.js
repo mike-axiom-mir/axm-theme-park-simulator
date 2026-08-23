@@ -1,6 +1,7 @@
 import {
   PAYMENT_TECHNOLOGY, getHistoricalEconomyView
 } from "../core/historicalEconomy.js";
+import { SIMULATION_MAX_SPEED, realMinutesForOperatingDays } from "../core/timeScale.js";
 
 const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, (char) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"
@@ -98,6 +99,7 @@ export class CashOfficeUI {
   render() {
     const view = getHistoricalEconomyView(this.getState());
     const cashShare = 1 - view.acceptedElectronicShare;
+    const fastestYearMinutes = realMinutesForOperatingDays(view.calendar.representativeDaysPerYear, SIMULATION_MAX_SPEED);
     const technologyHtml = view.technology.map((item) => {
       const prerequisites = item.prerequisites.map((id) => PAYMENT_TECHNOLOGY[id]?.label ?? id);
       const requirements = Object.entries(item.evidence)
@@ -123,7 +125,7 @@ export class CashOfficeUI {
       <div class="cash-office-hero">
         <p class="eyebrow">Park Cash Office · ${view.calendar.year}</p>
         <h2>The money exists. That does not mean it is in the bank yet.</h2>
-        <p>Cash sales physically wait in the park office vault. The weekly collection car deposits them for free. Electronic payments settle directly to the bank but lose a tiny processing cut.</p>
+        <p>Career day ${view.calendar.careerOperatingDay} · current map Day ${view.calendar.mapOperatingDay}. A future map campaign can restart its local Day 1 without resetting this career year, payment technology or cash-truck schedule.</p>
       </div>
       <div class="cash-office-grid">
         <div class="cash-office-card gold"><small>Spendable bank balance</small><b>${euro(view.bankAvailable)}</b></div>
@@ -147,7 +149,7 @@ export class CashOfficeUI {
         <div class="cash-office-tech">${technologyHtml}</div>
       </section>
 
-      <div class="cash-office-note">Career time is compressed for playability: ${view.calendar.representativeDaysPerYear} representative operating days = one historical year. The payment-era ordering and mix evolve by year; local playtesting can slow this constant later without changing the ledger architecture.</div>
+      <div class="cash-office-note">Career pacing is calibrated against the normal fastest speed: ${view.calendar.representativeDaysPerYear} representative operating days = one historical year, about ${fastestYearMinutes.toFixed(1)} real minutes at ${SIMULATION_MAX_SPEED}× if the park runs continuously. Pause / 1× / 2× / 4× changes playback speed only; it never changes the historical date.</div>
     `;
 
     this.content.querySelectorAll("[data-payment-tech]").forEach((button) => button.addEventListener("click", () => {
