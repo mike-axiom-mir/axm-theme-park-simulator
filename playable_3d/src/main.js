@@ -7,11 +7,15 @@ import {
   applyUpgradeAction, normalizeUpgradeState
 } from "./core/upgrades.js";
 import {
-  applyHistoricalEconomyAction, getHistoricalEconomyView, normalizeHistoricalEconomyState
+  applyHistoricalEconomyAction, getHistoricalEconomyView, normalizeHistoricalEconomyState,
+  processHistoricalOperatingDayTransition
 } from "./core/historicalEconomy.js";
 import {
   advanceOneMinuteWithHistoricalEconomy, simulateMinutesWithHistoricalEconomy
 } from "./core/historicalEconomyRuntime.js";
+import {
+  SIMULATION_MILLISECONDS_PER_MINUTE, SIMULATION_SPEEDS, normalizeSimulationSpeed
+} from "./core/timeScale.js";
 import {
   deserializeGame, loadFromSlot, saveToSlot, serializeGame, slotMetadata
 } from "./core/save.js";
@@ -82,6 +86,9 @@ function act(action, { quiet = false } = {}) {
           : applyAction(state, action);
   if (!result.ok && !quiet) ui.toast(result.reason ?? "That action could not be completed.", "error");
   if (result.ok) {
+    if (action?.type === "startNextDay") {
+      processHistoricalOperatingDayTransition(state, { source: "startNextDay" });
+    }
     if (result.timeCostMinutes > 0) {
       simulateMinutesWithHistoricalEconomy(state, result.timeCostMinutes);
       if (state.operations?.dayReport) {
@@ -131,7 +138,7 @@ async function playOpening({ resumeSpeed = 1 } = {}) {
     world.finishOpeningCamera();
   }
   if (state !== openingState) return;
-  speed = state.operations?.dayReport ? 0 : resumeSpeed;
+  speed = state.operations?.dayReport ? 0 : normalizeSimulationSpeed(resumeSpeed);
   ui.setSpeed(speed);
 }
 
@@ -178,7 +185,10 @@ const ui = new GameInterface({
       world.setMode(mode);
     }
   },
-  onSpeed: (value) => { speed = value; ui.setSpeed(value); },
+  onSpeed: (value) => {
+    speed = normalizeSimulationSpeed(value);
+    ui.setSpeed(speed);
+  },
   onBuildTool: (catalogId) => world.setBuildTool(catalogId),
   onRemovePathTool: (active) => world.setRemovePathTool(active),
   onCancelBuild: () => world.clearBuildTool(),
@@ -321,6 +331,8 @@ globalThis.__AXM_GAME__ = Object.freeze({
   getMode: () => world.mode,
   health: () => ({
     running: true,
+    speed,
+    availableSpeeds: [...SIMULATION_SPEEDS],
     day: state.clock.day,
     minute: state.clock.minute,
     visitors: state.visitors.length,
@@ -345,6 +357,9 @@ globalThis.__AXM_GAME__ = Object.freeze({
       const view = getHistoricalEconomyView(state);
       return {
         year: view.calendar.year,
+        careerOperatingDay: view.calendar.careerOperatingDay,
+        mapOperatingDay: view.calendar.mapOperatingDay,
+        activeMapId: view.calendar.activeMapId,
         bankAvailable: view.bankAvailable,
         officeVault: view.officeVault,
         acceptedElectronicShare: view.acceptedElectronicShare,
@@ -361,11 +376,10 @@ function gameLoop(now) {
   lastTime = now;
   if (speed > 0 && !toolDialogOpen()) {
     accumulator += delta * speed;
-    const millisecondsPerMinute = 620;
     let safety = 0;
-    while (accumulator >= millisecondsPerMinute && safety++ < 40) {
+    while (accumulator >= SIMULATION_MILLISECONDS_PER_MINUTE && safety++ < 40) {
       advanceOneMinuteWithHistoricalEconomy(state);
-      accumulator -= millisecondsPerMinute;
+      accumulator -= SIMULATION_MILLISECONDS_PER_MINUTE;
       if (state.operations?.dayReport) {
         speed = 0;
         accumulator = 0;
