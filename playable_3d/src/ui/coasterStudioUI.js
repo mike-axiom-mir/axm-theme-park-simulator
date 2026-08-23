@@ -80,7 +80,7 @@ function createMarkup() {
         <button class="coaster-studio-close" data-studio-close type="button">×</button>
         <p class="eyebrow">Coaster Studio · design draft</p>
         <h2>Shape it, then style it.</h2>
-        <p class="coaster-studio-help">Track geometry and decorations live in a portable design file. Decoration placement is visual/style data and does not silently change ride physics.</p>
+        <p class="coaster-studio-help">Track geometry and decorations live in a portable design file. Decoration placement is visual/style data and does not silently change ride physics. Opening the Studio pauses the park clock until you close it.</p>
         <label>Name <input data-studio-name type="text" maxlength="48"></label>
         <div class="coaster-style-grid">
           <label>Track <input data-style="trackColor" type="color"></label>
@@ -229,13 +229,10 @@ export class CoasterStudioUI {
   }
 
   nearestNode(point, radius = 1.2) {
-    return this.design.nodes
+    const sorted = this.design.nodes
       .map((node) => ({ node, distance: Math.hypot(node.x - point.x, node.z - point.z) }))
-      .sort((a, b) => a.distance - b.distance)[0]?.distance <= radius
-      ? this.design.nodes
-        .map((node) => ({ node, distance: Math.hypot(node.x - point.x, node.z - point.z) }))
-        .sort((a, b) => a.distance - b.distance)[0].node
-      : null;
+      .sort((a, b) => a.distance - b.distance);
+    return sorted[0]?.distance <= radius ? sorted[0].node : null;
   }
 
   nearestDecoration(point, radius = 1.25) {
@@ -255,6 +252,7 @@ export class CoasterStudioUI {
         this.draggingNode = true;
         this.canvas.setPointerCapture?.(event.pointerId);
       } else {
+        const beforeIds = new Set(this.design.nodes.map((node) => node.id));
         const selected = this.design.nodes.find((node) => node.id === this.selectedNodeId);
         this.design = addTrackNode(this.design, {
           x: point.x,
@@ -262,8 +260,7 @@ export class CoasterStudioUI {
           height: selected?.height ?? 2,
           bank: selected?.bank ?? 0
         }, selected?.id ?? null);
-        this.selectedNodeId = this.design.nodes.find((node) => node.id.startsWith("node-")
-          && !this.design.nodes.slice(0, -1).some((other) => other.id === node.id))?.id
+        this.selectedNodeId = this.design.nodes.find((node) => !beforeIds.has(node.id))?.id
           ?? this.design.nodes.at(-1)?.id ?? null;
         this.selectedDecorationId = null;
         this.changed();
@@ -275,8 +272,10 @@ export class CoasterStudioUI {
         this.selectedNodeId = null;
         this.render();
       } else {
+        const beforeIds = new Set(this.design.decorations.map((item) => item.id));
         this.design = addCoasterDecoration(this.design, this.decorationType, point);
-        this.selectedDecorationId = this.design.decorations.at(-1)?.id ?? null;
+        this.selectedDecorationId = this.design.decorations.find((item) => !beforeIds.has(item.id))?.id
+          ?? this.design.decorations.at(-1)?.id ?? null;
         this.selectedNodeId = null;
         this.changed();
       }
