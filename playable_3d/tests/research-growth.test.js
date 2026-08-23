@@ -157,6 +157,18 @@ test("passive stores can grow real park appeal without fake shopping transaction
     "passive retail growth must not fabricate purchases");
 });
 
+test("quiet support facilities expose Care growth without becoming fake health simulation", () => {
+  const state = researchedState("care-growth");
+  assert.equal(applyAction(state, { type: "build", catalogId: "quietcove", x: 1, z: 1, rotation: 0 }).ok, true);
+  completeForTest(state, "care-network");
+  const quiet = state.world.entities.find((entity) => entity.catalogId === "quietcove");
+  const view = getEntityGrowthView(state, quiet.id);
+  assert.deepEqual(view.tracks.map((track) => track.id), ["care"]);
+  assert.equal(applyResearchAction(state, { type: "growEntity", entityId: quiet.id, track: "care" }).ok, true);
+  assert.equal(quiet.researchGrowth.care, 1);
+  assert.equal(state.eventLog.some((entry) => entry.type === "health.incident"), false);
+});
+
 test("research and growth persist through save round-trip while legacy saves receive defaults", () => {
   const state = researchedState("research-save");
   completeForTest(state, "ride-throughput");
@@ -188,6 +200,7 @@ test("playable wiring uses the additive research runtime and keeps baseline simu
   assert.match(runtime, /advanceOneMinute\(state\)/);
   assert.match(runtime, /applyEntityGrowth/);
   assert.match(runtime, /applyParkGrowth/);
+  assert.match(runtime, /restCareLevels/);
   assert.doesNotMatch(simulation, /researchRuntime|research\.project|researchGrowth/);
   assert.match(lab, /Learn from the park you actually run/);
 });
