@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Standalone local intake and headless runtime for AXM Theme Park Playable Living Globe 3D v0.4.6.",
+  "license": "Apache-2.0",
   "scripts": {
     "headless": "node runtime/cli.js",
     "test:headless": "node --test intake-tests/headless_runtime.test.js",
