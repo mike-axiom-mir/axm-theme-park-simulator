@@ -57,3 +57,19 @@ Quality is often the accumulated result of many small correct details, not one l
 - Do not fragment working systems merely for ideology. Add granularity where it creates useful control, reuse, diagnosis, repair, or quality.
 
 **Working rule:** thousands of small good details and capabilities in the right places can improve a result more than one simple big upgrade.
+
+## Canonical state and adaptive realization principle
+
+Preserve the deterministic park/simulation body separately from the way a particular device can afford to show it.
+
+- Canonical simulation rules, park state, saves, guest/ride state, and gameplay meaning are authoritative; WebGL scenes, meshes, lighting, particles, audio richness, UI density, and previews are realizations.
+- Preserve expression intent when needed so attraction identity, theme, readability, motion meaning, and semantic detail survive lower-cost graphics.
+- Prefer one park body with multiple bounded realization contracts over divergent mobile/desktop/lite/ultra game truths.
+- Choose realization from canonical state + expression intent + measured machine capabilities + user policy; adaptation may happen at launch or dynamically.
+- A weak device should receive cheaper expression, **not weaker park truth or gameplay rules**.
+- Never degrade save integrity, simulation rules, fairness, collision/gameplay meaning, privacy, or authoritative state for rendering budgets.
+- Never let a simplified render/client cache overwrite richer canonical simulation state. Projection is not authority.
+- A richer realization may expose more of existing state/intent; it may not invent canonical facts merely to look better.
+- Apply this separation only where presentation can honestly remain subordinate to simulation truth.
+
+**Working rule:** degrade expression, never truth; upgrade expression, never invent truth.
