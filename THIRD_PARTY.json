@@ -1,0 +1,1 @@
+{"schema":"axm-third-party-v1","repository":"axm-theme-park-simulator","project_license":"Apache-2.0","audit":{"status":"baseline","complete":false,"note":"Theme Park assets are AXM-authored per maintainer direction. Only redistributable/open-source external components may be introduced, and each must be recorded before release."},"entries":[]}
