@@ -1,0 +1,62 @@
+name: Required verification
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "codex/theme-park-simulator-intake-v0.4.6"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: required-verification-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Node ${{ matrix.node }} / Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - node: "20"
+            python: "3.11"
+          - node: "22"
+            python: "3.13"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Run foundation reference tests
+        run: python run_tests.py
+
+      - name: Verify local intake
+        run: npm run verify:intake
+
+      - name: Run headless runtime tests
+        run: npm run test:headless
+
+      - name: Run playable simulation tests
+        run: npm run test:playable
+
+      - name: Rebuild playable distribution
+        run: npm run build:playable
+
+      - name: Verify committed playable distribution is reproducible
+        run: git diff --exit-code -- playable_3d/dist
+
+      - name: Verify preserved v0.3.0 donor package
+        run: python donor/AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_3_0/scripts/verify_package.py
