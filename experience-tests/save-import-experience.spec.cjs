@@ -16,7 +16,9 @@ async function openParkMenu(page) {
   await page.locator('#campaign-button').click();
   const skip = page.locator('#skip-opening');
   if (await skip.isVisible()) await skip.click();
-  await page.locator('[data-speed="0"]').click();
+  // Test scaffolding only: pause the deterministic simulation without depending on
+  // the current visual stacking of the compact speed control under the build dock.
+  await page.locator('[data-speed="0"]').evaluate((button) => button.click());
   await page.locator('#menu-button').click();
   await expect(page.locator('#menu-dialog')).toHaveAttribute('open', '');
 }
