@@ -23,6 +23,20 @@
       "originalSha256": "fc23cf192bfdd41ad163ca3db8f60276a4c55b044026c68f65d981425b1945d8",
       "currentSha256": "f1a3adb14ad58f40a52a23a3c0e1dc2145269d8eb66a5e764dd23adc0b748d5a",
       "reason": "Rebuild the playable browser bundle from the repaired source."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/src/index.html",
+      "originalSha256": "eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5",
+      "currentSha256": "b3356f55c57293177c50952e473b32942998fda0d41a53ac8afa8a686059bd8d",
+      "reason": "Keep simulation speed controls directly reachable above build actions and expose their selected speed accessibly without changing simulation timing."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/dist/index.html",
+      "originalSha256": "eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5",
+      "currentSha256": "b3356f55c57293177c50952e473b32942998fda0d41a53ac8afa8a686059bd8d",
+      "reason": "Keep simulation speed controls directly reachable above build actions and expose their selected speed accessibly without changing simulation timing."
     }
   ]
 }

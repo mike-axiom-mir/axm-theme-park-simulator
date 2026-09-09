@@ -6,6 +6,36 @@
   <meta name="theme-color" content="#10151d">
   <title>AXM Theme Park · Living Globe</title>
   <link rel="stylesheet" href="./styles.css">
+
+  <style id="axm-speed-control-experience-v1">
+    /* Keep simulation time controls physically clear of the build dock's floating actions. */
+    .speed-controls {
+      right: 16px;
+      bottom: 148px;
+      z-index: 16;
+      gap: 6px;
+      padding: 6px;
+    }
+    .speed-controls button {
+      min-width: 48px;
+      min-height: 44px;
+      padding: 8px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+    .speed-controls button[aria-pressed="true"] {
+      box-shadow: 0 0 0 2px rgba(117, 213, 173, .22);
+    }
+    @media (max-width: 430px) {
+      .speed-controls { right: 8px; bottom: 148px; }
+      .speed-controls button { min-width: 46px; }
+    }
+    @media (prefers-contrast: more) {
+      .speed-controls { border-width: 2px; background: #111820; }
+      .speed-controls button[aria-pressed="true"] { outline: 2px solid currentColor; outline-offset: 1px; }
+    }
+  </style>
 </head>
 <body>
   <canvas id="game-canvas" aria-label="3D theme park world"></canvas>
@@ -75,11 +105,11 @@
   <div id="walk-hint" class="walk-hint game-ui hidden">WASD move · Q/E turn · Shift run · Space inspect or collect</div>
   <div id="ride-hint" class="ride-hint game-ui hidden">Experiencing the live ride · Escape to leave</div>
 
-  <div class="speed-controls game-ui" aria-label="Simulation speed">
-    <button data-speed="0" type="button">Ⅱ</button>
-    <button data-speed="1" class="active" type="button">▶</button>
-    <button data-speed="3" type="button">▶▶</button>
-    <button data-speed="8" type="button">▶▶▶</button>
+  <div class="speed-controls game-ui" role="group" aria-label="Simulation speed" data-experience="axm-speed-control-experience-v1">
+    <button data-speed="0" type="button" aria-label="Pause simulation" aria-pressed="false">Pause</button>
+    <button data-speed="1" class="active" type="button" aria-label="Run simulation at normal speed" aria-pressed="true">1×</button>
+    <button data-speed="3" type="button" aria-label="Run simulation at triple speed" aria-pressed="false">3×</button>
+    <button data-speed="8" type="button" aria-label="Run simulation at eight times speed" aria-pressed="false">8×</button>
   </div>
 
   <section id="build-dock" class="build-dock game-ui">
@@ -208,5 +238,19 @@
 
   <div id="fatal-error" class="fatal-error hidden"></div>
   <script src="./game.js"></script>
+  <script>
+    (() => {
+      const controls = document.querySelector('.speed-controls');
+      if (!controls) return;
+      const buttons = [...controls.querySelectorAll('[data-speed]')];
+      const syncPressed = () => buttons.forEach((button) => {
+        button.setAttribute('aria-pressed', button.classList.contains('active') ? 'true' : 'false');
+      });
+      const observer = new MutationObserver(syncPressed);
+      buttons.forEach((button) => observer.observe(button, { attributes: true, attributeFilter: ['class'] }));
+      controls.addEventListener('click', syncPressed);
+      syncPressed();
+    })();
+  </script>
 </body>
 </html>
