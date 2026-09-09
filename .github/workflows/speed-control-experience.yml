@@ -1,0 +1,149 @@
+name: Speed control experience
+
+on:
+  pull_request:
+  push:
+    branches:
+      - automation/experience-speed-control-reachability-20260910
+
+permissions:
+  contents: write
+
+jobs:
+  browser-experience:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Materialize bounded speed-control repair on first branch run
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+
+          source_path = Path('playable_3d/src/index.html')
+          dist_path = Path('playable_3d/dist/index.html')
+          manifest_path = Path('.axm-intake/LOCAL_PATCHES.json')
+          text = source_path.read_text()
+          marker = 'axm-speed-control-experience-v1'
+          if marker not in text:
+              old = '''  <div class="speed-controls game-ui" aria-label="Simulation speed">
+              <button data-speed="0" type="button">Ⅱ</button>
+              <button data-speed="1" class="active" type="button">▶</button>
+              <button data-speed="3" type="button">▶▶</button>
+              <button data-speed="8" type="button">▶▶▶</button>
+            </div>'''
+              new = '''  <div class="speed-controls game-ui" role="group" aria-label="Simulation speed" data-experience="axm-speed-control-experience-v1">
+              <button data-speed="0" type="button" aria-label="Pause simulation" aria-pressed="false">Pause</button>
+              <button data-speed="1" class="active" type="button" aria-label="Run simulation at normal speed" aria-pressed="true">1×</button>
+              <button data-speed="3" type="button" aria-label="Run simulation at triple speed" aria-pressed="false">3×</button>
+              <button data-speed="8" type="button" aria-label="Run simulation at eight times speed" aria-pressed="false">8×</button>
+            </div>'''
+              if old not in text:
+                  raise SystemExit('speed-control source block changed; refusing blind patch')
+              text = text.replace(old, new, 1)
+              style = '''
+            <style id="axm-speed-control-experience-v1">
+              /* Keep simulation time controls physically clear of the build dock's floating actions. */
+              .speed-controls {
+                right: 16px;
+                bottom: 148px;
+                z-index: 16;
+                gap: 6px;
+                padding: 6px;
+              }
+              .speed-controls button {
+                min-width: 48px;
+                min-height: 44px;
+                padding: 8px 10px;
+                font-size: 11px;
+                font-weight: 800;
+                font-variant-numeric: tabular-nums;
+              }
+              .speed-controls button[aria-pressed="true"] {
+                box-shadow: 0 0 0 2px rgba(117, 213, 173, .22);
+              }
+              @media (max-width: 430px) {
+                .speed-controls { right: 8px; bottom: 148px; }
+                .speed-controls button { min-width: 46px; }
+              }
+              @media (prefers-contrast: more) {
+                .speed-controls { border-width: 2px; background: #111820; }
+                .speed-controls button[aria-pressed="true"] { outline: 2px solid currentColor; outline-offset: 1px; }
+              }
+            </style>'''
+              text = text.replace('</head>', f'{style}\n</head>', 1)
+              script = '''
+            <script>
+              (() => {
+                const controls = document.querySelector('.speed-controls');
+                if (!controls) return;
+                const buttons = [...controls.querySelectorAll('[data-speed]')];
+                const syncPressed = () => buttons.forEach((button) => {
+                  button.setAttribute('aria-pressed', button.classList.contains('active') ? 'true' : 'false');
+                });
+                const observer = new MutationObserver(syncPressed);
+                buttons.forEach((button) => observer.observe(button, { attributes: true, attributeFilter: ['class'] }));
+                controls.addEventListener('click', syncPressed);
+                syncPressed();
+              })();
+            </script>'''
+              text = text.replace('  <script src="./game.js"></script>\n</body>', f'  <script src="./game.js"></script>{script}\n</body>', 1)
+              source_path.write_text(text)
+              dist_path.write_text(text)
+
+              digest = hashlib.sha256(text.encode()).hexdigest()
+              manifest = json.loads(manifest_path.read_text())
+              for path, original in [
+                  ('playable_3d/src/index.html', 'eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5'),
+                  ('playable_3d/dist/index.html', 'eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5')
+              ]:
+                  manifest['patches'].append({
+                      'index': 'PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256',
+                      'path': path,
+                      'originalSha256': original,
+                      'currentSha256': digest,
+                      'reason': 'Keep simulation speed controls directly reachable above build actions and expose their selected speed accessibly without changing simulation timing.'
+                  })
+              manifest_path.write_text(json.dumps(manifest, indent=2) + '\n')
+          PY
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add playable_3d/src/index.html playable_3d/dist/index.html .axm-intake/LOCAL_PATCHES.json
+            git commit -m "Make simulation speed controls directly reachable"
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
+      - name: Verify source truth and reproducible playable bundle
+        run: |
+          npm run verify:intake
+          npm run build:playable
+          git diff --exit-code -- playable_3d/dist
+      - name: Install browser test harness
+        run: |
+          npm install --no-save --ignore-scripts @playwright/test@1.55.0
+          npx playwright install chromium
+      - name: Exercise actual speed controls
+        run: |
+          mkdir -p experience-artifacts
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory playable_3d/dist > /tmp/axm-theme-park-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then break; fi
+            sleep 0.25
+          done
+          npx playwright test experience-tests/speed-control-experience.spec.cjs --reporter=line --workers=1
+      - name: Upload retained visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: speed-control-experience-${{ github.sha }}
+          path: experience-artifacts/
+          if-no-files-found: warn
