@@ -5,9 +5,54 @@
   "type": "module",
   "description": "Standalone local intake and headless runtime for AXM Theme Park Playable Living Globe 3D v0.4.6.",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mike-axiom-mir/axm-theme-park-simulator.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "exports": {
+    ".": "./runtime/index.js"
+  },
+  "bin": {
+    "axm-theme-park-headless": "./runtime/cli.js"
+  },
+  "files": [
+    "runtime",
+    "playable_3d/src/core",
+    "HEADLESS_CONSUMER.md",
+    "LICENSE",
+    "THIRD_PARTY.json"
+  ],
+  "axmCapability": {
+    "schema": "axm.capability/v1",
+    "id": "axm.theme-park.headless-simulator",
+    "version": "1.0.0",
+    "status": "WORKING",
+    "implementationVersion": "0.4.6",
+    "runtime": {
+      "kind": "node",
+      "minimumVersion": "18",
+      "networkRequired": false
+    },
+    "entrypoints": {
+      "library": ".",
+      "command": "axm-theme-park-headless",
+      "discoveryCommand": "axm-theme-park-headless describe"
+    },
+    "contracts": {
+      "save": "axm.theme-park.playable-save/v3",
+      "summary": "axm.theme-park.headless-summary/v1"
+    },
+    "authority": {
+      "canonical": false,
+      "cliWritesNewFilesOnly": true
+    }
+  },
   "scripts": {
     "headless": "node runtime/cli.js",
-    "test:headless": "node --test intake-tests/headless_runtime.test.js",
+    "test:headless": "node --test intake-tests/*.test.js",
     "test:playable": "npm --prefix playable_3d test",
     "build:playable": "npm --prefix playable_3d run build",
     "verify:intake": "node tools/verify_local_intake.mjs",
