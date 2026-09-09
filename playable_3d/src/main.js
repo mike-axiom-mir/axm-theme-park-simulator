@@ -14,6 +14,154 @@ let accumulator = 0;
 let lastTime = performance.now();
 let lastUiUpdate = 0;
 let lastAutosave = performance.now();
+const importFeedback = createSaveImportFeedback();
+
+function createSaveImportFeedback() {
+  const menu = document.getElementById("menu-dialog");
+  const card = menu?.querySelector(".modal-card");
+  const actions = card?.querySelector(".modal-actions");
+  const input = document.getElementById("import-input");
+  if (!card || !actions || !input) return null;
+
+  const style = document.createElement("style");
+  style.textContent = `
+    #save-import-status {
+      margin: 18px 0 4px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 14px;
+      background: rgba(8,12,18,.86);
+      box-shadow: inset 0 1px rgba(255,255,255,.05);
+    }
+    #save-import-status[data-tone="checking"] { border-color: rgba(123,205,255,.55); }
+    #save-import-status[data-tone="held"] { border-color: rgba(255,184,92,.72); }
+    #save-import-status .save-import-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    #save-import-status .save-import-kicker {
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      opacity: .72;
+    }
+    #save-import-status .save-import-code {
+      font: 700 .72rem/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      opacity: .7;
+      overflow-wrap: anywhere;
+    }
+    #save-import-status strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 1rem;
+    }
+    #save-import-status p {
+      margin: 7px 0 0;
+      max-width: 72ch;
+      line-height: 1.45;
+      opacity: .86;
+    }
+    #save-import-status .save-import-next {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    #save-import-status .save-import-next button { min-height: 38px; }
+    @media (max-width: 620px) {
+      #save-import-status .save-import-head { align-items: flex-start; flex-direction: column; gap: 4px; }
+      #save-import-status .save-import-next button { flex: 1 1 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #save-import-status, #save-import-status * { scroll-behavior: auto !important; transition: none !important; }
+    }
+    @media (prefers-contrast: more) {
+      #save-import-status { border-width: 2px; background: #080c12; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  const panel = document.createElement("section");
+  panel.id = "save-import-status";
+  panel.className = "hidden";
+  panel.tabIndex = -1;
+  panel.setAttribute("role", "status");
+  panel.setAttribute("aria-live", "polite");
+  panel.innerHTML = `
+    <div class="save-import-head">
+      <span class="save-import-kicker">Local save admission</span>
+      <span class="save-import-code" data-save-import-code></span>
+    </div>
+    <strong data-save-import-title></strong>
+    <p data-save-import-body></p>
+    <div class="save-import-next">
+      <button type="button" data-save-import-choose>Choose another save</button>
+      <button type="button" data-save-import-dismiss>Keep current park</button>
+    </div>
+  `;
+  card.insertBefore(panel, actions);
+
+  const code = panel.querySelector("[data-save-import-code]");
+  const title = panel.querySelector("[data-save-import-title]");
+  const body = panel.querySelector("[data-save-import-body]");
+  const choose = panel.querySelector("[data-save-import-choose]");
+  const dismiss = panel.querySelector("[data-save-import-dismiss]");
+
+  function show({ tone, statusCode = "", heading, detail, actionsVisible = true }) {
+    panel.dataset.tone = tone;
+    code.textContent = statusCode;
+    title.textContent = heading;
+    body.textContent = detail;
+    choose.classList.toggle("hidden", !actionsVisible);
+    dismiss.classList.toggle("hidden", !actionsVisible);
+    panel.classList.remove("hidden");
+  }
+
+  choose.addEventListener("click", () => input.click());
+  dismiss.addEventListener("click", () => panel.classList.add("hidden"));
+
+  return Object.freeze({
+    checking(file) {
+      show({
+        tone: "checking",
+        statusCode: "CHECKING",
+        heading: `Checking ${file.name || "selected save"}…`,
+        detail: "Your current park stays open until the selected file passes local save admission.",
+        actionsVisible: false
+      });
+    },
+    clear() {
+      panel.classList.add("hidden");
+      input.value = "";
+    },
+    hold(error) {
+      const errorCode = typeof error?.code === "string" ? error.code : "AXM_SAVE_IMPORT_FAILED";
+      const copy = {
+        AXM_SAVE_INTEGRITY_REQUIRED: {
+          heading: "Save held · integrity evidence missing",
+          detail: "This current-version save does not carry the required state hash. Your open park was not replaced. Choose another save or keep playing this park."
+        },
+        AXM_SAVE_HASH_MISMATCH: {
+          heading: "Save held · integrity check failed",
+          detail: "The save's recorded state hash does not match its state. Your open park was not replaced. Choose another save or keep playing this park."
+        },
+        AXM_SAVE_READ_FAILED: {
+          heading: "Save held · file could not be read",
+          detail: "The browser could not read the selected local file. Your open park was not replaced. Choose another save or keep playing this park."
+        }
+      }[errorCode] ?? {
+        heading: "Save held · file was not admitted",
+        detail: `${error?.message || "The selected file is not a valid Theme Park save."} Your open park was not replaced. Choose another save or keep playing this park.`
+      };
+      show({ tone: "held", statusCode: errorCode, heading: copy.heading, detail: copy.detail });
+      input.value = "";
+      panel.focus({ preventScroll: true });
+    }
+  });
+}
 
 function guardedStorage(callback, fallback = null) {
   try { return callback(); } catch { return fallback; }
@@ -146,14 +294,24 @@ const ui = new GameInterface({
   },
   onImport: (file) => {
     if (!file) return;
+    importFeedback?.checking(file);
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        replaceState(deserializeGame(String(reader.result)));
+        const imported = deserializeGame(String(reader.result));
+        importFeedback?.clear();
+        replaceState(imported);
         ui.toast("Imported and verified the park save.", "good");
       } catch (error) {
-        ui.toast(error.message, "error");
+        importFeedback?.hold(error);
+        ui.toast("Save held. Your open park is unchanged.", "error");
       }
+    };
+    reader.onerror = () => {
+      const error = new Error("The selected local file could not be read.");
+      error.code = "AXM_SAVE_READ_FAILED";
+      importFeedback?.hold(error);
+      ui.toast("Save held. Your open park is unchanged.", "error");
     };
     reader.readAsText(file);
   },
