@@ -1,0 +1,62 @@
+name: Rebuild save admission artifact
+
+on:
+  push:
+    branches:
+      - automation/truth-sentinel-required-save-hash-20260909
+    paths:
+      - "playable_3d/src/core/save.js"
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: automation/truth-sentinel-required-save-hash-20260909
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Rebuild playable distribution
+        working-directory: playable_3d
+        run: npm run build
+      - name: Refresh explicit local-patch evidence
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          ledger_path = Path('.axm-intake/LOCAL_PATCHES.json')
+          ledger = json.loads(ledger_path.read_text(encoding='utf-8'))
+          updates = {
+              'playable_3d/src/core/save.js': (
+                  'Migrate legacy retained event history into the explicit event-stream cursor contract and require integrity evidence on current-version saves before migration.'
+              ),
+              'playable_3d/dist/game.js': (
+                  'Rebuild the playable browser bundle from the canonical event-stream cursor implementation and fail-closed current-save integrity admission.'
+              ),
+          }
+          for entry in ledger['patches']:
+              path = entry.get('path')
+              if path not in updates:
+                  continue
+              data = Path(path).read_bytes()
+              entry['currentSha256'] = hashlib.sha256(data).hexdigest()
+              entry['reason'] = updates[path]
+          ledger_path.write_text(json.dumps(ledger, indent=2) + '\n', encoding='utf-8')
+          PY
+      - name: Commit deterministic generated evidence
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add playable_3d/dist/game.js .axm-intake/LOCAL_PATCHES.json
+          if git diff --cached --quiet; then
+            echo "No generated changes required."
+            exit 0
+          fi
+          git commit -m "Rebuild playable bundle for save admission"
+          git push origin HEAD:automation/truth-sentinel-required-save-hash-20260909
