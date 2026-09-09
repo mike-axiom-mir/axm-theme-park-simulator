@@ -21,8 +21,8 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/dist/game.js",
       "originalSha256": "fc23cf192bfdd41ad163ca3db8f60276a4c55b044026c68f65d981425b1945d8",
-      "currentSha256": "574f7938e7f6c181c74790855c60e2f18e99091a6b3309c47b9f898df519ab46",
-      "reason": "Rebuild the playable browser bundle from the repaired source and canonical event-stream cursor implementation."
+      "currentSha256": "ce1da87fd3f3facfd367554b9376101d7b723d982a5deddeff94e6bfd105866a",
+      "reason": "Rebuild the playable browser bundle from the canonical event-stream cursor implementation and fail-closed current-save integrity admission."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
@@ -35,8 +35,8 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/src/core/save.js",
       "originalSha256": "99c1750c95596e5d34a78035c02bf0e75511e82986773be2db9bd98641840531",
-      "currentSha256": "8591d7fa3252678486402c7c86529f91e8b76445d73b25c19aad8519be603b68",
-      "reason": "Migrate legacy retained event history into the explicit event-stream cursor contract without rewriting historical records."
+      "currentSha256": "6ea22134bfd94b614b1dd3eda150fe6ad03a1e967e0e399951145e74aa4709af",
+      "reason": "Migrate legacy retained event history into the explicit event-stream cursor contract and require integrity evidence on current-version saves before migration."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
