@@ -28,7 +28,7 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/package.json",
       "originalSha256": "75c0af377dc74384bd2c5d1fa3af9e305c52ffbdc36d4deafb589693d231bf96",
-      "currentSha256": "d59c5b74274f7fd5ae3eae7f8c91f35d2a2ddf16ef399c194a332f988478d3cd",
+      "currentSha256": "d64b25faae2c4d80a717df0458ab12bf2d7777fb49b255c0091a51e386a3641e",
       "reason": "Record Apache-2.0 project licensing in the playable package metadata."
     }
   ]
