@@ -86,7 +86,8 @@ function verifyIndex(root, indexName, expectedRows) {
       seenLocalPatches.add(patchKey);
       continue;
     }
-    issues.push(`${indexName}: hash mismatch ${relative}`);
+    const declared = patch ? `, declared current ${patch.currentSha256}` : "";
+    issues.push(`${indexName}: hash mismatch ${relative}: archive ${original}, actual ${actual}${declared}`);
   }
   return { index: indexName, rows: rows.length, passed, locallyPatched };
 }
