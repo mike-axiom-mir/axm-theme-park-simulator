@@ -36,7 +36,7 @@ function countFiles(target, { ignorePythonCache = false } = {}) {
   if (stat.isFile()) return 1;
   if (!stat.isDirectory()) return 0;
   return fs.readdirSync(target, { withFileTypes: true })
-    .filter((entry) => !ignorePythonCache || entry.name !== "__pycache__")
+    .filter((entry) => !ignorePythonCache || (entry.name !== "__pycache__" && !entry.name.endsWith(".pyc")))
     .reduce((total, entry) => total + countFiles(path.join(target, entry.name), { ignorePythonCache }), 0);
 }
 
@@ -89,7 +89,7 @@ const activeCount = active.topLevelEntries.reduce((total, entry) => {
     issues.push(`active source entry missing: ${entry}`);
     return total;
   }
-  return total + countFiles(target);
+  return total + countFiles(target, { ignorePythonCache: true });
 }, 0);
 if (activeCount !== active.sourceFiles) {
   issues.push(`active source count: expected ${active.sourceFiles}, found ${activeCount}`);
