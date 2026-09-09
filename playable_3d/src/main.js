@@ -158,6 +158,7 @@ function createSaveImportFeedback() {
       };
       show({ tone: "held", statusCode: errorCode, heading: copy.heading, detail: copy.detail });
       input.value = "";
+      panel.scrollIntoView({ block: "nearest", inline: "nearest" });
       panel.focus({ preventScroll: true });
     }
   });

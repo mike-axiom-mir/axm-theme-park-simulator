@@ -7,8 +7,8 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/dist/game.js",
       "originalSha256": "fc23cf192bfdd41ad163ca3db8f60276a4c55b044026c68f65d981425b1945d8",
-      "currentSha256": "92acb4ea0fc3f52d97ff7a472f39cc854554e51c342df01609ab49d64594fe07",
-      "reason": "Rebuild the playable browser bundle from the save-import recovery experience source."
+      "currentSha256": "508963bd190b282b4c062998a1f2745b6f29800178aa95c36bf4fdbe48cf7b02",
+      "reason": "Rebuild the playable browser bundle from the automatically revealed save-import recovery experience source."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
@@ -35,8 +35,8 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/src/main.js",
       "originalSha256": "36b9a092a9e57e753b20eaec4328e38e984fe8917c4a47e86da48eb959f4ba99",
-      "currentSha256": "7588228ba4e3918bad14c2dadd4dc83d48eef879c4af1729ab7a46f2e1e7a8cd",
-      "reason": "Expose failed local save admission as a persistent, recoverable human-facing state without replacing the open park."
+      "currentSha256": "51d250ea14b02748cf99cb49553e0573e967b9ae8583d784fa93a41dcc51f015",
+      "reason": "Expose failed local save admission as a persistent, automatically revealed, recoverable human-facing state without replacing the open park."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
