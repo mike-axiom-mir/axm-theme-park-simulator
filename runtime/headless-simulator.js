@@ -7,6 +7,7 @@ import {
 } from "../playable_3d/src/core/simulation.js";
 import { deserializeGame, serializeGame } from "../playable_3d/src/core/save.js";
 import { stateHash } from "../playable_3d/src/core/random.js";
+import { eventStreamSummary, validateEventStream } from "../playable_3d/src/core/eventStream.js";
 
 export const MAX_STEP_MINUTES = 366 * 24 * 60;
 
@@ -39,7 +40,7 @@ export function validateState(state) {
   if (!Array.isArray(state?.world?.paths)) issues.push("world.paths must be an array");
   if (!Array.isArray(state?.world?.entities)) issues.push("world.entities must be an array");
   if (!Array.isArray(state?.visitors)) issues.push("visitors must be an array");
-  if (!Array.isArray(state?.eventLog)) issues.push("eventLog must be an array");
+  issues.push(...validateEventStream(state));
   const nonFinite = findNonFinite(state);
   if (nonFinite) issues.push(`${nonFinite} must be finite`);
   if (issues.length) throw new Error(`Invalid playable state: ${issues.join("; ")}`);
@@ -100,6 +101,7 @@ export class HeadlessSimulator {
       day: this.state.clock.day,
       minute: this.state.clock.minute,
       stateHash: this.state.stateHash,
+      eventStream: eventStreamSummary(this.state),
       cash: this.state.economy.cash,
       visitorsPresent: this.state.visitors.length,
       lifetimeVisitors: this.state.park.lifetimeVisitors,

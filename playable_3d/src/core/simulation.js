@@ -4,6 +4,7 @@ import {
 } from "./catalog.js";
 import { cellKey, findPath, neighbors, reachablePathKeys } from "./pathfinding.js";
 import { hashString, nextRandom, pick, randomInt, stateHash } from "./random.js";
+import { appendRetainedEvent, createEventStream } from "./eventStream.js";
 import { adventureProgress, createAdventureState } from "./adventure.js";
 import {
   addLitterPile, advanceStaffAgents, getStaffInsight as staffInsight,
@@ -73,14 +74,7 @@ function updateProgression(state) {
 }
 
 function event(state, type, subjectId, data = {}) {
-  state.eventLog.push({
-    sequence: state.eventLog.length + 1,
-    tick: state.tick,
-    type,
-    subjectId,
-    data
-  });
-  if (state.eventLog.length > 400) state.eventLog.splice(0, state.eventLog.length - 400);
+  appendRetainedEvent(state, { tick: state.tick, type, subjectId, data });
 }
 
 function notice(state, text, tone = "info") {
@@ -208,6 +202,7 @@ export function createNewGame({ seed = "AXM-LOCAL-PARK-001", parkName = "Moonroo
       reliableRideShare: 1,
       activeAttendance: 0
     },
+    eventStream: createEventStream(),
     eventLog: [],
     notifications: []
   };

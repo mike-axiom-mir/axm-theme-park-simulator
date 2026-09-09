@@ -1,4 +1,5 @@
 import { stateHash } from "./random.js";
+import { migrateEventStream } from "./eventStream.js";
 import { CAMPAIGN_LEVELS, catalogDefinition, catalogIdsThroughLevel } from "./catalog.js";
 import { createAdventureState } from "./adventure.js";
 import { normalizeStaffState } from "./staff.js";
@@ -47,6 +48,7 @@ export function migrateState(input) {
   }
   state.adventure = createAdventureState(state.adventure);
   state.economy.todayVisitors ??= 0;
+  migrateEventStream(state);
   for (const entity of state.world?.entities ?? []) {
     const definition = catalogDefinition(entity.catalogId);
     if ((definition.kind === "ride" || definition.kind === "service" || definition.need === "rest")

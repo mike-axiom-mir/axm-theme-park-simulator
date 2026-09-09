@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AXM Theme Park Retained Event Stream v1",
+  "type": "object",
+  "required": ["schema", "lastSequence", "retainedLimit", "continuity"],
+  "properties": {
+    "schema": { "const": "axm.theme-park.event-stream/v1" },
+    "lastSequence": { "type": "integer", "minimum": 0 },
+    "retainedLimit": { "const": 400 },
+    "continuity": {
+      "enum": ["continuous", "legacy_retained_window", "legacy_sequence_ambiguity"]
+    }
+  },
+  "additionalProperties": false
+}
