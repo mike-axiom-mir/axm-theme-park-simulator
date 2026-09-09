@@ -59,4 +59,75 @@ jobs:
         run: git diff --exit-code -- playable_3d/dist
 
       - name: Verify preserved v0.3.0 donor package
+        id: donor
+        continue-on-error: true
         run: python donor/AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_3_0/scripts/verify_package.py
+
+      - name: Diagnose preserved donor reference drift
+        if: steps.donor.outcome == 'failure'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import subprocess
+          import sys
+
+          root = Path("donor/AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_3_0")
+          checks = (
+              (
+                  "living-reference",
+                  [sys.executable, "examples/run_living_park_reference.py"],
+                  root / "release/LIVING_REFERENCE_OUTPUT.json",
+              ),
+              (
+                  "reference-suite",
+                  [sys.executable, "scripts/run_reference_suite.py"],
+                  root / "release/REFERENCE_SUITE_OUTPUT.json",
+              ),
+          )
+
+          def differences(expected, actual, path="$", limit=30):
+              found = []
+              def walk(left, right, here):
+                  if len(found) >= limit:
+                      return
+                  if type(left) is not type(right):
+                      found.append((here, left, right))
+                      return
+                  if isinstance(left, dict):
+                      for key in sorted(set(left) | set(right)):
+                          if key not in left:
+                              found.append((f"{here}.{key}", "<missing>", right[key]))
+                          elif key not in right:
+                              found.append((f"{here}.{key}", left[key], "<missing>"))
+                          else:
+                              walk(left[key], right[key], f"{here}.{key}")
+                          if len(found) >= limit:
+                              return
+                  elif isinstance(left, list):
+                      if len(left) != len(right):
+                          found.append((f"{here}.length", len(left), len(right)))
+                      for index, (left_item, right_item) in enumerate(zip(left, right)):
+                          walk(left_item, right_item, f"{here}[{index}]")
+                          if len(found) >= limit:
+                              return
+                  elif left != right:
+                      found.append((here, left, right))
+              walk(expected, actual, path)
+              return found
+
+          for label, command, recorded_path in checks:
+              completed = subprocess.run(command, cwd=root, capture_output=True, text=True, check=True)
+              actual = json.loads(completed.stdout)
+              expected = json.loads(recorded_path.read_text(encoding="utf-8"))
+              print(f"{label} differences:")
+              diff = differences(expected, actual)
+              if not diff:
+                  print("  none")
+              for item_path, expected_value, actual_value in diff:
+                  print(f"  {item_path}: recorded={expected_value!r} actual={actual_value!r}")
+          PY
+
+      - name: Fail when preserved donor verification failed
+        if: steps.donor.outcome == 'failure'
+        run: exit 1
