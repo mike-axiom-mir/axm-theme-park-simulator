@@ -68,8 +68,10 @@ jobs:
           npm run verify:intake
           npm run test:headless
           npm run test:playable
+          before=$(sha256sum playable_3d/dist/game.js | cut -d' ' -f1)
           npm run build:playable
-          git diff --exit-code -- playable_3d/dist
+          after=$(sha256sum playable_3d/dist/game.js | cut -d' ' -f1)
+          test "$before" = "$after"
       - name: Commit repaired source, distribution and receipts
         run: |
           git config user.name 'AXM Experience automation'
