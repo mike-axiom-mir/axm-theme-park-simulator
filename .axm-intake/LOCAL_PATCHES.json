@@ -23,6 +23,13 @@
       "originalSha256": "fc23cf192bfdd41ad163ca3db8f60276a4c55b044026c68f65d981425b1945d8",
       "currentSha256": "f1a3adb14ad58f40a52a23a3c0e1dc2145269d8eb66a5e764dd23adc0b748d5a",
       "reason": "Rebuild the playable browser bundle from the repaired source."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/package.json",
+      "originalSha256": "75c0af377dc74384bd2c5d1fa3af9e305c52ffbdc36d4deafb589693d231bf96",
+      "currentSha256": "d59c5b74274f7fd5ae3eae7f8c91f35d2a2ddf16ef399c194a332f988478d3cd",
+      "reason": "Record Apache-2.0 project licensing in the playable package metadata."
     }
   ]
 }
