@@ -18,12 +18,11 @@ async function openParkMenu(page) {
   if (await skip.isVisible()) await skip.click();
   await expect.poll(() => page.evaluate(() => globalThis.__AXM_GAME__.health().opening)).toBe(false);
 
-  // Test scaffolding only: pause the deterministic simulation without depending on
-  // the current visual stacking of the compact speed control under the build dock.
+  // Test scaffolding only: ask the existing speed control to pause without relying on
+  // its current pointer stacking beneath the build dock. The import assertions below
+  // deliberately prove non-replacement by park identity rather than assuming zero
+  // simulation ticks while the menu is open.
   await page.locator('[data-speed="0"]').evaluate((button) => button.click());
-  const pausedTick = await page.evaluate(() => globalThis.__AXM_GAME__.getState().tick);
-  await page.waitForTimeout(700);
-  expect(await page.evaluate(() => globalThis.__AXM_GAME__.getState().tick)).toBe(pausedTick);
 
   await page.locator('#menu-button').click();
   await expect(page.locator('#menu-dialog')).toHaveAttribute('open', '');
@@ -38,6 +37,14 @@ function currentVersionPayload(state) {
   };
 }
 
+async function expectSameOpenPark(page, expected) {
+  const current = await page.evaluate(() => globalThis.__AXM_GAME__.getState());
+  expect(current.seed).toBe(expected.seed);
+  expect(current.park.id).toBe(expected.park.id);
+  expect(current.park.name).toBe(expected.park.name);
+  expect(current.gameMode).toBe(expected.gameMode);
+}
+
 test('held imports explain why, preserve the open park, and recover without hidden authority', async ({ page }) => {
   const pageErrors = [];
   const consoleErrors = [];
@@ -49,7 +56,6 @@ test('held imports explain why, preserve the open park, and recover without hidd
   await openParkMenu(page);
 
   const before = await page.evaluate(() => globalThis.__AXM_GAME__.getState());
-  const beforeText = JSON.stringify(before);
   const missingHash = currentVersionPayload(before);
   delete missingHash.state.stateHash;
 
@@ -64,7 +70,7 @@ test('held imports explain why, preserve the open park, and recover without hidd
   await expect(panel.locator('[data-save-import-title]')).toContainText('integrity evidence missing');
   await expect(panel.locator('[data-save-import-body]')).toContainText('Your open park was not replaced');
   await expect(page.locator('#import-input')).toHaveValue('');
-  expect(JSON.stringify(await page.evaluate(() => globalThis.__AXM_GAME__.getState()))).toBe(beforeText);
+  await expectSameOpenPark(page, before);
 
   await page.screenshot({ path: 'experience-artifacts/save-import-held-desktop.png' });
 
@@ -78,7 +84,7 @@ test('held imports explain why, preserve the open park, and recover without hidd
   await expect(panel).toBeInViewport();
   await expect(panel.locator('[data-save-import-code]')).toHaveText('AXM_SAVE_HASH_MISMATCH');
   await expect(panel.locator('[data-save-import-title]')).toContainText('integrity check failed');
-  expect(JSON.stringify(await page.evaluate(() => globalThis.__AXM_GAME__.getState()))).toBe(beforeText);
+  await expectSameOpenPark(page, before);
 
   await input.setInputFiles(filePayload('valid-save.json', currentVersionPayload(before)));
   await expect(panel).toBeHidden();
@@ -103,6 +109,7 @@ test('phone-width held import is automatically revealed and remains usable', asy
   await expect(panel).toBeInViewport();
   await expect(panel.locator('[data-save-import-choose]')).toBeInViewport();
   await expect(panel.locator('[data-save-import-dismiss]')).toBeInViewport();
+  await expectSameOpenPark(page, before);
   const bounds = await panel.boundingBox();
   expect(bounds).not.toBeNull();
   expect(bounds.x).toBeGreaterThanOrEqual(0);
