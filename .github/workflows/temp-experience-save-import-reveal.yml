@@ -1,0 +1,79 @@
+name: TEMP Experience save import reveal repair
+
+on:
+  push:
+    branches:
+      - automation/experience-save-import-recovery-20260909
+
+permissions:
+  contents: write
+
+jobs:
+  repair-rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: automation/experience-save-import-recovery-20260909
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reveal held admission state before moving focus
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('playable_3d/src/main.js')
+          text = path.read_text(encoding='utf-8')
+          old = '      panel.focus({ preventScroll: true });'
+          new = '      panel.scrollIntoView({ block: "nearest", inline: "nearest" });\n      panel.focus({ preventScroll: true });'
+          if text.count(old) != 1:
+              raise SystemExit(f'expected exactly one focus marker, found {text.count(old)}')
+          path.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+      - name: Rebuild playable distribution
+        run: npm run build:playable
+      - name: Refresh explicit local patch receipts
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const indexName = 'PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256';
+          const index = new Map(fs.readFileSync(indexName, 'utf8').trim().split(/\r?\n/).map((line) => {
+            const match = /^([0-9a-f]{64})\s{2,}(.+)$/.exec(line);
+            if (!match) throw new Error(`Malformed checksum row: ${line}`);
+            return [match[2].replaceAll('\\', '/'), match[1]];
+          }));
+          const manifestPath = '.axm-intake/LOCAL_PATCHES.json';
+          const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+          const targets = [
+            ['playable_3d/src/main.js', 'Expose failed local save admission as a persistent, automatically revealed, recoverable human-facing state without replacing the open park.'],
+            ['playable_3d/dist/game.js', 'Rebuild the playable browser bundle from the automatically revealed save-import recovery experience source.']
+          ];
+          const sha256 = (path) => crypto.createHash('sha256').update(fs.readFileSync(path)).digest('hex');
+          for (const [path, reason] of targets) {
+            const originalSha256 = index.get(path);
+            if (!originalSha256) throw new Error(`No archived checksum row for ${path}`);
+            const currentSha256 = sha256(path);
+            const existing = manifest.patches.find((patch) => patch.index === indexName && patch.path === path);
+            if (!existing) throw new Error(`Expected existing explicit patch receipt for ${path}`);
+            Object.assign(existing, { originalSha256, currentSha256, reason });
+          }
+          fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+          NODE
+      - name: Verify repaired tree before commit
+        run: |
+          node --check playable_3d/src/main.js
+          node truth-tests/save-integrity-admission.test.mjs
+          npm run verify:intake
+          npm run test:headless
+          npm run test:playable
+          npm run build:playable
+          git diff --exit-code -- playable_3d/dist
+      - name: Commit repaired source, distribution and receipts
+        run: |
+          git config user.name 'AXM Experience automation'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add playable_3d/src/main.js playable_3d/dist/game.js .axm-intake/LOCAL_PATCHES.json
+          git commit -m 'Experience: reveal held save admission state'
+          git push origin HEAD:automation/experience-save-import-recovery-20260909
