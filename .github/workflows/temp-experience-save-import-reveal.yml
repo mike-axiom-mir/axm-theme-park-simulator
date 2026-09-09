@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  repair-rebuild:
+  normalize-rebuild:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,17 +19,27 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Reveal held admission state before moving focus
+      - name: Normalize held-state reveal to exactly one scroll
         run: |
           python3 - <<'PY'
           from pathlib import Path
           path = Path('playable_3d/src/main.js')
           text = path.read_text(encoding='utf-8')
-          old = '      panel.focus({ preventScroll: true });'
-          new = '      panel.scrollIntoView({ block: "nearest", inline: "nearest" });\n      panel.focus({ preventScroll: true });'
-          if text.count(old) != 1:
-              raise SystemExit(f'expected exactly one focus marker, found {text.count(old)}')
-          path.write_text(text.replace(old, new), encoding='utf-8')
+          marker = '      panel.scrollIntoView({ block: "nearest", inline: "nearest" });\n'
+          focus = '      panel.focus({ preventScroll: true });'
+          start = text.find(marker)
+          if start < 0 or focus not in text[start:]:
+              raise SystemExit('held-state reveal marker missing')
+          end = start
+          count = 0
+          while text.startswith(marker, end):
+              count += 1
+              end += len(marker)
+          if count < 1:
+              raise SystemExit('expected at least one reveal marker')
+          text = text[:start] + marker + text[end:]
+          path.write_text(text, encoding='utf-8')
+          print(f'normalized {count} reveal call(s) to 1')
           PY
       - name: Rebuild playable distribution
         run: npm run build:playable
@@ -72,10 +82,14 @@ jobs:
           npm run build:playable
           after=$(sha256sum playable_3d/dist/game.js | cut -d' ' -f1)
           test "$before" = "$after"
-      - name: Commit repaired source, distribution and receipts
+      - name: Commit normalized source, distribution and receipts when changed
         run: |
+          if git diff --quiet -- playable_3d/src/main.js playable_3d/dist/game.js .axm-intake/LOCAL_PATCHES.json; then
+            echo 'Reveal state already normalized.'
+            exit 0
+          fi
           git config user.name 'AXM Experience automation'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add playable_3d/src/main.js playable_3d/dist/game.js .axm-intake/LOCAL_PATCHES.json
-          git commit -m 'Experience: reveal held save admission state'
+          git commit -m 'Experience: normalize held save admission reveal'
           git push origin HEAD:automation/experience-save-import-recovery-20260909
