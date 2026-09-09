@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -38,6 +39,14 @@ function countFiles(target, { ignorePythonCache = false } = {}) {
   return fs.readdirSync(target, { withFileTypes: true })
     .filter((entry) => !ignorePythonCache || (entry.name !== "__pycache__" && !entry.name.endsWith(".pyc")))
     .reduce((total, entry) => total + countFiles(path.join(target, entry.name), { ignorePythonCache }), 0);
+}
+
+function countTrackedFiles(entries) {
+  const output = execFileSync("git", ["ls-files", "-z", "--", ...entries], {
+    cwd: repoRoot,
+    encoding: "utf8"
+  });
+  return output.split("\0").filter(Boolean).length;
 }
 
 function verifyIndex(root, indexName, expectedRows) {
@@ -83,14 +92,15 @@ function verifyIndex(root, indexName, expectedRows) {
 }
 
 const active = metadata.lineages.active;
-const activeCount = active.topLevelEntries.reduce((total, entry) => {
-  const target = path.join(repoRoot, entry);
-  if (!fs.existsSync(target)) {
-    issues.push(`active source entry missing: ${entry}`);
-    return total;
-  }
-  return total + countFiles(target, { ignorePythonCache: true });
-}, 0);
+for (const entry of active.topLevelEntries) {
+  if (!fs.existsSync(path.join(repoRoot, entry))) issues.push(`active source entry missing: ${entry}`);
+}
+let activeCount = 0;
+try {
+  activeCount = countTrackedFiles(active.topLevelEntries);
+} catch (error) {
+  issues.push(`active tracked source count unavailable: ${error instanceof Error ? error.message : String(error)}`);
+}
 if (activeCount !== active.sourceFiles) {
   issues.push(`active source count: expected ${active.sourceFiles}, found ${activeCount}`);
 }
