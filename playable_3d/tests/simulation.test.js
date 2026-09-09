@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {
   advanceOneMinute, applyAction, canPlace, catalogUnlocked, createNewGame,
   estimateQueueWait, getAdventureView, getEntityDiagnosis, getProgressionView, getStaffInsight, getVisitorInsight,
-  recomputeMetrics, refreshConnections, simulateMinutes
+  getPlacementPreview, recomputeMetrics, refreshConnections, simulateMinutes
 } from "../src/core/simulation.js";
 import { findPath } from "../src/core/pathfinding.js";
 import { deserializeGame, serializeGame } from "../src/core/save.js";
@@ -42,6 +42,37 @@ test("building uses declared space and money", () => {
   assert.equal(state.economy.cash, before - 12);
   assert.ok(state.world.paths.some((path) => path.x === 16 && path.z === 24));
   assert.equal(canPlace(state, "path", 16, 24).ok, false);
+});
+
+test("placement preview distinguishes legal space from functional guest access", () => {
+  const state = createNewGame({ seed: "placement-truth" });
+  const connected = getPlacementPreview(state, "spinner", 11, 14, 0);
+  assert.equal(connected.ok, true);
+  assert.equal(connected.connection, "connected");
+  assert.deepEqual(connected.accessCell, [11, 17]);
+
+  const disconnected = getPlacementPreview(state, "spinner", 0, 0, 0);
+  assert.equal(disconnected.ok, true, "disconnection is not silently rewritten as illegal");
+  assert.equal(disconnected.connection, "disconnected");
+  assert.match(disconnected.detail, /continuous path/i);
+
+  const networkedPath = getPlacementPreview(state, "path", 16, 24, 0);
+  assert.equal(networkedPath.connection, "connected");
+  assert.equal(networkedPath.newlyReachableTiles, 1);
+  assert.equal(getPlacementPreview(state, "path", 0, 29, 0).connection, "disconnected");
+});
+
+test("build returns an exact post-action connection and cost receipt", () => {
+  const state = createNewGame({ seed: "placement-receipt" });
+  const before = state.economy.cash;
+  const result = applyAction(state, { type: "build", catalogId: "spinner", x: 0, z: 0, rotation: 0 });
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.receipt, {
+    catalogId: "spinner", label: "Star Spinner", kind: "ride", cost: 3100,
+    cashAfter: before - 3100, x: 0, z: 0, rotation: 0,
+    connection: "disconnected", dragging: false
+  });
+  assert.equal(state.world.entities.find((entity) => entity.x === 0 && entity.z === 0).accessCell, null);
 });
 
 test("maintain and evolve preserve attraction identity and history", () => {

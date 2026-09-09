@@ -72,7 +72,11 @@ async function playOpening({ resumeSpeed = 1 } = {}) {
 const world = new WorldRenderer(canvas, {
   onBuild: (payload) => {
     const result = act({ type: "build", ...payload });
-    if (result.ok) world.updateGhost();
+    if (result.ok) {
+      world.clearGhost();
+      world.confirmPlacement(result.receipt);
+      ui.confirmBuild(result.receipt);
+    }
   },
   onRemovePath: (payload) => act({ type: "removePath", ...payload }),
   onSelectEntity: (entityId) => ui.openInspector(entityId),
@@ -601,6 +605,71 @@ function perimeterCells(state, entity) {
   return result;
 }
 
+function getPlacementPreview(state, catalogId, x, z, rotation = 0) {
+  const definition = catalogDefinition(catalogId);
+  const check = canPlace(state, catalogId, x, z, rotation);
+  const base = {
+    ...check,
+    catalogId,
+    label: definition.label,
+    cost: definition.cost,
+    cell: [x, z],
+    rotation,
+    connection: null,
+    newlyReachableTiles: 0
+  };
+  if (!check.ok) {
+    return {
+      ...base,
+      tone: "invalid",
+      title: "Cannot build here",
+      detail: check.reason
+    };
+  }
+
+  const reachableBefore = reachablePathKeys(pathSet(state), state.world.entrance, state.world.size);
+  if (definition.kind === "path") {
+    const proposedPaths = pathSet(state);
+    proposedPaths.add(cellKey(x, z));
+    const reachableAfter = reachablePathKeys(proposedPaths, state.world.entrance, state.world.size);
+    const connection = reachableAfter.has(cellKey(x, z)) ? "connected" : "disconnected";
+    const newlyReachableTiles = Math.max(0, reachableAfter.size - reachableBefore.size);
+    return {
+      ...base,
+      connection,
+      newlyReachableTiles,
+      tone: connection === "connected" ? "connected" : "caution",
+      title: connection === "connected" ? "Joins the entrance network" : "Isolated path segment",
+      detail: connection === "connected"
+        ? `${newlyReachableTiles} path tile${newlyReachableTiles === 1 ? "" : "s"} will become reachable.`
+        : "Guests cannot use this segment until a continuous path reaches it."
+    };
+  }
+
+  if (handlesVisitors(definition)) {
+    const proposed = { catalogId, x, z, rotation };
+    const accessCell = perimeterCells(state, proposed).find((cell) => reachableBefore.has(keyOf(cell))) ?? null;
+    const connection = accessCell ? "connected" : "disconnected";
+    return {
+      ...base,
+      connection,
+      accessCell,
+      tone: connection === "connected" ? "connected" : "caution",
+      title: connection === "connected" ? "Guests can reach this" : "No guest access yet",
+      detail: connection === "connected"
+        ? `Connects through path cell ${accessCell[0]},${accessCell[1]}.`
+        : "Build a continuous path beside its footprint before guests can use it."
+    };
+  }
+
+  return {
+    ...base,
+    tone: "neutral",
+    title: "Legal scenery placement",
+    detail: "Scenery can be placed here and does not require guest access."
+  };
+}
+
 function refreshConnections(state) {
   const paths = pathSet(state);
   const queuePaths = queuePathSet(state);
@@ -641,21 +710,39 @@ function earn(state, amount, label, entity = null) {
 function applyAction(state, action) {
   switch (action.type) {
     case "build": {
-      const check = canPlace(state, action.catalogId, action.x, action.z, action.rotation ?? 0);
-      if (!check.ok) return check;
+      const preview = getPlacementPreview(state, action.catalogId, action.x, action.z, action.rotation ?? 0);
+      if (!preview.ok) return preview;
       const definition = catalogDefinition(action.catalogId);
       charge(state, definition.cost, `Build ${definition.label}`);
+      let builtEntity = null;
       if (definition.kind === "path") {
         state.world.paths.push({ x: action.x, z: action.z, type: action.catalogId });
         event(state, "path.built", cellKey(action.x, action.z), { catalogId: action.catalogId });
       } else {
-        const entity = createEntity(state, action.catalogId, action.x, action.z, action.rotation ?? 0);
-        event(state, "entity.built", entity.id, { catalogId: action.catalogId });
+        builtEntity = createEntity(state, action.catalogId, action.x, action.z, action.rotation ?? 0);
+        event(state, "entity.built", builtEntity.id, { catalogId: action.catalogId });
       }
-      refreshConnections(state);
+      const reachable = refreshConnections(state);
       recomputeMetrics(state);
       state.stateHash = stateHash(state);
-      return { ok: true };
+      const connection = definition.kind === "path"
+        ? (reachable.has(cellKey(action.x, action.z)) ? "connected" : "disconnected")
+        : handlesVisitors(definition) ? (builtEntity?.accessCell ? "connected" : "disconnected") : null;
+      return {
+        ok: true,
+        receipt: {
+          catalogId: action.catalogId,
+          label: definition.label,
+          kind: definition.kind,
+          cost: definition.cost,
+          cashAfter: state.economy.cash,
+          x: action.x,
+          z: action.z,
+          rotation: action.rotation ?? 0,
+          connection,
+          dragging: Boolean(action.dragging)
+        }
+      };
     }
     case "removePath": {
       const index = state.world.paths.findIndex((path) => path.x === action.x && path.z === action.z);
@@ -1381,7 +1468,7 @@ function getParkGuidance(state) {
   return cards.slice(0, 3);
 }
 
-Object.assign(exports,{"catalogUnlocked":catalogUnlocked,"getProgressionView":getProgressionView,"getAdventureView":getAdventureView,"createNewGame":createNewGame,"pathSet":pathSet,"estimateQueueWait":estimateQueueWait,"entityCells":entityCells,"occupiedCells":occupiedCells,"canPlace":canPlace,"refreshConnections":refreshConnections,"applyAction":applyAction,"recomputeMetrics":recomputeMetrics,"advanceOneMinute":advanceOneMinute,"simulateMinutes":simulateMinutes,"formatClock":formatClock,"getEntityDiagnosis":getEntityDiagnosis,"getVisitorInsight":getVisitorInsight,"getStaffInsight":getStaffInsight,"getParkGuidance":getParkGuidance});
+Object.assign(exports,{"catalogUnlocked":catalogUnlocked,"getProgressionView":getProgressionView,"getAdventureView":getAdventureView,"createNewGame":createNewGame,"pathSet":pathSet,"estimateQueueWait":estimateQueueWait,"entityCells":entityCells,"occupiedCells":occupiedCells,"canPlace":canPlace,"getPlacementPreview":getPlacementPreview,"refreshConnections":refreshConnections,"applyAction":applyAction,"recomputeMetrics":recomputeMetrics,"advanceOneMinute":advanceOneMinute,"simulateMinutes":simulateMinutes,"formatClock":formatClock,"getEntityDiagnosis":getEntityDiagnosis,"getVisitorInsight":getVisitorInsight,"getStaffInsight":getStaffInsight,"getParkGuidance":getParkGuidance});
 },
 "src/core/catalog.js":function(module,exports,require){
 const GRID_SIZE = 30;
@@ -2108,7 +2195,7 @@ Object.assign(exports,{"SAVE_VERSION":SAVE_VERSION,"migrateState":migrateState,"
 "src/render/worldRenderer.js":function(module,exports,require){
 const THREE=require("vendor/three.module.min.js");
 const {GRID_SIZE,TILE_SIZE,catalogDefinition,rotatedFootprint}=require("src/core/catalog.js");
-const {canPlace,entityCells}=require("src/core/simulation.js");
+const {entityCells,getPlacementPreview}=require("src/core/simulation.js");
 const {LivingGlobeAdapter}=require("src/world/livingGlobeAdapter.js");
 const {openingCameraPose}=require("src/presentation/cameraFlight.js");
 const {animatePerson,createDiscoveryModel,createEntranceModel,createEntityModel,createPathModel,createGuestSignalSprite,createLitterModel,createPersonModel,createStaffModel,modelFootprint,setGuestSignalSpriteType}=require("src/render/models.js");
@@ -2184,6 +2271,14 @@ class WorldRenderer {
     this.selectionRing.visible = false;
     this.selectionRing.renderOrder = 30;
     this.globe.root.add(this.selectionRing);
+    this.placementPulse = new THREE.Mesh(
+      new THREE.RingGeometry(0.7, 1, 24),
+      new THREE.MeshBasicMaterial({ color: 0x75d5ad, side: THREE.DoubleSide, transparent: true, opacity: 0, depthTest: false })
+    );
+    this.placementPulse.visible = false;
+    this.placementPulse.renderOrder = 31;
+    this.placementPulseStartedAt = 0;
+    this.globe.root.add(this.placementPulse);
 
     this.clock = new THREE.Clock();
     this.bindEvents();
@@ -2370,6 +2465,22 @@ class WorldRenderer {
     this.buildTool = null;
     this.removePathTool = false;
     this.clearGhost();
+  }
+
+  confirmPlacement(receipt) {
+    if (!receipt) return;
+    const definition = catalogDefinition(receipt.catalogId);
+    const [width, depth] = rotatedFootprint(definition, receipt.rotation);
+    const frame = this.globe.frameAtGrid(receipt.x, receipt.z, width, depth, 0.42);
+    const radius = Math.max(width, depth) * TILE_SIZE * 0.58;
+    this.placementPulse.position.copy(frame.position);
+    this.placementPulse.quaternion.copy(frame.quaternion);
+    this.placementPulse.rotateX(-Math.PI / 2);
+    this.placementPulse.scale.setScalar(radius);
+    this.placementPulse.material.color.setHex(receipt.connection === "disconnected" ? 0xf0c766 : 0x75d5ad);
+    this.placementPulse.material.opacity = 0.95;
+    this.placementPulse.visible = true;
+    this.placementPulseStartedAt = performance.now();
   }
 
   setRemovePathTool(active = true) {
@@ -2787,9 +2898,9 @@ class WorldRenderer {
     if (!this.buildTool) return;
     const definition = catalogDefinition(this.buildTool);
     const [width, depth] = rotatedFootprint(definition, this.buildRotation);
-    const check = canPlace(this.state, this.buildTool, this.hoverCell.x, this.hoverCell.z, this.buildRotation);
+    const preview = getPlacementPreview(this.state, this.buildTool, this.hoverCell.x, this.hoverCell.z, this.buildRotation);
     const ghostMaterial = new THREE.MeshBasicMaterial({
-      color: check.ok ? 0x78e08f : 0xe56a72,
+      color: !preview.ok ? 0xe56a72 : preview.connection === "disconnected" ? 0xf0c766 : 0x78e08f,
       transparent: true,
       opacity: 0.48,
       depthTest: false
@@ -2805,7 +2916,7 @@ class WorldRenderer {
         this.ghostRoot.add(tile);
       }
     }
-    this.callbacks.onHoverBuild?.({ check, definition, cell: this.hoverCell, rotation: this.buildRotation });
+    this.callbacks.onHoverBuild?.({ preview, definition, cell: this.hoverCell, rotation: this.buildRotation });
   }
 
   clampManageTarget() {
@@ -3033,6 +3144,22 @@ class WorldRenderer {
     const dt = Math.min(0.05, this.clock.getDelta());
     const now = performance.now();
     const time = now / 1000;
+    if (this.placementPulse.visible) {
+      const elapsed = now - this.placementPulseStartedAt;
+      const reducedMotion = matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+      const duration = reducedMotion ? 700 : 1150;
+      const progress = Math.min(1, elapsed / duration);
+      this.placementPulse.material.opacity = 0.95 * (1 - progress);
+      if (!reducedMotion) {
+        const scale = 1 + progress * 0.45;
+        this.placementPulse.scale.multiplyScalar(scale / (this.placementPulse.userData.lastScale ?? 1));
+        this.placementPulse.userData.lastScale = scale;
+      }
+      if (progress >= 1) {
+        this.placementPulse.visible = false;
+        this.placementPulse.userData.lastScale = 1;
+      }
+    }
     this.pollGamepad();
     if (!this.openingCamera) {
       if (this.mode === "manage") this.updateManageInput(dt);
@@ -5043,6 +5170,7 @@ class GameInterface {
     this.dayReportShownDay = null;
     this.walkGuideShown = false;
     this.lastBuildSignature = "";
+    this.lastBuildReceipt = null;
     this.renderedNotificationIds = new Set();
     this.endingDialogShown = false;
     this.openingTimer = null;
@@ -5135,6 +5263,7 @@ class GameInterface {
     this.activeBuild = null;
     this.removePathActive = false;
     this.lastBuildSignature = "";
+    this.lastBuildReceipt = null;
     this.elements.inspector.classList.add("hidden");
     this.elements["cancel-build"].classList.add("hidden");
     this.elements["remove-path-button"].classList.remove("active");
@@ -5288,6 +5417,14 @@ class GameInterface {
       this.elements["remove-path-button"].classList.remove("active");
       this.elements["cancel-build"].classList.remove("hidden");
       this.renderBuildDock();
+      const definition = catalogDefinition(this.activeBuild);
+      this.showBuildStatus({
+        tone: "neutral",
+        title: `${definition.label} selected`,
+        detail: definition.kind === "path"
+          ? "Point at the globe to preview whether this tile joins the entrance network."
+          : "Point at the globe to preview space and guest access before spending cash."
+      }, `${euro(definition.cost)} · ${definition.description}`);
       this.callbacks.onBuildTool(this.activeBuild);
     }));
   }
@@ -5310,11 +5447,37 @@ class GameInterface {
   }
 
   showBuildHint(payload) {
-    const { check, definition, cell, rotation } = payload;
-    this.elements["build-hint"].textContent = check.ok
-      ? `${definition.label} · ${euro(definition.cost)} · cell ${cell.x},${cell.z} · rotation ${rotation * 90}°`
-      : check.reason;
-    this.elements["build-hint"].classList.remove("hidden");
+    const { preview, definition, cell, rotation } = payload;
+    const meta = preview.ok
+      ? `${euro(definition.cost)} · cell ${cell.x},${cell.z} · ${rotation * 90}°`
+      : `${definition.label} · cell ${cell.x},${cell.z}`;
+    this.showBuildStatus(preview, meta);
+  }
+
+  showBuildStatus(status, meta = "") {
+    const tone = ["connected", "caution", "invalid", "neutral"].includes(status.tone) ? status.tone : "neutral";
+    this.elements["build-hint"].className = `build-hint game-ui placement-${tone}`;
+    this.elements["build-hint"].innerHTML = `
+      <span class="placement-signal" aria-hidden="true"></span>
+      <span class="placement-copy"><b>${escapeHtml(status.title)}</b><small>${escapeHtml(status.detail)}</small></span>
+      ${meta ? `<span class="placement-meta">${meta}</span>` : ""}
+    `;
+  }
+
+  confirmBuild(receipt) {
+    if (!receipt) return;
+    this.lastBuildReceipt = receipt;
+    const connected = receipt.connection !== "disconnected";
+    const status = {
+      tone: connected ? "connected" : "caution",
+      title: connected ? `${receipt.label} built` : `${receipt.label} built · access pending`,
+      detail: receipt.connection === "disconnected"
+        ? "The placement is saved, but guests need a continuous path beside it."
+        : receipt.connection === "connected"
+          ? "Confirmed on the entrance network and ready for guests."
+          : "Placement confirmed in the live park."
+    };
+    this.showBuildStatus(status, `${euro(receipt.cost)} spent · ${euro(receipt.cashAfter)} remaining`);
   }
 
   openInspector(entityId) {

@@ -21,8 +21,8 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/dist/game.js",
       "originalSha256": "fc23cf192bfdd41ad163ca3db8f60276a4c55b044026c68f65d981425b1945d8",
-      "currentSha256": "f1a3adb14ad58f40a52a23a3c0e1dc2145269d8eb66a5e764dd23adc0b748d5a",
-      "reason": "Rebuild the playable browser bundle from the repaired source."
+      "currentSha256": "2f054740325fe545792236b226b124afcec4692047fa4a9397d9d4c92ce29bf4",
+      "reason": "Rebuild the offline client with truthful placement access previews and receipts."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
@@ -30,6 +30,76 @@
       "originalSha256": "1d6927226ac44b4d69e8e392515f8cbaf024b30eabdcb639c67083c51b126e8e",
       "currentSha256": "d64b25faae2c4d80a717df0458ab12bf2d7777fb49b255c0091a51e386a3641e",
       "reason": "Record Apache-2.0 project licensing in the playable package metadata."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/dist/index.html",
+      "originalSha256": "eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5",
+      "currentSha256": "a1e9e9215be737d9e83a142e62151ac36da69cf9f5225efa61f78c4589d629e3",
+      "reason": "Expose the placement forecast as an accessible live status in the offline build."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/dist/styles.css",
+      "originalSha256": "1f5c8e4dae402aa6f9cfdc4355f3cd06a3e65ad3749f2c01f40263692f1b0f08",
+      "currentSha256": "19105c21a0678bd9f6a734f8ad698ef7776f41a37239e2c7883d6cdc3d4b0932",
+      "reason": "Carry responsive connected, caution, and invalid placement states into the offline build."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/src/core/simulation.js",
+      "originalSha256": "3a550617f20533a4a6f410ff9f7026f9efbaf564499ca256d5b5e0983b43bffa",
+      "currentSha256": "55fdbc9988d45113b316a4cac56c93b2d0925e6d293c4088691d018328b052e1",
+      "reason": "Derive deterministic placement reachability before spending and return exact post-action receipts."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/src/index.html",
+      "originalSha256": "eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5",
+      "currentSha256": "a1e9e9215be737d9e83a142e62151ac36da69cf9f5225efa61f78c4589d629e3",
+      "reason": "Expose the placement forecast as an accessible live status."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/src/main.js",
+      "originalSha256": "36b9a092a9e57e753b20eaec4328e38e984fe8917c4a47e86da48eb959f4ba99",
+      "currentSha256": "2e70b44aff199f348d455bd0ce79e0dd647c8f40bcc9b402b651d0921eb5319e",
+      "reason": "Wire successful placements to visual confirmation and an exact player-facing receipt."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/src/render/worldRenderer.js",
+      "originalSha256": "0c70a437d2a0f55e860df634e26531ae67a7a1c312e3432b4a87305868c3f451",
+      "currentSha256": "73f2ea7750dd0f04dcf9858c41507ae57dd97519d0af07dc31f15ebc40ad298b",
+      "reason": "Color placement ghosts by functional access and acknowledge construction with a bounded render-only pulse."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/src/styles.css",
+      "originalSha256": "1f5c8e4dae402aa6f9cfdc4355f3cd06a3e65ad3749f2c01f40263692f1b0f08",
+      "currentSha256": "19105c21a0678bd9f6a734f8ad698ef7776f41a37239e2c7883d6cdc3d4b0932",
+      "reason": "Make placement states legible without colliding with mobile guest and speed controls."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/src/ui/interface.js",
+      "originalSha256": "4712b4ed63a79ffa770a125aff8a7b7aecbc2ac7571d90b361092e9de7c3a016",
+      "currentSha256": "38a7522933c2f0a23632e61ba46c6413cf3633bbc698f814e0c2024fda96ed2e",
+      "reason": "Present persistent pre-spend access forecasts and post-build cost and connection receipts."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/tests/simulation.test.js",
+      "originalSha256": "ef64a9e820866a09278bf5ace9e1ef90dd13c8cdb29eefd5af528b52547f16b1",
+      "currentSha256": "5b9fe61086526a46e14d3f9379a7efe43df68729505c5a56e8ac51e4f9ad279e",
+      "reason": "Regress connected, disconnected, and exact receipt placement semantics."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/tests/ui-contract.test.js",
+      "originalSha256": "3c653cf1c41a510750703fd7a712138538e63f56764f74dbe75c5718d6577c5a",
+      "currentSha256": "1d0cb2031f385190cf5408c2a8e69b7a7d39c8871a6376c062386134228cfa84",
+      "reason": "Regress the accessible live placement status contract."
     }
   ]
 }

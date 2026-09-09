@@ -70,7 +70,11 @@ async function playOpening({ resumeSpeed = 1 } = {}) {
 const world = new WorldRenderer(canvas, {
   onBuild: (payload) => {
     const result = act({ type: "build", ...payload });
-    if (result.ok) world.updateGhost();
+    if (result.ok) {
+      world.clearGhost();
+      world.confirmPlacement(result.receipt);
+      ui.confirmBuild(result.receipt);
+    }
   },
   onRemovePath: (payload) => act({ type: "removePath", ...payload }),
   onSelectEntity: (entityId) => ui.openInspector(entityId),
