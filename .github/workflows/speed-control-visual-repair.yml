@@ -25,17 +25,10 @@ jobs:
           paths = [Path('playable_3d/src/index.html'), Path('playable_3d/dist/index.html')]
           for path in paths:
               text = path.read_text()
-              old_desktop = '''    .speed-controls {
-                    right: 16px;
-                    bottom: 148px;'''
-              new_desktop = '''    .speed-controls {
-                    right: 16px;
-                    bottom: 232px;'''
-              old_phone = '''      .speed-controls { right: 8px; bottom: 148px; }'''
-              new_phone = '''      .speed-controls { right: 8px; bottom: 210px; }'''
-              if old_desktop not in text or old_phone not in text:
-                  raise SystemExit(f'expected speed-control spacing markers missing in {path}')
-              text = text.replace(old_desktop, new_desktop, 1).replace(old_phone, new_phone, 1)
+              if text.count('bottom: 148px;') != 2:
+                  raise SystemExit(f'expected exactly two speed-control spacing markers in {path}')
+              text = text.replace('bottom: 148px;', 'bottom: 232px;', 1)
+              text = text.replace('bottom: 148px;', 'bottom: 210px;', 1)
               path.write_text(text)
 
           manifest_path = Path('.axm-intake/LOCAL_PATCHES.json')
