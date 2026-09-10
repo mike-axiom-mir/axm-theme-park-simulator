@@ -1,0 +1,60 @@
+name: Park gate status experience
+
+on:
+  pull_request:
+  push:
+    branches:
+      - automation/experience-park-gate-status-20260910
+
+permissions:
+  contents: read
+
+jobs:
+  browser-experience:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Require exact source head
+        shell: bash
+        run: |
+          expected='${{ github.event.pull_request.head.sha || github.sha }}'
+          actual="$(git rev-parse HEAD)"
+          echo "expected=$expected"
+          echo "actual=$actual"
+          test "$actual" = "$expected"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run required deterministic checks
+        run: |
+          npm run test:headless
+          npm run test:playable
+          python donor/AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_3_0/scripts/verify_package.py
+      - name: Verify committed playable distribution is reproducible
+        run: |
+          npm run build:playable
+          git diff --exit-code -- playable_3d/dist
+      - name: Install browser test harness
+        run: |
+          npm install --no-save --ignore-scripts @playwright/test@1.55.0
+          npx playwright install chromium
+      - name: Exercise visible park gate status
+        run: |
+          mkdir -p experience-artifacts
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory playable_3d/dist > /tmp/axm-theme-park-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then break; fi
+            sleep 0.25
+          done
+          npx playwright test experience-tests/park-gate-status-experience.spec.cjs --reporter=line --workers=1
+      - name: Upload retained visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: park-gate-status-experience-${{ github.event.pull_request.head.sha || github.sha }}
+          path: experience-artifacts/
+          if-no-files-found: warn
