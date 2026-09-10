@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import fs from "node:fs";
 import path from "node:path";
+import { readActionFile } from "./action-file-reader.js";
 import { HeadlessSimulator } from "./headless-simulator.js";
-import { MAX_SAVE_BYTES, readSave, writeNewSave } from "./file-save-store.js";
+import { readSave, writeNewSave } from "./file-save-store.js";
 import { describeCapability } from "./package-metadata.js";
 
 function usage() {
@@ -20,14 +20,6 @@ function usage() {
 
 function print(value) {
   process.stdout.write(`${JSON.stringify(value, null, 2)}\n`);
-}
-
-function readAction(filePath) {
-  const resolved = path.resolve(filePath);
-  const stat = fs.statSync(resolved);
-  if (!stat.isFile()) throw new Error(`Action path is not a file: ${resolved}`);
-  if (stat.size > Math.min(MAX_SAVE_BYTES, 1024 * 1024)) throw new Error("Action file exceeds 1 MiB.");
-  return JSON.parse(fs.readFileSync(resolved, "utf8"));
 }
 
 function requireArg(value, label) {
@@ -81,7 +73,7 @@ function main(argv) {
     const output = requireArg(args[1], "output path");
     const actionPath = requireArg(args[2], "action JSON path");
     const simulator = HeadlessSimulator.fromSerialized(readSave(input));
-    const result = simulator.apply(readAction(actionPath));
+    const result = simulator.apply(readActionFile(actionPath));
     if (!result.ok) throw new Error(`Simulation refused action: ${result.reason ?? "unspecified reason"}`);
     const savedTo = writeNewSave(output, simulator.serialize());
     print({ command, source: path.resolve(input), savedTo, result, ...simulator.summary() });
@@ -94,6 +86,7 @@ function main(argv) {
 try {
   main(process.argv.slice(2));
 } catch (error) {
-  process.stderr.write(`Theme Park headless runtime refused: ${error.message}\n`);
+  const code = typeof error?.code === "string" ? ` [${error.code}]` : "";
+  process.stderr.write(`Theme Park headless runtime refused${code}: ${error.message}\n`);
   process.exitCode = 1;
 }

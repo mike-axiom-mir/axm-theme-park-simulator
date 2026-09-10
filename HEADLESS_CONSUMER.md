@@ -49,8 +49,25 @@ atomic filesystem snapshot. Symlinked ancestor directories are not rejected;
 a hostile same-user writer can still attempt in-place mutation, and the
 size/mtime/ctime checks do not claim to defeat an attacker able to rewrite
 bytes while restoring every observed metadata value. UTF-8 admission also does
-not make JSON authentic, unique-keyed, or semantically valid; those are separate
-layers.
+not make save JSON authentic, unique-keyed, or semantically valid; those are
+separate layers.
+
+The CLI `action` command applies a separate, tighter action-file boundary before
+simulation semantics see the request. Action files are capped at 1 MiB, must be
+regular non-symlink final paths, are copied through one admitted descriptor with
+the same identity/stability checks, and must decode as valid UTF-8. Native
+`JSON.parse` remains the syntax and value decoder, while an additional recursive
+walk rejects duplicate decoded object-member names (including escaped-equivalent
+spellings) before the parsed action is admitted. JSON nesting beyond 256 levels
+is held rather than risking an unbounded verifier call stack. Refusals expose
+stable `AXM_ACTION_*` codes through the command's stderr.
+
+This action boundary is still not a filesystem sandbox, hostile-writer proof,
+authentication mechanism, or semantic proof that an otherwise unique-keyed JSON
+action is allowed. Symlinked ancestor directories remain outside the check, and
+the descriptor metadata observations are best-effort race detection rather than
+an atomic filesystem snapshot. The simulator's existing `apply()` contract
+remains the authority for which admitted action objects are legal.
 
 ## Library boundary
 

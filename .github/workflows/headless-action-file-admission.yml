@@ -37,8 +37,10 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Check CLI syntax
-        run: node --check runtime/cli.js
+      - name: Check action boundary syntax
+        run: |
+          node --check runtime/action-file-reader.js
+          node --check runtime/cli.js
 
       - name: Run inherited headless/package tests
         run: npm run test:headless
