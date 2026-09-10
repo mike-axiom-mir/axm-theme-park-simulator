@@ -23,6 +23,20 @@
       "originalSha256": "fc23cf192bfdd41ad163ca3db8f60276a4c55b044026c68f65d981425b1945d8",
       "currentSha256": "f1a3adb14ad58f40a52a23a3c0e1dc2145269d8eb66a5e764dd23adc0b748d5a",
       "reason": "Rebuild the playable browser bundle from the repaired source."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/src/index.html",
+      "originalSha256": "eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5",
+      "currentSha256": "97ca73e7b9b2d2a70255e7af4be13f8b2ae81bb7f8ad497c644cf74cb34ac5bc",
+      "reason": "Expose authoritative park-gate state as a persistent local HUD projection and route activation to the existing Park menu gate control without changing simulation authority."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/dist/index.html",
+      "originalSha256": "eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5",
+      "currentSha256": "97ca73e7b9b2d2a70255e7af4be13f8b2ae81bb7f8ad497c644cf74cb34ac5bc",
+      "reason": "Mirror the park-gate HUD realization into the checked-in offline browser distribution."
     }
   ]
 }
