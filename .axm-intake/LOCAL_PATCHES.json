@@ -21,8 +21,8 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/dist/game.js",
       "originalSha256": "fc23cf192bfdd41ad163ca3db8f60276a4c55b044026c68f65d981425b1945d8",
-      "currentSha256": "574f7938e7f6c181c74790855c60e2f18e99091a6b3309c47b9f898df519ab46",
-      "reason": "Rebuild the playable browser bundle from the repaired source and canonical event-stream cursor implementation."
+      "currentSha256": "e46074baaaf74cb3c1bceb488af4751987c8897fdde1022908190b555e2859ba",
+      "reason": "Rebuild the playable browser bundle from the canonical event-stream cursor implementation and continuous-window admission invariant."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",

@@ -36,10 +36,12 @@ export function validateEventStream(state) {
 
   let previous = 0;
   let maximum = 0;
+  let sequencesValid = true;
   for (const record of records) {
     const sequence = record?.sequence;
     if (!Number.isSafeInteger(sequence) || sequence < 1) {
       issues.push("eventLog sequences must be positive safe integers");
+      sequencesValid = false;
       continue;
     }
     if (sequence < previous) issues.push("eventLog sequences must not move backwards");
@@ -51,6 +53,25 @@ export function validateEventStream(state) {
   }
   if (records.length && stream.lastSequence !== maximum) {
     issues.push("eventStream.lastSequence must match the newest retained sequence");
+  } else if (
+    records.length
+    && sequencesValid
+    && stream.continuity === "continuous"
+    && Number.isSafeInteger(stream.lastSequence)
+    && stream.lastSequence >= 0
+  ) {
+    const firstExpected = stream.lastSequence - records.length + 1;
+    const isContiguousSuffix = firstExpected >= 1
+      && records.every((record, index) => record.sequence === firstExpected + index);
+    if (!isContiguousSuffix) {
+      issues.push("continuous eventLog must be a contiguous suffix ending at eventStream.lastSequence");
+    }
+  } else if (
+    !records.length
+    && Number.isSafeInteger(stream.lastSequence)
+    && stream.lastSequence !== 0
+  ) {
+    issues.push("eventStream.lastSequence must be 0 when eventLog is empty");
   }
   return issues;
 }

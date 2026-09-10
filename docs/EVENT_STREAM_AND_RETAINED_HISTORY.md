@@ -14,11 +14,11 @@ The playable park keeps at most 400 recent event records in `eventLog`. That arr
 - `retainedLimit`: the fixed 400-record local memory boundary;
 - `continuity`: whether identity is continuous or a legacy ambiguity was preserved.
 
-The headless admission boundary rejects unsupported schemas, cursor drift, changed retention policy, oversized windows, backwards sequences and undeclared duplicates. Headless summaries expose the cursor, retained range and the sequence floor before the current window.
+The headless admission boundary rejects unsupported schemas, cursor drift, changed retention policy, oversized windows, backwards sequences and undeclared duplicates. A stream marked `continuous` must carry the exact contiguous retained suffix ending at `lastSequence`; an empty retained log is valid only at cursor zero. This prevents a re-sealed state from hiding a missing event inside a window while still claiming continuous history. Headless summaries expose the cursor, retained range and the sequence floor before the current window.
 
 ## Migration
 
-Existing v1/v2/v3 save envelopes remain accepted. Saves without `eventStream` derive a cursor floor from the greatest retained sequence. Strictly increasing legacy windows are labelled `legacy_retained_window`. Existing duplicate identities are preserved byte-for-meaning and labelled `legacy_sequence_ambiguity`; the runtime does not renumber history, and the next event receives a new sequence above the retained maximum.
+Existing v1/v2/v3 save envelopes remain accepted. Saves without `eventStream` derive a cursor floor from the greatest retained sequence. Strictly increasing legacy windows are labelled `legacy_retained_window` and may contain gaps because discarded older history cannot be reconstructed. Existing duplicate identities are preserved byte-for-meaning and labelled `legacy_sequence_ambiguity`; the runtime does not renumber history, and the next event receives a new sequence above the retained maximum.
 
 ## Boundary
 

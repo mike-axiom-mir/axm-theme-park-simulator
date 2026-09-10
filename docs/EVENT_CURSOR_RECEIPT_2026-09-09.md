@@ -10,6 +10,7 @@ One architecture repair: separate canonical event identity from the bounded `eve
 - Save round trips preserve the cursor and allocate the next identity exactly once.
 - Legacy duplicated identities remain visible and receive an explicit ambiguity label rather than silent renumbering.
 - Cursor drift, retention-policy drift, oversized windows and unsupported continuity fail at headless admission.
+- Continuous streams must retain an exact contiguous suffix ending at the canonical cursor; impossible internal gaps and empty nonzero windows fail closed.
 - Browser and headless clients consume the same shared deterministic capability.
 
 ## Authority boundary
