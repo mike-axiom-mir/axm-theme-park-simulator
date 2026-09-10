@@ -28,15 +28,15 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/src/index.html",
       "originalSha256": "eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5",
-      "currentSha256": "b3356f55c57293177c50952e473b32942998fda0d41a53ac8afa8a686059bd8d",
-      "reason": "Keep simulation speed controls directly reachable above build actions and expose their selected speed accessibly without changing simulation timing."
+      "currentSha256": "6988634cebcbf264d6b50532242042967e32936573e78d439bf278ef6ee1d719",
+      "reason": "Keep simulation speed controls directly reachable in a clear stack above live Guest Pulse and build actions, while exposing selected speed accessibly without changing simulation timing."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/dist/index.html",
       "originalSha256": "eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5",
-      "currentSha256": "b3356f55c57293177c50952e473b32942998fda0d41a53ac8afa8a686059bd8d",
-      "reason": "Keep simulation speed controls directly reachable above build actions and expose their selected speed accessibly without changing simulation timing."
+      "currentSha256": "6988634cebcbf264d6b50532242042967e32936573e78d439bf278ef6ee1d719",
+      "reason": "Keep simulation speed controls directly reachable in a clear stack above live Guest Pulse and build actions, while exposing selected speed accessibly without changing simulation timing."
     }
   ]
 }
