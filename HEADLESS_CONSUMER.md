@@ -26,6 +26,15 @@ The command also supports `inspect`, `step`, and `action`; run
 `axm-theme-park-headless --help` for the exact arguments. Writes use new files
 only and refuse to overwrite an existing save.
 
+A new save is staged into a uniquely named sibling file, flushed with `fsync`,
+and only then published by a create-only hard link to the requested path. An
+interrupted staging write therefore cannot expose partial bytes at the final
+save path. If the filesystem cannot provide that hard-link primitive, the write
+fails closed rather than falling back to direct final-path mutation. This is a
+single-host filesystem publication boundary, not a claim of directory-entry
+power-loss durability or protection from a hostile process running with the
+same OS-user filesystem authority.
+
 ## Library boundary
 
 ```js
