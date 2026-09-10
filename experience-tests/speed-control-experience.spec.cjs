@@ -31,7 +31,7 @@ for (const viewport of [
   { name: 'desktop', width: 1440, height: 1000 },
   { name: 'phone', width: 390, height: 844 }
 ]) {
-  test(`${viewport.name} simulation speed remains reachable above build actions`, async ({ page }) => {
+  test(`${viewport.name} simulation speed remains reachable in a clear feedback stack`, async ({ page }) => {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
     const pageErrors = [];
     const consoleErrors = [];
@@ -43,15 +43,20 @@ for (const viewport of [
     await openPlayablePark(page);
 
     const controls = page.locator('.speed-controls');
+    const guestPulse = page.locator('#guest-pulse');
     const removePath = page.locator('#remove-path-button');
     await expect(controls).toBeVisible();
+    await expect(guestPulse).toBeVisible();
     await expect(controls).toHaveAttribute('role', 'group');
 
     const controlBox = await controls.boundingBox();
+    const guestBox = await guestPulse.boundingBox();
     const removeBox = await removePath.boundingBox();
     expect(controlBox).not.toBeNull();
+    expect(guestBox).not.toBeNull();
     expect(removeBox).not.toBeNull();
-    expect(controlBox.y + controlBox.height).toBeLessThanOrEqual(removeBox.y - 8);
+    expect(controlBox.y + controlBox.height).toBeLessThanOrEqual(guestBox.y - 8);
+    expect(guestBox.y + guestBox.height).toBeLessThanOrEqual(removeBox.y - 8);
 
     const speeds = ['0', '1', '3', '8'];
     for (const speed of speeds) {
