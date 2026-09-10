@@ -1,0 +1,57 @@
+name: Speed control visual repair
+
+on:
+  push:
+    branches:
+      - automation/experience-speed-control-reachability-20260910
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply evidence-driven speed stack repair and remove this bootstrap
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+
+          paths = [Path('playable_3d/src/index.html'), Path('playable_3d/dist/index.html')]
+          for path in paths:
+              text = path.read_text()
+              old_desktop = '''    .speed-controls {
+                    right: 16px;
+                    bottom: 148px;'''
+              new_desktop = '''    .speed-controls {
+                    right: 16px;
+                    bottom: 232px;'''
+              old_phone = '''      .speed-controls { right: 8px; bottom: 148px; }'''
+              new_phone = '''      .speed-controls { right: 8px; bottom: 210px; }'''
+              if old_desktop not in text or old_phone not in text:
+                  raise SystemExit(f'expected speed-control spacing markers missing in {path}')
+              text = text.replace(old_desktop, new_desktop, 1).replace(old_phone, new_phone, 1)
+              path.write_text(text)
+
+          manifest_path = Path('.axm-intake/LOCAL_PATCHES.json')
+          manifest = json.loads(manifest_path.read_text())
+          for path in paths:
+              digest = hashlib.sha256(path.read_bytes()).hexdigest()
+              receipt = next((entry for entry in manifest['patches'] if entry['path'] == str(path)), None)
+              if receipt is None:
+                  raise SystemExit(f'missing local patch receipt for {path}')
+              receipt['currentSha256'] = digest
+              receipt['reason'] = 'Keep simulation speed controls directly reachable in a clear stack above live Guest Pulse and build actions, while exposing selected speed accessibly without changing simulation timing.'
+          manifest_path.write_text(json.dumps(manifest, indent=2) + '\n')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/speed-control-visual-repair.yml
+          git add playable_3d/src/index.html playable_3d/dist/index.html .axm-intake/LOCAL_PATCHES.json
+          git commit -m "Separate speed controls from live guest feedback"
+          git push origin HEAD:${GITHUB_REF_NAME}
