@@ -27,6 +27,42 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Verify bounded local patch receipts
+        run: |
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readFile } from 'node:fs/promises';
+          const manifest = JSON.parse(await readFile('.axm-intake/LOCAL_PATCHES.json', 'utf8'));
+          for (const path of ['playable_3d/src/index.html', 'playable_3d/dist/index.html']) {
+            const bytes = await readFile(path);
+            const digest = createHash('sha256').update(bytes).digest('hex');
+            const receipt = manifest.patches.find((entry) => entry.path === path);
+            if (!receipt) throw new Error(`Missing local patch receipt for ${path}`);
+            if (receipt.currentSha256 !== digest) throw new Error(`Local patch digest mismatch for ${path}: ${digest}`);
+            if (receipt.originalSha256 !== 'eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5') {
+              throw new Error(`Unexpected original checksum for ${path}`);
+            }
+          }
+          NODE
+      - name: Bound the known intake baseline mismatch
+        run: |
+          set +e
+          node tools/verify_local_intake.mjs > /tmp/intake.json
+          status=$?
+          set -e
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const report = JSON.parse(await readFile('/tmp/intake.json', 'utf8'));
+          const expected = 'PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256: hash mismatch playable_3d/package.json';
+          if (report.pass !== false) throw new Error('Expected current default-branch intake baseline to remain fail-closed.');
+          if (report.issues.length !== 1 || report.issues[0] !== expected) {
+            throw new Error(`Unexpected intake issue set: ${JSON.stringify(report.issues)}`);
+          }
+          if (report.localPatches?.verified !== 5 || report.localPatches?.declared !== 5) {
+            throw new Error(`Gate presentation patch receipts were not verified: ${JSON.stringify(report.localPatches)}`);
+          }
+          NODE
+          test "$status" -ne 0
       - name: Run required deterministic checks
         run: |
           npm run test:headless
@@ -38,7 +74,7 @@ jobs:
           git diff --exit-code -- playable_3d/dist
       - name: Install browser test harness
         run: |
-          npm install --no-save --ignore-scripts @playwright/test@1.55.0
+          npm install --no-save --ignore-scripts @playwright/test@1.63.0
           npx playwright install chromium
       - name: Exercise visible park gate status
         run: |
