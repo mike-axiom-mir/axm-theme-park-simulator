@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
 
+# This lane intentionally verifies the repaired human interaction without mutating repository state.
 jobs:
   browser-experience:
     runs-on: ubuntu-latest
