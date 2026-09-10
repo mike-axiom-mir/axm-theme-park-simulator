@@ -1,0 +1,45 @@
+name: Headless save publication safety
+
+on:
+  pull_request:
+    paths:
+      - "runtime/file-save-store.js"
+      - "truth-tests/file-save-publication.test.js"
+      - ".github/workflows/headless-save-publication.yml"
+  push:
+    branches:
+      - "automation/truth-safe-save-publication-20260910"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: headless-save-publication-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["18", "22", "24"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Check save-store syntax
+        run: node --check runtime/file-save-store.js
+
+      - name: Run inherited headless/package tests
+        run: npm run test:headless
+
+      - name: Run save publication regressions
+        run: node --test truth-tests/file-save-publication.test.js
