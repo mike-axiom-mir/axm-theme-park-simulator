@@ -35,6 +35,23 @@ single-host filesystem publication boundary, not a claim of directory-entry
 power-loss durability or protection from a hostile process running with the
 same OS-user filesystem authority.
 
+Headless save reads also fail closed before semantic save admission when the
+final path is already a symbolic link, the admitted path no longer identifies
+the file descriptor that was opened, the file exceeds the 64 MiB bound, the
+opened file changes observably while its bytes are copied, or the copied bytes
+are not valid UTF-8. The reader copies through the opened descriptor with one
+extra byte of bounded growth detection instead of validating one path and then
+reopening it by name. On platforms that expose `O_NOFOLLOW`, final-component
+symlink replacement is additionally refused by the open itself.
+
+That is a cooperating local-filesystem read boundary, not a sandbox or an
+atomic filesystem snapshot. Symlinked ancestor directories are not rejected;
+a hostile same-user writer can still attempt in-place mutation, and the
+size/mtime/ctime checks do not claim to defeat an attacker able to rewrite
+bytes while restoring every observed metadata value. UTF-8 admission also does
+not make JSON authentic, unique-keyed, or semantically valid; those are separate
+layers.
+
 ## Library boundary
 
 ```js
