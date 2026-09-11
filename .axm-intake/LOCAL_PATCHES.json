@@ -21,8 +21,8 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/dist/game.js",
       "originalSha256": "fc23cf192bfdd41ad163ca3db8f60276a4c55b044026c68f65d981425b1945d8",
-      "currentSha256": "f1a3adb14ad58f40a52a23a3c0e1dc2145269d8eb66a5e764dd23adc0b748d5a",
-      "reason": "Rebuild the playable browser bundle from the repaired source."
+      "currentSha256": "ec14e157cc1960de408a52ba2731f1213cad074b0d4d760594e7b39f03a1ae49",
+      "reason": "Rebuild the playable browser bundle from the repaired source, including unambiguous save JSON admission."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
