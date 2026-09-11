@@ -69,6 +69,14 @@ the descriptor metadata observations are best-effort race detection rather than
 an atomic filesystem snapshot. The simulator's existing `apply()` contract
 remains the authority for which admitted action objects are legal.
 
+Save envelopes now pass through the same pure-JavaScript unambiguous JSON parser
+before version, state-hash, migration, or simulation admission. Duplicate decoded
+member names—including escaped-equivalent spellings—and nesting beyond 256
+levels are held with stable `AXM_SAVE_*` error identities. The parser is exported
+as `parseUnambiguousJson()` for deterministic local consumers; it performs no
+network or AI work and grants no authority. State hashes continue to bind
+canonical park state, not authorship, trust, or the derived `savedAt` field.
+
 ## Library boundary
 
 ```js

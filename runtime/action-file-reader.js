@@ -1,10 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { TextDecoder } from "node:util";
+import { parseUnambiguousJson } from "../playable_3d/src/core/strict-json.js";
 
 export const MAX_ACTION_BYTES = 1024 * 1024;
-const MAX_JSON_DEPTH = 256;
-
 function actionReadError(code, message, cause) {
   const error = new Error(message, cause === undefined ? undefined : { cause });
   error.code = code;
@@ -25,119 +24,29 @@ function sameObservedFile(opened, afterRead) {
   );
 }
 
-function assertUniqueObjectKeys(text) {
-  let index = 0;
-
-  function skipWhitespace() {
-    while (index < text.length && /\s/.test(text[index])) index += 1;
-  }
-
-  function readString() {
-    const start = index;
-    index += 1;
-    while (index < text.length) {
-      if (text[index] === "\\") {
-        index += 2;
-        continue;
-      }
-      if (text[index] === '"') {
-        index += 1;
-        return JSON.parse(text.slice(start, index));
-      }
-      index += 1;
+function parseActionJson(text, resolved) {
+  try {
+    return parseUnambiguousJson(text);
+  } catch (error) {
+    if (error?.code === "AXM_JSON_INVALID") {
+      throw actionReadError("AXM_ACTION_INVALID_JSON", `Action file is not valid JSON: ${resolved}`, error);
     }
-    throw actionReadError("AXM_ACTION_INVALID_JSON", "Action JSON string did not terminate.");
-  }
-
-  function scanValue(depth) {
-    if (depth > MAX_JSON_DEPTH) {
+    if (error?.code === "AXM_JSON_DUPLICATE_KEY") {
       throw actionReadError(
-        "AXM_ACTION_JSON_TOO_DEEP",
-        `Action JSON nesting exceeds ${MAX_JSON_DEPTH} levels.`
+        "AXM_ACTION_DUPLICATE_KEY",
+        `Action JSON contains duplicate decoded member name: ${JSON.stringify(error.memberName)}`,
+        error
       );
     }
-
-    skipWhitespace();
-    const token = text[index];
-    if (token === "{") {
-      scanObject(depth + 1);
-      return;
+    if (error?.code === "AXM_JSON_TOO_DEEP") {
+      throw actionReadError(
+        "AXM_ACTION_JSON_TOO_DEEP",
+        "Action JSON nesting exceeds 256 levels.",
+        error
+      );
     }
-    if (token === "[") {
-      scanArray(depth + 1);
-      return;
-    }
-    if (token === '"') {
-      readString();
-      return;
-    }
-
-    while (index < text.length && !/[\s,}\]]/.test(text[index])) index += 1;
+    throw error;
   }
-
-  function scanObject(depth) {
-    index += 1;
-    skipWhitespace();
-    if (text[index] === "}") {
-      index += 1;
-      return;
-    }
-
-    const seen = new Set();
-    while (index < text.length) {
-      skipWhitespace();
-      const key = readString();
-      if (seen.has(key)) {
-        throw actionReadError(
-          "AXM_ACTION_DUPLICATE_KEY",
-          `Action JSON contains duplicate decoded member name: ${JSON.stringify(key)}`
-        );
-      }
-      seen.add(key);
-
-      skipWhitespace();
-      index += 1; // Native JSON.parse already proved this byte is ':'.
-      scanValue(depth);
-      skipWhitespace();
-      if (text[index] === "}") {
-        index += 1;
-        return;
-      }
-      index += 1; // Native JSON.parse already proved this byte is ','.
-    }
-  }
-
-  function scanArray(depth) {
-    index += 1;
-    skipWhitespace();
-    if (text[index] === "]") {
-      index += 1;
-      return;
-    }
-
-    while (index < text.length) {
-      scanValue(depth);
-      skipWhitespace();
-      if (text[index] === "]") {
-        index += 1;
-        return;
-      }
-      index += 1; // Native JSON.parse already proved this byte is ','.
-    }
-  }
-
-  scanValue(0);
-}
-
-function parseActionJson(text, resolved) {
-  let parsed;
-  try {
-    parsed = JSON.parse(text);
-  } catch (error) {
-    throw actionReadError("AXM_ACTION_INVALID_JSON", `Action file is not valid JSON: ${resolved}`, error);
-  }
-  assertUniqueObjectKeys(text);
-  return parsed;
 }
 
 export function readActionFile(filePath) {
