@@ -19,7 +19,7 @@
     "active": {
       "root": ".",
       "version": "0.4.6",
-      "sourceFiles": 167,
+      "sourceFiles": 168,
       "topLevelEntries": [
         "ACTION_REPORT.md",
         "ARCHITECTURE.md",

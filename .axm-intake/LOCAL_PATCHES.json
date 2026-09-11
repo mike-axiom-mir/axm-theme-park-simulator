@@ -30,6 +30,13 @@
       "originalSha256": "1d6927226ac44b4d69e8e392515f8cbaf024b30eabdcb639c67083c51b126e8e",
       "currentSha256": "d64b25faae2c4d80a717df0458ab12bf2d7777fb49b255c0091a51e386a3641e",
       "reason": "Record Apache-2.0 project licensing in the playable package metadata."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/src/core/save.js",
+      "originalSha256": "99c1750c95596e5d34a78035c02bf0e75511e82986773be2db9bd98641840531",
+      "currentSha256": "4d9d8924945f223d6f3ccefd00188317e7971afae3a270207bd51e9056cd06d8",
+      "reason": "Reject duplicate decoded JSON member names and excessive nesting before save version, hash, migration, or simulation admission."
     }
   ]
 }
