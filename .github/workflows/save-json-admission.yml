@@ -1,0 +1,51 @@
+name: Save JSON admission
+
+on:
+  pull_request:
+    paths:
+      - "playable_3d/src/core/save.js"
+      - "playable_3d/src/core/strict-json.js"
+      - "runtime/action-file-reader.js"
+      - "runtime/index.js"
+      - "truth-tests/save-json-admission.test.js"
+      - ".github/workflows/save-json-admission.yml"
+      - "HEADLESS_CONSUMER.md"
+  push:
+    branches:
+      - "automation/state-architect-save-json-admission-20260911"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: save-json-admission-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["18", "22", "24"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Check strict JSON boundary syntax
+        run: |
+          node --check playable_3d/src/core/save.js
+          node --check runtime/action-file-reader.js
+
+      - name: Run inherited headless/package tests
+        run: npm run test:headless
+
+      - name: Run save JSON admission regressions
+        run: node --test truth-tests/save-json-admission.test.js
