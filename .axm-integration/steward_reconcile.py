@@ -161,3 +161,15 @@ stext = replace_once(stext,
     '  assert.match(finalSeam, /legacyStyleUpgradeWorldRenderer/);\n  assert.match(legacySeam, /gildedStyleWorldRenderer/);\n',
     'Seasonal compatibility seam')
 seasonal.write_text(stext)
+
+simulation = Path('playable_3d/tests/simulation.test.js')
+sim = simulation.read_text()
+sim = replace_once(sim,
+    'import { deserializeGame, serializeGame } from "../src/core/save.js";\n',
+    'import { deserializeGame, migrateState, serializeGame } from "../src/core/save.js";\n',
+    'simulation migrate import')
+sim = replace_once(sim,
+    '  assert.deepEqual(restored, JSON.parse(serialized).state);\n',
+    '  assert.deepEqual(restored, migrateState(structuredClone(JSON.parse(serialized).state)));\n',
+    'simulation current-schema save expectation')
+simulation.write_text(sim)
