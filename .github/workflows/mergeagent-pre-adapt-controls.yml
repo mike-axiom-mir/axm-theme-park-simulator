@@ -26,6 +26,9 @@ jobs:
           text = p.read_text()
           style = '''
           <style id="axm-current-control-experience-v1">
+            /* axm-desktop-top-actions-bounds-v1 */
+            .top-actions { min-width: 0; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; }
+            .top-actions > button { flex: 0 0 auto; white-space: nowrap; }
             .speed-controls { right: 16px; bottom: 232px; z-index: 16; gap: 6px; padding: 6px; }
             .speed-controls button { min-width: 48px; min-height: 44px; padding: 8px 10px; font-size: 11px; font-weight: 800; font-variant-numeric: tabular-nums; }
             .speed-controls button[aria-pressed="true"] { box-shadow: 0 0 0 2px rgba(117, 213, 173, .22); }
@@ -42,6 +45,8 @@ jobs:
           '''
           if 'axm-current-control-experience-v1' not in text:
               text = text.replace('</head>', style + '\n</head>', 1)
+          elif 'axm-desktop-top-actions-bounds-v1' not in text:
+              text = text.replace('<style id="axm-current-control-experience-v1">', '<style id="axm-current-control-experience-v1">\n  /* axm-desktop-top-actions-bounds-v1 */\n  .top-actions { min-width: 0; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; }\n  .top-actions > button { flex: 0 0 auto; white-space: nowrap; }', 1)
           weather = '      <div class="weather"><small>Weather</small><b id="weather">Bright</b></div>\n'
           if 'id="park-gate-status"' not in text:
               text = text.replace(weather, weather + '      <button id="park-gate-status" class="gate-status" type="button" disabled aria-label="Park gate status unavailable.">\n        <small>Gate</small><b>—</b>\n      </button>\n', 1)
@@ -89,5 +94,5 @@ jobs:
           git config user.name 'AXM MergeAgent'
           git config user.email 'actions@users.noreply.github.com'
           git add playable_3d/src/index.html
-          git commit -m 'Adapt current park controls for final growth pass'
+          git commit -m 'Keep desktop park actions inside their grid track'
           git push origin HEAD:integration/theme-park-final-growth-20260912
