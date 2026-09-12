@@ -1,0 +1,93 @@
+name: MergeAgent pre-adapt current controls
+
+on:
+  push:
+    branches:
+      - integration/theme-park-final-growth-20260912
+
+permissions:
+  contents: write
+
+jobs:
+  adapt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: integration/theme-park-final-growth-20260912
+      - name: Adapt current speed contract and gate status shell
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('playable_3d/src/index.html')
+          text = p.read_text()
+          style = '''
+          <style id="axm-current-control-experience-v1">
+            .speed-controls { right: 16px; bottom: 232px; z-index: 16; gap: 6px; padding: 6px; }
+            .speed-controls button { min-width: 48px; min-height: 44px; padding: 8px 10px; font-size: 11px; font-weight: 800; font-variant-numeric: tabular-nums; }
+            .speed-controls button[aria-pressed="true"] { box-shadow: 0 0 0 2px rgba(117, 213, 173, .22); }
+            .gate-status { min-width: 72px; min-height: 44px; padding: 4px 9px; border: 0; border-left: 1px solid var(--line); border-radius: 0; background: transparent; text-align: left; }
+            .gate-status:hover, .gate-status:focus-visible { background: rgba(255,255,255,.08); border-left-color: rgba(240,199,102,.55); }
+            .gate-status small { pointer-events: none; }
+            .gate-status b { display: block; font-size: 13px; letter-spacing: .04em; }
+            .gate-status[data-open="true"] b { color: var(--mint); }
+            .gate-status[data-open="false"] b { color: #ffad83; }
+            @media (max-width: 640px) { .gate-status { flex: 1; min-width: 0; padding: 4px 6px; } .gate-status b { font-size: 11px; } }
+            @media (max-width: 430px) { .speed-controls { right: 8px; bottom: 210px; } .speed-controls button { min-width: 46px; } .build-hint { bottom: 286px; } }
+            @media (prefers-contrast: more) { .speed-controls { border-width: 2px; background: #111820; } .speed-controls button[aria-pressed="true"] { outline: 2px solid currentColor; outline-offset: 1px; } .gate-status { border-left-color: currentColor; } .gate-status[data-open="true"] b, .gate-status[data-open="false"] b { color: var(--ink); } }
+          </style>
+          '''
+          if 'axm-current-control-experience-v1' not in text:
+              text = text.replace('</head>', style + '\n</head>', 1)
+          weather = '      <div class="weather"><small>Weather</small><b id="weather">Bright</b></div>\n'
+          if 'id="park-gate-status"' not in text:
+              text = text.replace(weather, weather + '      <button id="park-gate-status" class="gate-status" type="button" disabled aria-label="Park gate status unavailable.">\n        <small>Gate</small><b>—</b>\n      </button>\n', 1)
+          speed = '''  <div class="speed-controls game-ui" role="group" aria-label="Simulation speed" data-experience="axm-current-speed-control-v1">
+            <button data-speed="0" type="button" aria-label="Pause simulation" aria-pressed="false">Pause</button>
+            <button data-speed="1" class="active" type="button" aria-label="Run simulation at normal speed" aria-pressed="true">1×</button>
+            <button data-speed="2" type="button" aria-label="Run simulation at two times speed" aria-pressed="false">2×</button>
+            <button data-speed="4" type="button" aria-label="Run simulation at four times speed" aria-pressed="false">4×</button>
+          </div>'''
+          if 'data-experience="axm-current-speed-control-v1"' not in text:
+              text, n = re.subn(r'  <div class="speed-controls game-ui" aria-label="Simulation speed">.*?  </div>', speed, text, count=1, flags=re.S)
+              if n != 1: raise SystemExit('speed block not found')
+          script = '''
+          <script id="axm-current-control-experience-script-v1">
+            (() => {
+              const controls = document.querySelector('.speed-controls');
+              const speedButtons = controls ? [...controls.querySelectorAll('[data-speed]')] : [];
+              const syncPressed = () => speedButtons.forEach((button) => button.setAttribute('aria-pressed', button.classList.contains('active') ? 'true' : 'false'));
+              if (controls) { const observer = new MutationObserver(syncPressed); speedButtons.forEach((button) => observer.observe(button, { attributes: true, attributeFilter: ['class'] })); controls.addEventListener('click', syncPressed); syncPressed(); }
+              const gateStatus = document.getElementById('park-gate-status');
+              const gateValue = gateStatus?.querySelector('b');
+              const menuButton = document.getElementById('menu-button');
+              const gateControl = document.getElementById('park-open-button');
+              if (!gateStatus || !gateValue || !menuButton || !gateControl) return;
+              let lastOpen = null;
+              const renderGateStatus = () => {
+                const open = globalThis.__AXM_GAME__?.getState?.()?.park?.open;
+                if (typeof open !== 'boolean') { lastOpen = null; gateStatus.disabled = true; gateStatus.removeAttribute('data-open'); gateStatus.setAttribute('aria-label', 'Park gate status unavailable.'); gateValue.textContent = '—'; return; }
+                if (open === lastOpen && !gateStatus.disabled) return;
+                lastOpen = open; gateStatus.disabled = false; gateStatus.dataset.open = String(open); gateValue.textContent = open ? 'OPEN' : 'CLOSED';
+                const action = open ? 'close' : 'open';
+                gateStatus.setAttribute('aria-label', `Park gate is ${open ? 'open' : 'closed'}. Open park settings to ${action} it.`);
+                gateStatus.title = `Gate ${open ? 'open' : 'closed'} · open settings to ${action} park`;
+              };
+              gateStatus.addEventListener('click', () => { menuButton.click(); requestAnimationFrame(() => { gateControl.scrollIntoView({ block: 'nearest' }); gateControl.focus({ preventScroll: true }); }); });
+              renderGateStatus(); const statusTimer = setInterval(renderGateStatus, 250); addEventListener('pagehide', () => clearInterval(statusTimer), { once: true });
+            })();
+          </script>
+          '''
+          if 'axm-current-control-experience-script-v1' not in text:
+              text = text.replace('</body>', script + '\n</body>', 1)
+          p.write_text(text)
+          PY
+          if git diff --quiet -- playable_3d/src/index.html; then exit 0; fi
+          git config user.name 'AXM MergeAgent'
+          git config user.email 'actions@users.noreply.github.com'
+          git add playable_3d/src/index.html
+          git commit -m 'Adapt current park controls for final growth pass'
+          git push origin HEAD:integration/theme-park-final-growth-20260912
