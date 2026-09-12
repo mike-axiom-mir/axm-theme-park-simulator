@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: '24'
-      - name: Merge Steward, reconcile canonical event authority, run playable files
+      - name: Merge Steward and run playable tests file-by-file
         shell: bash
         run: |
           set -euo pipefail
@@ -34,114 +34,7 @@ jobs:
             [ "$conflicts" = 'playable_3d/src/core/save.js' ] || { printf '%s\n' "$conflicts"; exit 1; }
             git checkout --ours playable_3d/src/core/save.js
           fi
-          python - <<'PY'
-          from pathlib import Path
-          import re
-
-          def add_import(path):
-              text = path.read_text()
-              line = 'import { appendRetainedEvent } from "./eventStream.js";\n'
-              if line not in text:
-                  text = line + text
-              path.write_text(text)
-
-          def replace_generic_writer(path, name='appendEvent'):
-              add_import(path)
-              text = path.read_text()
-              pattern = rf'function {name}\(state, type, subjectId, data = \{{\}}\) \{{\n(?:  .*\n)*?\}}'
-              replacement = f'''function {name}(state, type, subjectId, data = {{}}) {{\n  return appendRetainedEvent(state, {{\n    tick: state.tick ?? 0, type, subjectId, data\n  }});\n}}'''
-              text, count = re.subn(pattern, replacement, text, count=1)
-              if count != 1:
-                  raise SystemExit(f'event writer replacement failed: {path}')
-              path.write_text(text)
-
-          for rel in [
-              'playable_3d/src/core/historicalEconomy.js',
-              'playable_3d/src/core/upgrades.js',
-              'playable_3d/src/core/upgradeRuntime.js',
-              'playable_3d/src/core/researchRuntime.js',
-              'playable_3d/src/core/research.js',
-              'playable_3d/src/core/legacyCareer.js',
-          ]:
-              replace_generic_writer(Path(rel))
-
-          staff = Path('playable_3d/src/core/staff.js')
-          add_import(staff)
-          s = staff.read_text()
-          pattern = r'function appendStaffEvent\(state, type, subjectId, data = \{\}\) \{\n(?:  .*\n)*?\}'
-          replacement = '''function appendStaffEvent(state, type, subjectId, data = {}) {\n  return appendRetainedEvent(state, {\n    tick: Number(state.tick) || 0, type, subjectId, data\n  });\n}'''
-          s, count = re.subn(pattern, replacement, s, count=1)
-          if count != 1: raise SystemExit('staff event writer replacement failed')
-          staff.write_text(s)
-
-          districts = Path('playable_3d/src/core/districts.js')
-          add_import(districts)
-          d = districts.read_text()
-          pattern = r'function appendEvent\(state, districtId, previousTheme, themeId\) \{\n(?:  .*\n)*?\}'
-          replacement = '''function appendEvent(state, districtId, previousTheme, themeId) {\n  return appendRetainedEvent(state, {\n    tick: state.tick ?? 0,\n    type: "district.theme.changed",\n    subjectId: districtId,\n    data: { previousTheme, themeId }\n  });\n}'''
-          d, count = re.subn(pattern, replacement, d, count=1)
-          if count != 1: raise SystemExit('district event writer replacement failed')
-          districts.write_text(d)
-
-          save = Path('playable_3d/src/core/save.js')
-          text = save.read_text()
-          anchor = 'import { normalizeStaffState } from "./staff.js";\n'
-          additions = 'import { normalizeResearchState } from "./research.js";\nimport { normalizeUpgradeState } from "./upgrades.js";\nimport { normalizeDistrictState } from "./districts.js";\nimport { normalizeHistoricalEconomyState } from "./historicalEconomy.js";\nimport { normalizeLegacyCareerState } from "./legacyCareer.js";\n'
-          if additions not in text:
-              if anchor not in text: raise SystemExit('save import anchor missing')
-              text = text.replace(anchor, anchor + additions, 1)
-          calls_anchor = '  normalizeStaffState(state);\n'
-          calls = '  normalizeResearchState(state);\n  normalizeUpgradeState(state);\n  normalizeDistrictState(state);\n  normalizeHistoricalEconomyState(state);\n  normalizeLegacyCareerState(state);\n'
-          if calls not in text:
-              if calls_anchor not in text: raise SystemExit('save normalize anchor missing')
-              text = text.replace(calls_anchor, calls_anchor + calls, 1)
-          if 'officeVault:' not in text:
-              text = text.replace('      cash: payload.state?.economy?.cash ?? 0\n', '      cash: payload.state?.economy?.cash ?? 0,\n      officeVault: payload.state?.payments?.officeVault ?? 0,\n      legacyFund: payload.state?.legacy?.fund ?? 0\n', 1)
-          save.write_text(text)
-
-          coaster = Path('playable_3d/tests/coaster-studio.test.js')
-          ctext = coaster.read_text()
-          stale = '  assert.match(main, /!coasterStudio\\.dialog\\.open/);\n'
-          stronger = '  assert.match(main, /function toolDialogOpen\\(\\)[\\s\\S]*coasterStudio\\.dialog\\.open/);\n  assert.match(main, /speed > 0 && !toolDialogOpen\\(\\)/);\n'
-          if stale in ctext: ctext = ctext.replace(stale, stronger, 1)
-          facade = '  const renderer = read("../src/render/contentStudioWorldRenderer.js");\n'
-          implementation = '  const renderer = read("../src/render/specialContentWorldRenderer.js");\n'
-          if facade in ctext: ctext = ctext.replace(facade, implementation, 1)
-          coaster.write_text(ctext)
-
-          gilded = Path('playable_3d/tests/gilded-style.test.js')
-          gtext = gilded.read_text()
-          final_decl = '  const finalSeam = read("../src/render/finalStyleWorldRenderer.js");\n'
-          legacy_decl = final_decl + '  const legacySeam = read("../src/render/legacyStyleUpgradeWorldRenderer.js");\n'
-          if legacy_decl not in gtext: gtext = gtext.replace(final_decl, legacy_decl, 1)
-          gtext = gtext.replace('  assert.match(finalSeam, /gildedStyleWorldRenderer/);\n', '  assert.match(finalSeam, /legacyStyleUpgradeWorldRenderer/);\n  assert.match(legacySeam, /gildedStyleWorldRenderer/);\n', 1)
-          gilded.write_text(gtext)
-
-          historical = Path('playable_3d/tests/historical-economy.test.js')
-          htext = historical.read_text()
-          main_decl = '  const main = read("../src/main.js");\n'
-          legacy_decl = main_decl + '  const legacyRuntime = read("../src/core/legacyCareerRuntime.js");\n'
-          if legacy_decl not in htext: htext = htext.replace(main_decl, legacy_decl, 1)
-          htext = htext.replace('test("historical economy remains the final additive runtime layer", () => {', 'test("historical economy remains active beneath the final Legacy runtime layer", () => {', 1)
-          htext = htext.replace('  assert.match(main, /advanceOneMinuteWithHistoricalEconomy/);\n  assert.match(main, /simulateMinutesWithHistoricalEconomy/);\n', '  assert.match(main, /advanceOneMinuteWithLegacyCareer/);\n  assert.match(main, /simulateMinutesWithLegacyCareer/);\n  assert.match(legacyRuntime, /advanceOneMinuteWithHistoricalEconomy/);\n  assert.match(legacyRuntime, /simulateMinutesWithHistoricalEconomy/);\n', 1)
-          historical.write_text(htext)
-
-          legacy = Path('playable_3d/tests/legacy-career.test.js')
-          ltext = legacy.read_text()
-          old = 'function state(seed = "legacy-career") {\n  return normalizeLegacyCareerState(normalizeHistoricalEconomyState(createNewGame({ seed, mode: "sandbox" })));\n}\n'
-          new = 'function state(seed = "legacy-career") {\n  const park = normalizeLegacyCareerState(normalizeHistoricalEconomyState(createNewGame({ seed, mode: "sandbox" })));\n  for (const objective of park.campaign.objectives ?? []) objective.complete = false;\n  return park;\n}\n'
-          if old in ltext: ltext = ltext.replace(old, new, 1)
-          legacy.write_text(ltext)
-
-          research = Path('playable_3d/tests/research-growth.test.js')
-          rtext = research.read_text()
-          runtime_decl = '  const runtime = read("../src/core/researchRuntime.js");\n'
-          chain_decl = runtime_decl + '  const upgradeRuntime = read("../src/core/upgradeRuntime.js");\n  const historicalRuntime = read("../src/core/historicalEconomyRuntime.js");\n  const legacyRuntime = read("../src/core/legacyCareerRuntime.js");\n'
-          if chain_decl not in rtext: rtext = rtext.replace(runtime_decl, chain_decl, 1)
-          rtext = rtext.replace('  assert.match(main, /advanceOneMinuteWithResearch/);\n', '  assert.match(main, /advanceOneMinuteWithLegacyCareer/);\n  assert.match(legacyRuntime, /advanceOneMinuteWithHistoricalEconomy/);\n  assert.match(historicalRuntime, /advanceOneMinuteWithUpgrades/);\n  assert.match(upgradeRuntime, /advanceOneMinuteWithResearch/);\n', 1)
-          research.write_text(rtext)
-          PY
-
+          python .axm-integration/steward_reconcile.py
           echo '--- remaining direct event writers (only canonical eventStream expected) ---'
           grep -R -n -F 'eventLog.push' playable_3d/src/core runtime || true
           while IFS= read -r -d '' f; do
