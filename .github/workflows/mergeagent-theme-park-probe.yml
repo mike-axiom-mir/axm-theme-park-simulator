@@ -1,0 +1,36 @@
+name: MergeAgent Theme Park consolidation probe
+
+on:
+  push:
+    branches:
+      - integration/theme-park-growth-consolidation-20260912
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: integration/theme-park-growth-consolidation-20260912
+          fetch-depth: 0
+      - name: Probe headless safety terminal merge
+        shell: bash
+        run: |
+          set -u
+          git config user.name 'AXM MergeAgent'
+          git config user.email 'actions@users.noreply.github.com'
+          set +e
+          git merge --no-edit 949682eeaa6a347c09900e32a3b1fd13b8bb7633
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ]; then
+            echo '--- UNMERGED FILES ---'
+            git diff --name-only --diff-filter=U
+            echo '--- STATUS ---'
+            git status --short
+            exit 1
+          fi
+          echo 'MERGE_CLEAN'
