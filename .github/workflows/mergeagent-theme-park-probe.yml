@@ -72,6 +72,20 @@ jobs:
           if stale_gilded in gtext: gtext = gtext.replace(stale_gilded, stronger_gilded, 1)
           elif stronger_gilded not in gtext: raise SystemExit('Gilded seam assertion missing')
           gilded.write_text(gtext)
+
+          historical = Path('playable_3d/tests/historical-economy.test.js')
+          htext = historical.read_text()
+          main_decl = '  const main = read("../src/main.js");\n'
+          legacy_runtime_decl = main_decl + '  const legacyRuntime = read("../src/core/legacyCareerRuntime.js");\n'
+          if legacy_runtime_decl not in htext:
+              if main_decl not in htext: raise SystemExit('Historical main declaration missing')
+              htext = htext.replace(main_decl, legacy_runtime_decl, 1)
+          htext = htext.replace('test("historical economy remains the final additive runtime layer", () => {', 'test("historical economy remains active beneath the final Legacy runtime layer", () => {', 1)
+          stale_runtime = '  assert.match(main, /advanceOneMinuteWithHistoricalEconomy/);\n  assert.match(main, /simulateMinutesWithHistoricalEconomy/);\n'
+          stronger_runtime = '  assert.match(main, /advanceOneMinuteWithLegacyCareer/);\n  assert.match(main, /simulateMinutesWithLegacyCareer/);\n  assert.match(legacyRuntime, /advanceOneMinuteWithHistoricalEconomy/);\n  assert.match(legacyRuntime, /simulateMinutesWithHistoricalEconomy/);\n'
+          if stale_runtime in htext: htext = htext.replace(stale_runtime, stronger_runtime, 1)
+          elif stronger_runtime not in htext: raise SystemExit('Historical runtime assertion missing')
+          historical.write_text(htext)
           PY
           while IFS= read -r -d '' f; do
             echo "=== PLAYABLE_TEST_FILE:$f ==="
