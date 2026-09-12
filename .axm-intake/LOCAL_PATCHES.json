@@ -5,23 +5,9 @@
   "patches": [
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
-      "path": "playable_3d/src/world/livingGlobeAdapter.js",
-      "originalSha256": "5dd0c08871c3be623f76ee9ef718626c9648a333c820ed9ba090b4458268f300",
-      "currentSha256": "0e319010e9d7f62521aac02edb5eade5b17a31320b72a3020140e00ebc9a24ed",
-      "reason": "Initialize a fresh Three.js scene background before the first day-night frame instead of calling Color.copy on null."
-    },
-    {
-      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
-      "path": "playable_3d/tests/visual-animation.test.js",
-      "originalSha256": "0fa5ae29c10a46b84219b84001738df8ca0bb00e9ac80db8499ee979926ee715",
-      "currentSha256": "06c20429c0fde3ece9a7ada7813f6265d6084a0d5b08a9f612514bcc93a78010",
-      "reason": "Add a regression test for first-frame day-night rendering on a fresh Three.js scene."
-    },
-    {
-      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/dist/game.js",
       "originalSha256": "fc23cf192bfdd41ad163ca3db8f60276a4c55b044026c68f65d981425b1945d8",
-      "currentSha256": "e46074baaaf74cb3c1bceb488af4751987c8897fdde1022908190b555e2859ba",
+      "currentSha256": "dc184bef9e39e413c130d0976f8318b5c28f6386eaa1812e11ec959d091486e5",
       "reason": "Rebuild the playable browser bundle from the canonical event-stream cursor implementation and continuous-window admission invariant."
     },
     {
@@ -35,7 +21,7 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/src/core/save.js",
       "originalSha256": "99c1750c95596e5d34a78035c02bf0e75511e82986773be2db9bd98641840531",
-      "currentSha256": "8591d7fa3252678486402c7c86529f91e8b76445d73b25c19aad8519be603b68",
+      "currentSha256": "609da3a2c2327c44c296b9c6f8478cae0c5df4c89d3dd2cdcd022a0c2855f5b8",
       "reason": "Migrate legacy retained event history into the explicit event-stream cursor contract without rewriting historical records."
     },
     {
@@ -44,6 +30,20 @@
       "originalSha256": "3a550617f20533a4a6f410ff9f7026f9efbaf564499ca256d5b5e0983b43bffa",
       "currentSha256": "48873dfb93903c151171ad58e6a6452e06a3a7a8b5bfd46add7e0a54d40596c2",
       "reason": "Assign event identity from a canonical monotonic cursor instead of the bounded retained-history length."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/src/world/livingGlobeAdapter.js",
+      "originalSha256": "5dd0c08871c3be623f76ee9ef718626c9648a333c820ed9ba090b4458268f300",
+      "currentSha256": "0e319010e9d7f62521aac02edb5eade5b17a31320b72a3020140e00ebc9a24ed",
+      "reason": "Initialize a fresh Three.js scene background before the first day-night frame instead of calling Color.copy on null."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/tests/visual-animation.test.js",
+      "originalSha256": "0fa5ae29c10a46b84219b84001738df8ca0bb00e9ac80db8499ee979926ee715",
+      "currentSha256": "06c20429c0fde3ece9a7ada7813f6265d6084a0d5b08a9f612514bcc93a78010",
+      "reason": "Add a regression test for first-frame day-night rendering on a fresh Three.js scene."
     }
   ]
 }

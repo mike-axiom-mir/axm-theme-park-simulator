@@ -3,6 +3,7 @@ import { migrateEventStream } from "./eventStream.js";
 import { CAMPAIGN_LEVELS, catalogDefinition, catalogIdsThroughLevel } from "./catalog.js";
 import { createAdventureState } from "./adventure.js";
 import { normalizeStaffState } from "./staff.js";
+import { parseUnambiguousJson } from "./strict-json.js";
 
 export const SAVE_VERSION = 3;
 const PREFIX = "axm-theme-park-v042-slot-";
@@ -87,8 +88,32 @@ export function serializeGame(state) {
   return JSON.stringify(payload, null, 2);
 }
 
+function parseSaveJson(text) {
+  try {
+    return parseUnambiguousJson(text);
+  } catch (error) {
+    const details = error?.memberName === undefined
+      ? ""
+      : `: ${JSON.stringify(error.memberName)}`;
+    const mapping = {
+      AXM_JSON_INVALID: ["AXM_SAVE_INVALID_JSON", "Save is not valid JSON."],
+      AXM_JSON_DUPLICATE_KEY: [
+        "AXM_SAVE_DUPLICATE_KEY",
+        `Save JSON contains duplicate decoded member name${details}.`
+      ],
+      AXM_JSON_TOO_DEEP: ["AXM_SAVE_JSON_TOO_DEEP", "Save JSON nesting exceeds 256 levels."]
+    };
+    const [code, message] = mapping[error?.code] ?? [];
+    if (!code) throw error;
+    const held = new SyntaxError(message, { cause: error });
+    held.code = code;
+    if (error.memberName !== undefined) held.memberName = error.memberName;
+    throw held;
+  }
+}
+
 export function deserializeGame(text) {
-  const payload = JSON.parse(text);
+  const payload = parseSaveJson(text);
   if (payload.schema !== "axm.theme-park.playable-save") throw new Error("Not an AXM Theme Park save.");
   if (![1, 2, SAVE_VERSION].includes(payload.version)) throw new Error(`Unsupported save version: ${payload.version}`);
   const expected = payload.state.stateHash;

@@ -2112,6 +2112,7 @@ const {migrateEventStream}=require("src/core/eventStream.js");
 const {CAMPAIGN_LEVELS,catalogDefinition,catalogIdsThroughLevel}=require("src/core/catalog.js");
 const {createAdventureState}=require("src/core/adventure.js");
 const {normalizeStaffState}=require("src/core/staff.js");
+const {parseUnambiguousJson}=require("src/core/strict-json.js");
 
 const SAVE_VERSION = 3;
 const PREFIX = "axm-theme-park-v042-slot-";
@@ -2196,8 +2197,32 @@ function serializeGame(state) {
   return JSON.stringify(payload, null, 2);
 }
 
+function parseSaveJson(text) {
+  try {
+    return parseUnambiguousJson(text);
+  } catch (error) {
+    const details = error?.memberName === undefined
+      ? ""
+      : `: ${JSON.stringify(error.memberName)}`;
+    const mapping = {
+      AXM_JSON_INVALID: ["AXM_SAVE_INVALID_JSON", "Save is not valid JSON."],
+      AXM_JSON_DUPLICATE_KEY: [
+        "AXM_SAVE_DUPLICATE_KEY",
+        `Save JSON contains duplicate decoded member name${details}.`
+      ],
+      AXM_JSON_TOO_DEEP: ["AXM_SAVE_JSON_TOO_DEEP", "Save JSON nesting exceeds 256 levels."]
+    };
+    const [code, message] = mapping[error?.code] ?? [];
+    if (!code) throw error;
+    const held = new SyntaxError(message, { cause: error });
+    held.code = code;
+    if (error.memberName !== undefined) held.memberName = error.memberName;
+    throw held;
+  }
+}
+
 function deserializeGame(text) {
-  const payload = JSON.parse(text);
+  const payload = parseSaveJson(text);
   if (payload.schema !== "axm.theme-park.playable-save") throw new Error("Not an AXM Theme Park save.");
   if (![1, 2, SAVE_VERSION].includes(payload.version)) throw new Error(`Unsupported save version: ${payload.version}`);
   const expected = payload.state.stateHash;
@@ -2233,6 +2258,133 @@ function slotMetadata(slot, storage = localStorage) {
 }
 
 Object.assign(exports,{"SAVE_VERSION":SAVE_VERSION,"migrateState":migrateState,"serializeGame":serializeGame,"deserializeGame":deserializeGame,"saveToSlot":saveToSlot,"loadFromSlot":loadFromSlot,"slotMetadata":slotMetadata});
+},
+"src/core/strict-json.js":function(module,exports,require){
+const MAX_JSON_DEPTH = 256;
+
+function jsonAdmissionError(code, message, details = {}) {
+  const error = new SyntaxError(message, details.cause === undefined ? undefined : { cause: details.cause });
+  error.code = code;
+  if (details.memberName !== undefined) error.memberName = details.memberName;
+  return error;
+}
+
+function assertUniqueObjectKeys(text, maxDepth) {
+  let index = 0;
+
+  function skipWhitespace() {
+    while (index < text.length && /\s/.test(text[index])) index += 1;
+  }
+
+  function readString() {
+    const start = index;
+    index += 1;
+    while (index < text.length) {
+      if (text[index] === "\\") {
+        index += 2;
+        continue;
+      }
+      if (text[index] === '"') {
+        index += 1;
+        return JSON.parse(text.slice(start, index));
+      }
+      index += 1;
+    }
+  }
+
+  function scanValue(depth) {
+    if (depth > maxDepth) {
+      throw jsonAdmissionError(
+        "AXM_JSON_TOO_DEEP",
+        `JSON nesting exceeds ${maxDepth} levels.`
+      );
+    }
+
+    skipWhitespace();
+    const token = text[index];
+    if (token === "{") {
+      scanObject(depth + 1);
+      return;
+    }
+    if (token === "[") {
+      scanArray(depth + 1);
+      return;
+    }
+    if (token === '"') {
+      readString();
+      return;
+    }
+
+    while (index < text.length && !/[\s,}\]]/.test(text[index])) index += 1;
+  }
+
+  function scanObject(depth) {
+    index += 1;
+    skipWhitespace();
+    if (text[index] === "}") {
+      index += 1;
+      return;
+    }
+
+    const seen = new Set();
+    while (index < text.length) {
+      skipWhitespace();
+      const key = readString();
+      if (seen.has(key)) {
+        throw jsonAdmissionError(
+          "AXM_JSON_DUPLICATE_KEY",
+          `JSON contains duplicate decoded member name: ${JSON.stringify(key)}`,
+          { memberName: key }
+        );
+      }
+      seen.add(key);
+
+      skipWhitespace();
+      index += 1;
+      scanValue(depth);
+      skipWhitespace();
+      if (text[index] === "}") {
+        index += 1;
+        return;
+      }
+      index += 1;
+    }
+  }
+
+  function scanArray(depth) {
+    index += 1;
+    skipWhitespace();
+    if (text[index] === "]") {
+      index += 1;
+      return;
+    }
+
+    while (index < text.length) {
+      scanValue(depth);
+      skipWhitespace();
+      if (text[index] === "]") {
+        index += 1;
+        return;
+      }
+      index += 1;
+    }
+  }
+
+  scanValue(0);
+}
+
+function parseUnambiguousJson(text, { maxDepth = MAX_JSON_DEPTH } = {}) {
+  let parsed;
+  try {
+    parsed = JSON.parse(text);
+  } catch (cause) {
+    throw jsonAdmissionError("AXM_JSON_INVALID", "Input is not valid JSON.", { cause });
+  }
+  assertUniqueObjectKeys(text, maxDepth);
+  return parsed;
+}
+
+Object.assign(exports,{"MAX_JSON_DEPTH":MAX_JSON_DEPTH,"parseUnambiguousJson":parseUnambiguousJson});
 },
 "src/render/worldRenderer.js":function(module,exports,require){
 const THREE=require("vendor/three.module.min.js");
