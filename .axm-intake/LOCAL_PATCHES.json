@@ -4,6 +4,13 @@
   "archiveChecksumIndexesModified": false,
   "patches": [
     {
+      "index": "CHECKSUMS.sha256",
+      "path": "README.md",
+      "originalSha256": "954267311dd66afdf475697014079b18d9d2f879d8bbad3d3a0883245afe0d9c",
+      "currentSha256": "b2115925dd160e850764a8ec2bf6e98843d959e6d34373829947ce71ea7a7769",
+      "reason": "Live governance/front-door truth was updated without rewriting the preserved archive checksum index."
+    },
+    {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/dist/game.js",
       "originalSha256": "fc23cf192bfdd41ad163ca3db8f60276a4c55b044026c68f65d981425b1945d8",
