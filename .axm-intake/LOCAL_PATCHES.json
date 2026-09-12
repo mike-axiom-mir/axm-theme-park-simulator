@@ -7,7 +7,7 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/dist/game.js",
       "originalSha256": "fc23cf192bfdd41ad163ca3db8f60276a4c55b044026c68f65d981425b1945d8",
-      "currentSha256": "dc184bef9e39e413c130d0976f8318b5c28f6386eaa1812e11ec959d091486e5",
+      "currentSha256": "52a462289783be57c943c033d9b45146f31c242e5a10bfed7fa8a9e50af09d78",
       "reason": "Rebuild the playable browser bundle from the canonical event-stream cursor implementation and continuous-window admission invariant."
     },
     {
@@ -21,7 +21,7 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/src/core/save.js",
       "originalSha256": "99c1750c95596e5d34a78035c02bf0e75511e82986773be2db9bd98641840531",
-      "currentSha256": "609da3a2c2327c44c296b9c6f8478cae0c5df4c89d3dd2cdcd022a0c2855f5b8",
+      "currentSha256": "802c0a7a5ef2c62653756d522b922b38ff65edcedd13fdf9154a725cc44936ab",
       "reason": "Migrate legacy retained event history into the explicit event-stream cursor contract without rewriting historical records."
     },
     {
@@ -30,6 +30,13 @@
       "originalSha256": "3a550617f20533a4a6f410ff9f7026f9efbaf564499ca256d5b5e0983b43bffa",
       "currentSha256": "48873dfb93903c151171ad58e6a6452e06a3a7a8b5bfd46add7e0a54d40596c2",
       "reason": "Assign event identity from a canonical monotonic cursor instead of the bounded retained-history length."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/src/main.js",
+      "originalSha256": "36b9a092a9e57e753b20eaec4328e38e984fe8917c4a47e86da48eb959f4ba99",
+      "currentSha256": "51d250ea14b02748cf99cb49553e0573e967b9ae8583d784fa93a41dcc51f015",
+      "reason": "Consolidated verified growth-lane integration; current bytes are explicitly bound without rewriting the historical checksum index."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",

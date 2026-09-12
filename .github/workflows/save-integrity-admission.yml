@@ -1,0 +1,29 @@
+name: Save integrity admission
+
+on:
+  pull_request:
+    paths:
+      - "playable_3d/src/core/save.js"
+      - "truth-tests/save-integrity-admission.test.mjs"
+      - ".github/workflows/save-integrity-admission.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  save-integrity:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [22, 24]
+    name: Node ${{ matrix.node }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Check save module syntax
+        run: node --check playable_3d/src/core/save.js
+      - name: Run current-save integrity regression
+        run: node --test truth-tests/save-integrity-admission.test.mjs

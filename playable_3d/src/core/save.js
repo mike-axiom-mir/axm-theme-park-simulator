@@ -19,6 +19,12 @@ function savedText(storage, slot) {
     ?? null;
 }
 
+function saveIntegrityError(code, message) {
+  const error = new Error(message);
+  error.code = code;
+  return error;
+}
+
 function inferredLevel(state) {
   if (state.gameMode === "sandbox") return CAMPAIGN_LEVELS.at(-1).level;
   if ((state.park?.lifetimeVisitors ?? 0) >= 90 && (state.park?.rating ?? 0) >= 70) return 4;
@@ -116,9 +122,17 @@ export function deserializeGame(text) {
   const payload = parseSaveJson(text);
   if (payload.schema !== "axm.theme-park.playable-save") throw new Error("Not an AXM Theme Park save.");
   if (![1, 2, SAVE_VERSION].includes(payload.version)) throw new Error(`Unsupported save version: ${payload.version}`);
-  const expected = payload.state.stateHash;
+  const expected = payload.state?.stateHash;
+  if (payload.version === SAVE_VERSION && (typeof expected !== "string" || !/^[0-9a-f]{8}$/.test(expected))) {
+    throw saveIntegrityError(
+      "AXM_SAVE_INTEGRITY_REQUIRED",
+      "Save verification failed: current save requires an 8-character state hash."
+    );
+  }
   const actual = stateHash(payload.state);
-  if (expected && expected !== actual) throw new Error("Save verification failed: state hash mismatch.");
+  if (expected && expected !== actual) {
+    throw saveIntegrityError("AXM_SAVE_HASH_MISMATCH", "Save verification failed: state hash mismatch.");
+  }
   return migrateState(payload.state);
 }
 
