@@ -1,4 +1,4 @@
-name: MergeAgent Theme Park Steward playable-file probe
+name: MergeAgent Theme Park Steward event-writer probe
 
 on:
   push:
@@ -16,10 +16,7 @@ jobs:
         with:
           ref: integration/theme-park-growth-consolidation-20260912
           fetch-depth: 0
-      - uses: actions/setup-node@v7
-        with:
-          node-version: '24'
-      - name: Merge Steward and run playable tests file-by-file
+      - name: Merge Steward and list direct retained-event writers
         shell: bash
         run: |
           set -euo pipefail
@@ -34,71 +31,7 @@ jobs:
             [ "$conflicts" = 'playable_3d/src/core/save.js' ] || { printf '%s\n' "$conflicts"; exit 1; }
             git checkout --ours playable_3d/src/core/save.js
           fi
-          python - <<'PY'
-          from pathlib import Path
-          save = Path('playable_3d/src/core/save.js')
-          text = save.read_text()
-          anchor = 'import { normalizeStaffState } from "./staff.js";\n'
-          additions = 'import { normalizeResearchState } from "./research.js";\nimport { normalizeUpgradeState } from "./upgrades.js";\nimport { normalizeDistrictState } from "./districts.js";\nimport { normalizeHistoricalEconomyState } from "./historicalEconomy.js";\nimport { normalizeLegacyCareerState } from "./legacyCareer.js";\n'
-          if additions not in text: text = text.replace(anchor, anchor + additions, 1)
-          calls_anchor = '  normalizeStaffState(state);\n'
-          calls = '  normalizeResearchState(state);\n  normalizeUpgradeState(state);\n  normalizeDistrictState(state);\n  normalizeHistoricalEconomyState(state);\n  normalizeLegacyCareerState(state);\n'
-          if calls not in text: text = text.replace(calls_anchor, calls_anchor + calls, 1)
-          if 'officeVault:' not in text:
-              text = text.replace('      cash: payload.state?.economy?.cash ?? 0\n', '      cash: payload.state?.economy?.cash ?? 0,\n      officeVault: payload.state?.payments?.officeVault ?? 0,\n      legacyFund: payload.state?.legacy?.fund ?? 0\n', 1)
-          save.write_text(text)
-
-          coaster = Path('playable_3d/tests/coaster-studio.test.js')
-          ctext = coaster.read_text()
-          stale = '  assert.match(main, /!coasterStudio\\.dialog\\.open/);\n'
-          stronger = '  assert.match(main, /function toolDialogOpen\\(\\)[\\s\\S]*coasterStudio\\.dialog\\.open/);\n  assert.match(main, /speed > 0 && !toolDialogOpen\\(\\)/);\n'
-          if stale in ctext: ctext = ctext.replace(stale, stronger, 1)
-          elif stronger not in ctext: raise SystemExit('Coaster Studio guard assertion anchor missing')
-          facade = '  const renderer = read("../src/render/contentStudioWorldRenderer.js");\n'
-          implementation = '  const renderer = read("../src/render/specialContentWorldRenderer.js");\n'
-          if facade in ctext: ctext = ctext.replace(facade, implementation, 1)
-          elif implementation not in ctext: raise SystemExit('Coaster Studio renderer assertion anchor missing')
-          coaster.write_text(ctext)
-
-          gilded = Path('playable_3d/tests/gilded-style.test.js')
-          gtext = gilded.read_text()
-          final_decl = '  const finalSeam = read("../src/render/finalStyleWorldRenderer.js");\n'
-          legacy_decl = final_decl + '  const legacySeam = read("../src/render/legacyStyleUpgradeWorldRenderer.js");\n'
-          if legacy_decl not in gtext:
-              if final_decl not in gtext: raise SystemExit('Gilded final seam declaration missing')
-              gtext = gtext.replace(final_decl, legacy_decl, 1)
-          stale_gilded = '  assert.match(finalSeam, /gildedStyleWorldRenderer/);\n'
-          stronger_gilded = '  assert.match(finalSeam, /legacyStyleUpgradeWorldRenderer/);\n  assert.match(legacySeam, /gildedStyleWorldRenderer/);\n'
-          if stale_gilded in gtext: gtext = gtext.replace(stale_gilded, stronger_gilded, 1)
-          elif stronger_gilded not in gtext: raise SystemExit('Gilded seam assertion missing')
-          gilded.write_text(gtext)
-
-          historical = Path('playable_3d/tests/historical-economy.test.js')
-          htext = historical.read_text()
-          main_decl = '  const main = read("../src/main.js");\n'
-          legacy_runtime_decl = main_decl + '  const legacyRuntime = read("../src/core/legacyCareerRuntime.js");\n'
-          if legacy_runtime_decl not in htext:
-              if main_decl not in htext: raise SystemExit('Historical main declaration missing')
-              htext = htext.replace(main_decl, legacy_runtime_decl, 1)
-          htext = htext.replace('test("historical economy remains the final additive runtime layer", () => {', 'test("historical economy remains active beneath the final Legacy runtime layer", () => {', 1)
-          stale_runtime = '  assert.match(main, /advanceOneMinuteWithHistoricalEconomy/);\n  assert.match(main, /simulateMinutesWithHistoricalEconomy/);\n'
-          stronger_runtime = '  assert.match(main, /advanceOneMinuteWithLegacyCareer/);\n  assert.match(main, /simulateMinutesWithLegacyCareer/);\n  assert.match(legacyRuntime, /advanceOneMinuteWithHistoricalEconomy/);\n  assert.match(legacyRuntime, /simulateMinutesWithHistoricalEconomy/);\n'
-          if stale_runtime in htext: htext = htext.replace(stale_runtime, stronger_runtime, 1)
-          elif stronger_runtime not in htext: raise SystemExit('Historical runtime assertion missing')
-          historical.write_text(htext)
-
-          legacy = Path('playable_3d/tests/legacy-career.test.js')
-          ltext = legacy.read_text()
-          old_helper = 'function state(seed = "legacy-career") {\n  return normalizeLegacyCareerState(normalizeHistoricalEconomyState(createNewGame({ seed, mode: "sandbox" })));\n}\n'
-          new_helper = 'function state(seed = "legacy-career") {\n  const park = normalizeLegacyCareerState(normalizeHistoricalEconomyState(createNewGame({ seed, mode: "sandbox" })));\n  for (const objective of park.campaign.objectives ?? []) objective.complete = false;\n  return park;\n}\n'
-          if old_helper in ltext: ltext = ltext.replace(old_helper, new_helper, 1)
-          elif new_helper not in ltext: raise SystemExit('Legacy fixture helper missing')
-          legacy.write_text(ltext)
-          PY
-          while IFS= read -r -d '' f; do
-            echo "=== PLAYABLE_TEST_FILE:$f ==="
-            if ! node --test "$f"; then
-              echo "=== FAILING_PLAYABLE_FILE:$f ==="
-              exit 1
-            fi
-          done < <(find playable_3d/tests -maxdepth 1 -type f -name '*.test.js' -print0 | sort -z)
+          echo '--- eventLog.push writers ---'
+          grep -R -n -F 'eventLog.push' playable_3d/src/core runtime || true
+          echo '--- local appendEvent definitions ---'
+          grep -R -n -F 'function appendEvent' playable_3d/src/core runtime || true
