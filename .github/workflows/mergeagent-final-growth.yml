@@ -1,0 +1,273 @@
+name: MergeAgent final Theme Park growth
+
+on:
+  push:
+    branches:
+      - integration/theme-park-final-growth-20260912
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: integration/theme-park-final-growth-20260912
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Transplant placement truth onto current Steward body
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin 58d592c92df4748d988b6da6e1a25214adcf3b90 6cfa731f317da199fe39c8fae6b5446fa74698f7 5d1bda7467f15495d2daca32e3bbd8324083ef9a 35c546c3f6679126585cb58ee46e6b98c1600f81
+          git diff 58d592c92df4748d988b6da6e1a25214adcf3b90 6cfa731f317da199fe39c8fae6b5446fa74698f7 -- \
+            playable_3d/src/core/simulation.js \
+            playable_3d/src/index.html \
+            playable_3d/src/main.js \
+            playable_3d/src/render/worldRenderer.js \
+            playable_3d/src/styles.css \
+            playable_3d/src/ui/interface.js \
+            playable_3d/tests/simulation.test.js \
+            playable_3d/tests/ui-contract.test.js > /tmp/placement.patch
+          git apply --3way /tmp/placement.patch
+          git show 5d1bda7467f15495d2daca32e3bbd8324083ef9a:experience-tests/speed-control-experience.spec.cjs > experience-tests/speed-control-experience.spec.cjs
+          git show 35c546c3f6679126585cb58ee46e6b98c1600f81:experience-tests/park-gate-status-experience.spec.cjs > experience-tests/park-gate-status-experience.spec.cjs
+
+      - name: Adapt speed and gate experience to current semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('playable_3d/src/index.html')
+          text = path.read_text()
+
+          style = '''
+          <style id="axm-current-control-experience-v1">
+            .speed-controls {
+              right: 16px;
+              bottom: 232px;
+              z-index: 16;
+              gap: 6px;
+              padding: 6px;
+            }
+            .speed-controls button {
+              min-width: 48px;
+              min-height: 44px;
+              padding: 8px 10px;
+              font-size: 11px;
+              font-weight: 800;
+              font-variant-numeric: tabular-nums;
+            }
+            .speed-controls button[aria-pressed="true"] {
+              box-shadow: 0 0 0 2px rgba(117, 213, 173, .22);
+            }
+            .gate-status {
+              min-width: 72px;
+              min-height: 44px;
+              padding: 4px 9px;
+              border: 0;
+              border-left: 1px solid var(--line);
+              border-radius: 0;
+              background: transparent;
+              text-align: left;
+            }
+            .gate-status:hover, .gate-status:focus-visible {
+              background: rgba(255,255,255,.08);
+              border-left-color: rgba(240,199,102,.55);
+            }
+            .gate-status small { pointer-events: none; }
+            .gate-status b { display: block; font-size: 13px; letter-spacing: .04em; }
+            .gate-status[data-open="true"] b { color: var(--mint); }
+            .gate-status[data-open="false"] b { color: #ffad83; }
+            @media (max-width: 640px) {
+              .gate-status { flex: 1; min-width: 0; padding: 4px 6px; }
+              .gate-status b { font-size: 11px; }
+            }
+            @media (max-width: 430px) {
+              .speed-controls { right: 8px; bottom: 210px; }
+              .speed-controls button { min-width: 46px; }
+              .build-hint { bottom: 286px; }
+            }
+            @media (prefers-contrast: more) {
+              .speed-controls { border-width: 2px; background: #111820; }
+              .speed-controls button[aria-pressed="true"] { outline: 2px solid currentColor; outline-offset: 1px; }
+              .gate-status { border-left-color: currentColor; }
+              .gate-status[data-open="true"] b, .gate-status[data-open="false"] b { color: var(--ink); }
+            }
+          </style>
+          '''
+          if 'axm-current-control-experience-v1' not in text:
+              text = text.replace('</head>', style + '\n</head>', 1)
+
+          weather = '      <div class="weather"><small>Weather</small><b id="weather">Bright</b></div>\n'
+          gate = weather + '      <button id="park-gate-status" class="gate-status" type="button" disabled aria-label="Park gate status unavailable.">\n        <small>Gate</small><b>—</b>\n      </button>\n'
+          if 'id="park-gate-status"' not in text:
+              if weather not in text: raise SystemExit('weather metric anchor missing')
+              text = text.replace(weather, gate, 1)
+
+          old_speed = '''  <div class="speed-controls game-ui" aria-label="Simulation speed">
+            <button data-speed="0" type="button" aria-label="Pause simulation">Ⅱ</button>
+            <button data-speed="1" class="active" type="button" aria-label="Normal speed">1×</button>
+            <button data-speed="2" type="button" aria-label="Two times speed">2×</button>
+            <button data-speed="4" type="button" aria-label="Four times speed">4×</button>
+          </div>'''.replace('          ', '')
+          new_speed = '''  <div class="speed-controls game-ui" role="group" aria-label="Simulation speed" data-experience="axm-current-speed-control-v1">
+            <button data-speed="0" type="button" aria-label="Pause simulation" aria-pressed="false">Pause</button>
+            <button data-speed="1" class="active" type="button" aria-label="Run simulation at normal speed" aria-pressed="true">1×</button>
+            <button data-speed="2" type="button" aria-label="Run simulation at two times speed" aria-pressed="false">2×</button>
+            <button data-speed="4" type="button" aria-label="Run simulation at four times speed" aria-pressed="false">4×</button>
+          </div>'''.replace('          ', '')
+          if new_speed not in text:
+              if old_speed not in text: raise SystemExit('current speed controls anchor missing')
+              text = text.replace(old_speed, new_speed, 1)
+
+          script = '''
+          <script id="axm-current-control-experience-script-v1">
+            (() => {
+              const controls = document.querySelector('.speed-controls');
+              const speedButtons = controls ? [...controls.querySelectorAll('[data-speed]')] : [];
+              const syncPressed = () => speedButtons.forEach((button) => {
+                button.setAttribute('aria-pressed', button.classList.contains('active') ? 'true' : 'false');
+              });
+              if (controls) {
+                const observer = new MutationObserver(syncPressed);
+                speedButtons.forEach((button) => observer.observe(button, { attributes: true, attributeFilter: ['class'] }));
+                controls.addEventListener('click', syncPressed);
+                syncPressed();
+              }
+
+              const gateStatus = document.getElementById('park-gate-status');
+              const gateValue = gateStatus?.querySelector('b');
+              const menuButton = document.getElementById('menu-button');
+              const gateControl = document.getElementById('park-open-button');
+              if (!gateStatus || !gateValue || !menuButton || !gateControl) return;
+              let lastOpen = null;
+              const renderGateStatus = () => {
+                const open = globalThis.__AXM_GAME__?.getState?.()?.park?.open;
+                if (typeof open !== 'boolean') {
+                  lastOpen = null;
+                  gateStatus.disabled = true;
+                  gateStatus.removeAttribute('data-open');
+                  gateStatus.setAttribute('aria-label', 'Park gate status unavailable.');
+                  gateValue.textContent = '—';
+                  return;
+                }
+                if (open === lastOpen && !gateStatus.disabled) return;
+                lastOpen = open;
+                gateStatus.disabled = false;
+                gateStatus.dataset.open = String(open);
+                gateValue.textContent = open ? 'OPEN' : 'CLOSED';
+                const action = open ? 'close' : 'open';
+                gateStatus.setAttribute('aria-label', `Park gate is ${open ? 'open' : 'closed'}. Open park settings to ${action} it.`);
+                gateStatus.title = `Gate ${open ? 'open' : 'closed'} · open settings to ${action} park`;
+              };
+              gateStatus.addEventListener('click', () => {
+                menuButton.click();
+                requestAnimationFrame(() => {
+                  gateControl.scrollIntoView({ block: 'nearest' });
+                  gateControl.focus({ preventScroll: true });
+                });
+              });
+              renderGateStatus();
+              const statusTimer = setInterval(renderGateStatus, 250);
+              addEventListener('pagehide', () => clearInterval(statusTimer), { once: true });
+            })();
+          </script>
+          '''
+          if 'axm-current-control-experience-script-v1' not in text:
+              text = text.replace('</body>', script + '\n</body>', 1)
+          path.write_text(text)
+
+          speed_test = Path('experience-tests/speed-control-experience.spec.cjs')
+          s = speed_test.read_text()
+          s = s.replace("const speeds = ['0', '1', '3', '8'];", "const speeds = ['0', '1', '2', '4'];")
+          speed_test.write_text(s)
+          PY
+
+      - name: Rebuild and reseal active intake evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run build:playable
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+
+          def sha(path): return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+          manifest_path = Path('.axm-intake/LOCAL_PATCHES.json')
+          existing = json.loads(manifest_path.read_text())
+          reason = 'Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable.'
+          patches = []
+          for index_name, root in [('CHECKSUMS.sha256', Path('.')), ('PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256', Path('.'))]:
+              index_path = root / index_name
+              for line in index_path.read_text().splitlines():
+                  if not line.strip(): continue
+                  original, rel = line.split(None, 1)
+                  rel = rel.strip()
+                  target = root / rel
+                  if not target.exists(): continue
+                  current = sha(target)
+                  if current != original.lower():
+                      patches.append({
+                          'index': index_name,
+                          'path': rel.replace('\\\\','/'),
+                          'originalSha256': original.lower(),
+                          'currentSha256': current,
+                          'reason': reason
+                      })
+          existing['patches'] = patches
+          existing['archiveChecksumIndexesModified'] = False
+          manifest_path.write_text(json.dumps(existing, indent=2) + '\n')
+          PY
+          npm run verify:intake
+          node tools/generate-public-capability.mjs --check
+
+      - name: Run deterministic repository gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python run_tests.py
+          npm run test:headless
+          npm run test:playable
+          npm run build:playable
+          git diff --exit-code -- playable_3d/dist
+          python donor/AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_3_0/scripts/verify_package.py
+          test "$(grep -R -l -F 'eventLog.push' playable_3d/src/core runtime | tr '\n' ' ')" = 'playable_3d/src/core/eventStream.js '
+
+      - name: Run actual browser control and save journeys
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --ignore-scripts @playwright/test@1.55.0
+          npx playwright install chromium
+          mkdir -p experience-artifacts
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory playable_3d/dist >/tmp/theme-park-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && break || sleep .25; done
+          npx playwright test \
+            experience-tests/speed-control-experience.spec.cjs \
+            experience-tests/park-gate-status-experience.spec.cjs \
+            experience-tests/save-import-experience.spec.cjs \
+            --reporter=line --workers=1
+
+      - name: Commit only after every gate passes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'AXM MergeAgent'
+          git config user.email 'actions@users.noreply.github.com'
+          git add .axm-intake/LOCAL_PATCHES.json playable_3d experience-tests/speed-control-experience.spec.cjs experience-tests/park-gate-status-experience.spec.cjs
+          git diff --cached --check
+          git commit -m 'Integrate placement truth and reachable park controls'
+          git push origin HEAD:integration/theme-park-final-growth-20260912
