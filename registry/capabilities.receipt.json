@@ -6,7 +6,7 @@
   "sourceBlobs": {
     "LICENSE": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
     "package.json": "5b3e1f23927fbd7b77e264cc17d8b6d805bb27f5",
-    "runtime/index.js": "5aabd8b9c50db1ba865bf1f000becc71b107c91d",
+    "runtime/index.js": "9c4aa4dc3274c379d865c821663d282a9ad713bc",
     "runtime/package-metadata.js": "c20fa0cd807a87b2129feacf0cd2e35de98bf47b",
     "tools/generate-public-capability.mjs": "213a3fe10a6182103333464b4d7db0a769387e50"
   },

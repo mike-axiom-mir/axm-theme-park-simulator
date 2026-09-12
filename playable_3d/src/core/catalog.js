@@ -1,3 +1,6 @@
+import { WORLD_CONTENT_CATALOG } from "./worldContentCatalog.js";
+import { WATER_DISTRICT_CATALOG } from "./waterDistrictCatalog.js";
+
 export const GRID_SIZE = 30;
 export const TILE_SIZE = 2;
 export const PARK_OPEN_MINUTE = 9 * 60;
@@ -38,6 +41,14 @@ export const CATALOG = {
     operatingCost: 10, firstValue: 0.79, repeatValue: 0.68, intensity: 0.34,
     comfort: 0.81, familyFit: 0.88, thrillFit: 0.44, explorerFit: 0.9,
     color: 0x63c7d5
+  }),
+  galleon: ride({
+    id: "galleon", category: "Rides", label: "Moonwake Galleon", icon: "◒",
+    description: "A swinging ship that bridges family spectacle and real thrill without consuming coaster-scale land.",
+    cost: 4300, footprint: [5, 3], capacity: 12, cycleMinutes: 8,
+    operatingCost: 12, ridePrice: 3, firstValue: 0.84, repeatValue: 0.75,
+    intensity: 0.72, comfort: 0.64, familyFit: 0.72, thrillFit: 0.86,
+    explorerFit: 0.74, color: 0xd8894f
   }),
   coaster: ride({
     id: "coaster", category: "Rides", label: "Comet Coaster", icon: "⌁",
@@ -109,29 +120,42 @@ export const CATALOG = {
     icon: "═", description: "Rest support that helps families and tired guests stay longer.",
     cost: 65, footprint: [1, 1], capacity: 2, serviceMinutes: 14, need: "rest",
     theme: "neutral", influence: "rest", color: 0x8b5e3c
-  }
+  },
+  ...WORLD_CONTENT_CATALOG,
+  ...WATER_DISTRICT_CATALOG
 };
 
-export const BUILD_CATEGORIES = ["Paths", "Rides", "Services", "Scenery"];
+export const BUILD_CATEGORIES = ["Paths", "Rides", "Attractions", "Services", "Stores", "Scenery"];
 
 export const CAMPAIGN_LEVELS = Object.freeze([
   {
     level: 1,
     label: "Local fairground",
     requirement: "Inherited with the park",
-    unlocks: ["path", "queue", "carousel", "spinner", "snacks", "toilets", "tree", "lantern", "fountain", "bench"]
+    unlocks: [
+      "path", "queue", "carousel", "spinner", "twirlcups", "bumpers", "cloudhop",
+      "littleloop", "gardendrift", "acornplay", "mistgarden", "snacks", "toilets", "refill",
+      "harbourfizz", "watersidegazebo", "hellohub", "familynest", "memorymarket",
+      "sugarcloud", "swirlcart", "popcornplanet", "tree", "lantern", "fountain", "bench",
+      "lilypond", "reedbank", "boardwalkdeck"
+    ]
   },
   {
     level: 2,
     label: "Neighbourhood favourite",
     requirement: "Welcome 20 guests and hold rating 55",
-    unlocks: ["wheel", "drinks"]
+    unlocks: [
+      "wheel", "galleon", "starflyers", "sunbeam", "logdash", "lanternmaze", "skyribbon",
+      "cloudcinema", "tinytown", "canalcruise", "tidalturn", "lagoonshow", "drinks",
+      "quietcove", "stash", "wagonwheels", "chargegrove", "toytinker", "parkthreads",
+      "snapshotshop", "nameit", "ponchopier", "cascadegarden", "harbourlight"
+    ]
   },
   {
     level: 3,
     label: "Regional adventure",
     requirement: "Welcome 55 guests and hold rating 62",
-    unlocks: ["splash", "haunted"]
+    unlocks: ["splash", "haunted", "rapids", "cometdrop", "skysail", "bubblesub", "firstaid"]
   },
   {
     level: 4,

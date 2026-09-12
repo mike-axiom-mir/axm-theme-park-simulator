@@ -6,7 +6,7 @@ import {
   recomputeMetrics, refreshConnections, simulateMinutes
 } from "../src/core/simulation.js";
 import { findPath } from "../src/core/pathfinding.js";
-import { deserializeGame, serializeGame } from "../src/core/save.js";
+import { deserializeGame, migrateState, serializeGame } from "../src/core/save.js";
 import { stateHash } from "../src/core/random.js";
 import { LIVING_GLOBE_SOURCE } from "../src/world/livingGlobeAdapter.js";
 import { deriveOpeningSignal } from "../src/presentation/openingSequence.js";
@@ -72,7 +72,7 @@ test("save export round-trips and rejects tampering", () => {
   simulateMinutes(state, 75);
   const serialized = serializeGame(state);
   const restored = deserializeGame(serialized);
-  assert.deepEqual(restored, JSON.parse(serialized).state);
+  assert.deepEqual(restored, migrateState(structuredClone(JSON.parse(serialized).state)));
   const tampered = JSON.parse(serialized);
   tampered.state.economy.cash += 99999;
   assert.throws(() => deserializeGame(JSON.stringify(tampered)), /hash mismatch/);

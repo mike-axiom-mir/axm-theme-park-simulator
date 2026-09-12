@@ -6,6 +6,24 @@
   <meta name="theme-color" content="#10151d">
   <title>AXM Theme Park · Living Globe</title>
   <link rel="stylesheet" href="./styles.css">
+  <style>
+    @media (max-width: 640px) {
+      .top-actions {
+        min-width: 0;
+        max-width: 62vw;
+        overflow-x: auto;
+        justify-content: flex-start;
+        scrollbar-width: none;
+      }
+      .top-actions::-webkit-scrollbar { display: none; }
+      .top-actions button {
+        flex: 0 0 auto;
+        white-space: nowrap;
+      }
+      #mode-button { order: -2; }
+      #menu-button { order: -1; }
+    }
+  </style>
 </head>
 <body>
   <canvas id="game-canvas" aria-label="3D theme park world"></canvas>
@@ -76,10 +94,10 @@
   <div id="ride-hint" class="ride-hint game-ui hidden">Experiencing the live ride · Escape to leave</div>
 
   <div class="speed-controls game-ui" aria-label="Simulation speed">
-    <button data-speed="0" type="button">Ⅱ</button>
-    <button data-speed="1" class="active" type="button">▶</button>
-    <button data-speed="3" type="button">▶▶</button>
-    <button data-speed="8" type="button">▶▶▶</button>
+    <button data-speed="0" type="button" aria-label="Pause simulation">Ⅱ</button>
+    <button data-speed="1" class="active" type="button" aria-label="Normal speed">1×</button>
+    <button data-speed="2" type="button" aria-label="Two times speed">2×</button>
+    <button data-speed="4" type="button" aria-label="Four times speed">4×</button>
   </div>
 
   <section id="build-dock" class="build-dock game-ui">

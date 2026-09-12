@@ -1,0 +1,50 @@
+name: Save import experience
+
+on:
+  pull_request:
+  push:
+    branches:
+      - automation/experience-save-import-recovery-20260909
+
+permissions:
+  contents: read
+
+jobs:
+  browser-experience:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify focused source and required truth boundary
+        run: |
+          node --check playable_3d/src/main.js
+          node truth-tests/save-integrity-admission.test.mjs
+          npm run verify:intake
+      - name: Verify committed playable distribution is reproducible
+        run: |
+          npm run build:playable
+          git diff --exit-code -- playable_3d/dist
+      - name: Install browser test harness
+        run: |
+          npm install --no-save --ignore-scripts @playwright/test@1.55.0
+          npx playwright install chromium
+      - name: Exercise actual save import surface
+        run: |
+          mkdir -p experience-artifacts
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory playable_3d/dist > /tmp/axm-theme-park-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then break; fi
+            sleep 0.25
+          done
+          npx playwright test experience-tests/save-import-experience.spec.cjs --reporter=line --workers=1
+      - name: Upload retained visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: save-import-experience-${{ github.sha }}
+          path: experience-artifacts/
+          if-no-files-found: warn
