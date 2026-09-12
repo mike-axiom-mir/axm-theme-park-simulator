@@ -5,7 +5,7 @@ import {
   getProgressionView,
   simulateMinutes
 } from "../playable_3d/src/core/simulation.js";
-import { deserializeGame, serializeGame } from "../playable_3d/src/core/save.js";
+import { deserializeGame, migrateState, serializeGame } from "../playable_3d/src/core/save.js";
 import { stateHash } from "../playable_3d/src/core/random.js";
 import { eventStreamSummary, validateEventStream } from "../playable_3d/src/core/eventStream.js";
 
@@ -59,7 +59,7 @@ export class HeadlessSimulator {
   }
 
   static create(options = {}) {
-    return new HeadlessSimulator(createNewGame(options));
+    return new HeadlessSimulator(migrateState(createNewGame(options)));
   }
 
   static fromSerialized(text) {

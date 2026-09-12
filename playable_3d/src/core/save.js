@@ -3,6 +3,11 @@ import { migrateEventStream } from "./eventStream.js";
 import { CAMPAIGN_LEVELS, catalogDefinition, catalogIdsThroughLevel } from "./catalog.js";
 import { createAdventureState } from "./adventure.js";
 import { normalizeStaffState } from "./staff.js";
+import { normalizeResearchState } from "./research.js";
+import { normalizeUpgradeState } from "./upgrades.js";
+import { normalizeDistrictState } from "./districts.js";
+import { normalizeHistoricalEconomyState } from "./historicalEconomy.js";
+import { normalizeLegacyCareerState } from "./legacyCareer.js";
 import { parseUnambiguousJson } from "./strict-json.js";
 
 export const SAVE_VERSION = 3;
@@ -72,6 +77,11 @@ export function migrateState(input) {
   }
   const legacyLitter = Math.max(0, Number(state.park?.litter) || 0);
   normalizeStaffState(state);
+  normalizeResearchState(state);
+  normalizeUpgradeState(state);
+  normalizeDistrictState(state);
+  normalizeHistoricalEconomyState(state);
+  normalizeLegacyCareerState(state);
   if (!state.world.litter.length && legacyLitter > 0) {
     state.world.litter.push({
       id: `litter-${state.world.nextLitterId++}`,
@@ -155,7 +165,9 @@ export function slotMetadata(slot, storage = localStorage) {
       savedAt: payload.savedAt,
       parkName: payload.state?.park?.name ?? "Unknown park",
       day: payload.state?.clock?.day ?? 1,
-      cash: payload.state?.economy?.cash ?? 0
+      cash: payload.state?.economy?.cash ?? 0,
+      officeVault: payload.state?.payments?.officeVault ?? 0,
+      legacyFund: payload.state?.legacy?.fund ?? 0
     };
   } catch {
     return { slot, damaged: true };

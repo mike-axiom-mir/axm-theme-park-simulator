@@ -1,14 +1,69 @@
-import { createNewGame, advanceOneMinute, applyAction } from "./core/simulation.js";
+import { createNewGame, applyAction } from "./core/simulation.js";
+import { applyStaffDevelopmentAction } from "./core/staff.js";
+import {
+  applyResearchAction, getResearchView, normalizeResearchState
+} from "./core/research.js";
+import {
+  applyUpgradeAction, normalizeUpgradeState
+} from "./core/upgrades.js";
+import {
+  applyHistoricalEconomyAction, getHistoricalEconomyView, normalizeHistoricalEconomyState,
+  processHistoricalOperatingDayTransition
+} from "./core/historicalEconomy.js";
+import {
+  applyLegacyCareerAction, getLegacyCareerView, normalizeLegacyCareerState,
+  processLegacyCareerProgress
+} from "./core/legacyCareer.js";
+import {
+  advanceOneMinuteWithLegacyCareer, simulateMinutesWithLegacyCareer
+} from "./core/legacyCareerRuntime.js";
+import {
+  SIMULATION_MILLISECONDS_PER_MINUTE, SIMULATION_SPEEDS, normalizeSimulationSpeed
+} from "./core/timeScale.js";
 import {
   deserializeGame, loadFromSlot, saveToSlot, serializeGame, slotMetadata
 } from "./core/save.js";
 import { stateHash } from "./core/random.js";
-import { WorldRenderer } from "./render/worldRenderer.js";
+import { WorldRenderer } from "./render/contentStudioWorldRenderer.js";
 import { GameInterface } from "./ui/interface.js";
+import { CoasterStudioUI } from "./ui/coasterStudioUI.js";
+import { ResearchLabUI } from "./ui/researchLabUI.js";
+import { UpgradeBayUI } from "./ui/upgradeBayUI.js";
+import { CashOfficeUI } from "./ui/cashOfficeUI.js";
+import { LegacyAtelierUI } from "./ui/legacyAtelierUI.js";
 import { deriveOpeningSignal } from "./presentation/openingSequence.js";
 
 const canvas = document.getElementById("game-canvas");
-let state = createNewGame();
+const visionButton = document.createElement("button");
+visionButton.id = "vision-button";
+visionButton.type = "button";
+visionButton.textContent = "Vision · Off";
+visionButton.title = "Park Vision: cycle Crowd flow, Queue pressure, Guest needs, and Operations (V)";
+visionButton.setAttribute("aria-pressed", "false");
+const studioButton = document.createElement("button");
+studioButton.id = "coaster-studio-button";
+studioButton.type = "button";
+studioButton.textContent = "Coaster Studio";
+studioButton.title = "Design, style, decorate, export, and import custom coaster drafts";
+const researchButton = document.createElement("button");
+researchButton.id = "research-button";
+researchButton.type = "button";
+researchButton.textContent = "Research";
+researchButton.title = "Research real park evidence and grow attractions, services, stores, and the park itself";
+const upgradeButton = document.createElement("button");
+upgradeButton.id = "upgrade-button";
+upgradeButton.type = "button";
+upgradeButton.textContent = "Upgrade Bay";
+upgradeButton.title = "Install researched modules on specific park elements or across the whole park";
+const topActions = document.querySelector(".top-actions");
+topActions?.prepend(studioButton);
+topActions?.prepend(upgradeButton);
+topActions?.prepend(researchButton);
+topActions?.prepend(visionButton);
+
+let state = normalizeLegacyCareerState(
+  normalizeHistoricalEconomyState(normalizeUpgradeState(normalizeResearchState(createNewGame())))
+);
 let speed = 1;
 let accumulator = 0;
 let lastTime = performance.now();
@@ -164,23 +219,56 @@ function createSaveImportFeedback() {
   });
 }
 
+const STAFF_DEVELOPMENT_ACTIONS = new Set(["trainStaff", "setStaffZone", "cycleStaffZone"]);
+const RESEARCH_ACTIONS = new Set(["completeResearch", "growEntity", "growPark"]);
+const UPGRADE_ACTIONS = new Set([
+  "installEntityUpgrade", "removeEntityUpgrade", "installParkUpgrade", "removeParkUpgrade"
+]);
+const HISTORICAL_ECONOMY_ACTIONS = new Set(["completePaymentTechnology", "manualBankRun"]);
+const LEGACY_CAREER_ACTIONS = new Set(["completeLegacyStyleProject"]);
+
 function guardedStorage(callback, fallback = null) {
   try { return callback(); } catch { return fallback; }
 }
 
 function act(action, { quiet = false } = {}) {
-  const result = applyAction(state, action);
+  const result = STAFF_DEVELOPMENT_ACTIONS.has(action?.type)
+    ? applyStaffDevelopmentAction(state, action)
+    : RESEARCH_ACTIONS.has(action?.type)
+      ? applyResearchAction(state, action)
+      : UPGRADE_ACTIONS.has(action?.type)
+        ? applyUpgradeAction(state, action)
+        : HISTORICAL_ECONOMY_ACTIONS.has(action?.type)
+          ? applyHistoricalEconomyAction(state, action)
+          : LEGACY_CAREER_ACTIONS.has(action?.type)
+            ? applyLegacyCareerAction(state, action)
+            : applyAction(state, action);
   if (!result.ok && !quiet) ui.toast(result.reason ?? "That action could not be completed.", "error");
   if (result.ok) {
+    if (action?.type === "startNextDay") {
+      processHistoricalOperatingDayTransition(state, { source: "startNextDay" });
+    }
+    if (result.timeCostMinutes > 0) {
+      simulateMinutesWithLegacyCareer(state, result.timeCostMinutes);
+      if (state.operations?.dayReport) {
+        speed = 0;
+        accumulator = 0;
+        ui.setSpeed(0);
+      }
+    }
+    processLegacyCareerProgress(state);
     state.stateHash = stateHash(state);
     world.syncWorld();
     ui.render(state);
+    if (result.message && !quiet) ui.toast(result.message, "good");
   }
   return result;
 }
 
 function replaceState(nextState) {
-  state = nextState;
+  state = normalizeLegacyCareerState(
+    normalizeHistoricalEconomyState(normalizeUpgradeState(normalizeResearchState(nextState)))
+  );
   speed = state.operations?.dayReport ? 0 : 1;
   accumulator = 0;
   ui.resetTransientState();
@@ -212,7 +300,7 @@ async function playOpening({ resumeSpeed = 1 } = {}) {
     world.finishOpeningCamera();
   }
   if (state !== openingState) return;
-  speed = state.operations?.dayReport ? 0 : resumeSpeed;
+  speed = state.operations?.dayReport ? 0 : normalizeSimulationSpeed(resumeSpeed);
   ui.setSpeed(speed);
 }
 
@@ -225,6 +313,7 @@ const world = new WorldRenderer(canvas, {
   onSelectEntity: (entityId) => ui.openInspector(entityId),
   onSelectVisitor: (visitorId) => ui.openVisitorInspector(visitorId),
   onSelectStaff: (staffId) => ui.openStaffInspector(staffId),
+  onStaffDevelopment: (action) => act(action),
   onCloseInspector: () => world.selectEntity(null),
   onBuildRotation: (rotation) => ui.toast(`Build rotation ${rotation * 90}°`, "info"),
   onCancelBuild: () => ui.cancelBuild(),
@@ -258,7 +347,10 @@ const ui = new GameInterface({
       world.setMode(mode);
     }
   },
-  onSpeed: (value) => { speed = value; ui.setSpeed(value); },
+  onSpeed: (value) => {
+    speed = normalizeSimulationSpeed(value);
+    ui.setSpeed(speed);
+  },
   onBuildTool: (catalogId) => world.setBuildTool(catalogId),
   onRemovePathTool: (active) => world.setRemovePathTool(active),
   onCancelBuild: () => world.clearBuildTool(),
@@ -329,10 +421,77 @@ const ui = new GameInterface({
   onTouchInteract: () => world.interactNearby()
 });
 
+const coasterStudio = new CoasterStudioUI({
+  onMessage: (message) => ui.toast(message, "info")
+});
+const researchLab = new ResearchLabUI({
+  getState: () => state,
+  onAction: (action) => act(action),
+  onMessage: (message, tone = "info") => ui.toast(message, tone)
+});
+const upgradeBay = new UpgradeBayUI({
+  getState: () => state,
+  onAction: (action) => act(action, { quiet: true }),
+  onMessage: (message, tone = "info") => ui.toast(message, tone)
+});
+const cashOffice = new CashOfficeUI({
+  getState: () => state,
+  onAction: (action) => act(action, { quiet: true }),
+  onMessage: (message, tone = "info") => ui.toast(message, tone)
+});
+const legacyAtelier = new LegacyAtelierUI({
+  getState: () => state,
+  onAction: (action) => act(action, { quiet: true }),
+  onMessage: (message, tone = "info") => ui.toast(message, tone)
+});
+
+coasterStudio.dialog.addEventListener("keydown", (event) => event.stopPropagation());
+
+function closeToolDialogs(except = null) {
+  for (const tool of [coasterStudio, researchLab, upgradeBay, cashOffice, legacyAtelier]) {
+    if (tool !== except) tool.close();
+  }
+}
+
+studioButton.addEventListener("click", () => { closeToolDialogs(coasterStudio); coasterStudio.open(); });
+researchButton.addEventListener("click", () => { closeToolDialogs(researchLab); researchLab.open(); });
+upgradeButton.addEventListener("click", () => { closeToolDialogs(upgradeBay); upgradeBay.open(); });
+cashOffice.button.addEventListener("click", () => closeToolDialogs(cashOffice));
+legacyAtelier.button.addEventListener("click", () => closeToolDialogs(legacyAtelier));
+
+function toolDialogOpen() {
+  return coasterStudio.dialog.open || researchLab.dialog.open || upgradeBay.dialog.open
+    || cashOffice.dialog.open || legacyAtelier.dialog.open;
+}
+
+function renderParkVisionStatus(status, { announce = false } = {}) {
+  visionButton.textContent = `Vision · ${status.label}`;
+  visionButton.classList.toggle("primary", status.active);
+  visionButton.setAttribute("aria-pressed", status.active ? "true" : "false");
+  visionButton.title = status.active
+    ? `Park Vision: ${status.label} · ${status.markerCount} live markers · press V to cycle`
+    : "Park Vision: cycle Crowd flow, Queue pressure, Guest needs, and Operations (V)";
+  if (announce) ui.toast(`Park Vision · ${status.label}${status.active ? ` · ${status.markerCount} live markers` : ""}`, "info");
+}
+
+function cycleParkVision({ announce = true } = {}) {
+  const status = world.cycleParkVision();
+  renderParkVisionStatus(status, { announce });
+  return status;
+}
+
+visionButton.addEventListener("click", () => cycleParkVision());
+addEventListener("keydown", (event) => {
+  if (event.code !== "KeyV" || world.mode !== "manage" || toolDialogOpen()) return;
+  if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
+  cycleParkVision();
+});
+
 world.setState(state);
 ui.render(state);
 ui.setContinueAvailable(Boolean(guardedStorage(() => slotMetadata(0))));
 ui.setMode("manage");
+renderParkVisionStatus(world.getParkVisionStatus());
 const savedQuality = guardedStorage(() => localStorage.getItem("axm-theme-park-v046-quality")
   ?? localStorage.getItem("axm-theme-park-v045-quality")
   ?? localStorage.getItem("axm-theme-park-v044-quality")
@@ -351,6 +510,8 @@ globalThis.__AXM_GAME__ = Object.freeze({
   getMode: () => world.mode,
   health: () => ({
     running: true,
+    speed,
+    availableSpeeds: [...SIMULATION_SPEEDS],
     day: state.clock.day,
     minute: state.clock.minute,
     visitors: state.visitors.length,
@@ -359,6 +520,42 @@ globalThis.__AXM_GAME__ = Object.freeze({
     crewJobsToday: (state.operations.todayCleanups ?? 0) + (state.operations.todayRepairs ?? 0),
     benchRestsToday: state.operations.todayBenchRests ?? 0,
     opening: ui.openingActive,
+    coasterStudioOpen: coasterStudio.dialog.open,
+    researchLabOpen: researchLab.dialog.open,
+    upgradeBayOpen: upgradeBay.dialog.open,
+    cashOfficeOpen: cashOffice.dialog.open,
+    legacyAtelierOpen: legacyAtelier.dialog.open,
+    research: (() => {
+      const view = getResearchView(state);
+      return { insight: view.insight, lifetimeInsight: view.lifetimeInsight, completed: view.completed.length, parkGrowth: view.parkGrowth };
+    })(),
+    upgrades: {
+      park: state.upgrades?.park?.length ?? 0,
+      entity: (state.world.entities ?? []).reduce((sum, entity) => sum + (entity.installedUpgrades?.length ?? 0), 0)
+    },
+    payments: (() => {
+      const view = getHistoricalEconomyView(state);
+      return {
+        year: view.calendar.year,
+        careerOperatingDay: view.calendar.careerOperatingDay,
+        mapOperatingDay: view.calendar.mapOperatingDay,
+        activeMapId: view.calendar.activeMapId,
+        bankAvailable: view.bankAvailable,
+        officeVault: view.officeVault,
+        acceptedElectronicShare: view.acceptedElectronicShare,
+        electronicFees: view.ledger.electronicFees,
+        technology: view.completedTechnology.length
+      };
+    })(),
+    legacy: (() => {
+      const view = getLegacyCareerView(state);
+      return {
+        fund: view.fund,
+        lifetimeEarned: view.lifetimeEarned,
+        parkValue: view.parkValue,
+        completedStyleProjects: view.projects.filter((item) => item.completed).length
+      };
+    })(),
     visuals: world.getVisualHealth()
   })
 });
@@ -366,13 +563,12 @@ globalThis.__AXM_GAME__ = Object.freeze({
 function gameLoop(now) {
   const delta = Math.min(1000, now - lastTime);
   lastTime = now;
-  if (speed > 0) {
+  if (speed > 0 && !toolDialogOpen()) {
     accumulator += delta * speed;
-    const millisecondsPerMinute = 620;
     let safety = 0;
-    while (accumulator >= millisecondsPerMinute && safety++ < 40) {
-      advanceOneMinute(state);
-      accumulator -= millisecondsPerMinute;
+    while (accumulator >= SIMULATION_MILLISECONDS_PER_MINUTE && safety++ < 40) {
+      advanceOneMinuteWithLegacyCareer(state);
+      accumulator -= SIMULATION_MILLISECONDS_PER_MINUTE;
       if (state.operations?.dayReport) {
         speed = 0;
         accumulator = 0;
@@ -383,6 +579,11 @@ function gameLoop(now) {
   }
   if (now - lastUiUpdate > 250) {
     ui.render(state);
+    if (world.getParkVisionStatus().active) renderParkVisionStatus(world.getParkVisionStatus());
+    if (researchLab.dialog.open) researchLab.render();
+    if (upgradeBay.dialog.open) upgradeBay.render();
+    if (cashOffice.dialog.open) cashOffice.render();
+    if (legacyAtelier.dialog.open) legacyAtelier.render();
     lastUiUpdate = now;
   }
   if (now - lastAutosave > 45000) {
