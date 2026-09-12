@@ -1,4 +1,4 @@
-name: MergeAgent Theme Park Steward integration
+name: MergeAgent Theme Park Steward fixture probe
 
 on:
   push:
@@ -6,24 +6,17 @@ on:
       - integration/theme-park-growth-consolidation-20260912
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  integrate:
-    if: github.event.head_commit.message != 'MergeAgent integrate Steward park stack'
+  probe:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
           ref: integration/theme-park-growth-consolidation-20260912
           fetch-depth: 0
-      - uses: actions/setup-node@v7
-        with:
-          node-version: '24'
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.13'
-      - name: Merge exact Steward terminal and reconcile state boundaries
+      - name: Merge Steward and locate failing fixture
         shell: bash
         run: |
           set -euo pipefail
@@ -35,152 +28,11 @@ jobs:
           set -e
           if [ "$merge_status" -ne 0 ]; then
             conflicts="$(git diff --name-only --diff-filter=U)"
-            printf '%s\n' "$conflicts"
             if [ "$conflicts" != 'playable_3d/src/core/save.js' ]; then
-              echo 'Unexpected Steward conflict; refusing automatic resolution.'
+              printf '%s\n' "$conflicts"
               exit 1
             fi
             git checkout --ours playable_3d/src/core/save.js
+            git add playable_3d/src/core/save.js
           fi
-          python - <<'PY'
-          from pathlib import Path
-
-          save_path = Path('playable_3d/src/core/save.js')
-          text = save_path.read_text()
-          anchor = 'import { normalizeStaffState } from "./staff.js";\n'
-          additions = (
-              'import { normalizeResearchState } from "./research.js";\n'
-              'import { normalizeUpgradeState } from "./upgrades.js";\n'
-              'import { normalizeDistrictState } from "./districts.js";\n'
-              'import { normalizeHistoricalEconomyState } from "./historicalEconomy.js";\n'
-              'import { normalizeLegacyCareerState } from "./legacyCareer.js";\n'
-          )
-          if additions not in text:
-              if anchor not in text: raise SystemExit('save import anchor missing')
-              text = text.replace(anchor, anchor + additions, 1)
-          call_anchor = '  normalizeStaffState(state);\n'
-          calls = (
-              '  normalizeResearchState(state);\n'
-              '  normalizeUpgradeState(state);\n'
-              '  normalizeDistrictState(state);\n'
-              '  normalizeHistoricalEconomyState(state);\n'
-              '  normalizeLegacyCareerState(state);\n'
-          )
-          if calls not in text:
-              if call_anchor not in text: raise SystemExit('save normalize anchor missing')
-              text = text.replace(call_anchor, call_anchor + calls, 1)
-          cash_anchor = '      cash: payload.state?.economy?.cash ?? 0\n'
-          metadata = (
-              '      cash: payload.state?.economy?.cash ?? 0,\n'
-              '      officeVault: payload.state?.payments?.officeVault ?? 0,\n'
-              '      legacyFund: payload.state?.legacy?.fund ?? 0\n'
-          )
-          if 'officeVault:' not in text:
-              if cash_anchor not in text: raise SystemExit('slot metadata anchor missing')
-              text = text.replace(cash_anchor, metadata, 1)
-          save_path.write_text(text)
-
-          headless_path = Path('runtime/headless-simulator.js')
-          headless = headless_path.read_text()
-          old_import = 'import { deserializeGame, serializeGame } from "../playable_3d/src/core/save.js";'
-          new_import = 'import { deserializeGame, migrateState, serializeGame } from "../playable_3d/src/core/save.js";'
-          if old_import in headless:
-              headless = headless.replace(old_import, new_import, 1)
-          elif new_import not in headless:
-              raise SystemExit('headless save import anchor missing')
-          old_create = '    return new HeadlessSimulator(createNewGame(options));'
-          new_create = '    return new HeadlessSimulator(migrateState(createNewGame(options)));'
-          if old_create in headless:
-              headless = headless.replace(old_create, new_create, 1)
-          elif new_create not in headless:
-              raise SystemExit('headless create anchor missing')
-          headless_path.write_text(headless)
-          PY
-          git add playable_3d/src/core/save.js runtime/headless-simulator.js
-      - name: Rebuild and regenerate combined evidence
-        shell: bash
-        run: |
-          set -euo pipefail
-          npm run build:playable
-          node tools/generate-public-capability.mjs --write
-          python - <<'PY'
-          import hashlib, json, pathlib, re, subprocess
-          root = pathlib.Path('.')
-          archives_path = root / '.axm-intake' / 'SOURCE_ARCHIVES.json'
-          patches_path = root / '.axm-intake' / 'LOCAL_PATCHES.json'
-          archives = json.loads(archives_path.read_text())
-          entries = archives['lineages']['active']['topLevelEntries']
-          raw = subprocess.check_output(['git','ls-files','-z','--',*entries])
-          archives['lineages']['active']['sourceFiles'] = len([p for p in raw.split(b'\0') if p])
-          archives_path.write_text(json.dumps(archives, indent=2) + '\n')
-          old = json.loads(patches_path.read_text())
-          old_map = {(p['index'], p['path']): p for p in old.get('patches', [])}
-          refreshed = []
-          for index in ['CHECKSUMS.sha256','PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256']:
-            for line in (root / index).read_text().splitlines():
-              if not line.strip(): continue
-              m = re.match(r'^([0-9a-fA-F]{64})\s{2,}(.+)$', line)
-              if not m: raise SystemExit(f'malformed checksum row: {index}: {line}')
-              original, rel = m.group(1).lower(), m.group(2).replace('\\','/')
-              target = root / rel
-              if not target.exists(): continue
-              current = hashlib.sha256(target.read_bytes()).hexdigest()
-              if current == original: continue
-              prior = old_map.get((index, rel))
-              refreshed.append({
-                'index': index,
-                'path': rel,
-                'originalSha256': original,
-                'currentSha256': current,
-                'reason': prior.get('reason') if prior else 'Consolidated verified growth-lane integration; current bytes are explicitly bound without rewriting the historical checksum index.'
-              })
-          old['patches'] = refreshed
-          patches_path.write_text(json.dumps(old, indent=2) + '\n')
-          PY
-          git add .axm-intake registry playable_3d/dist runtime/headless-simulator.js
-      - name: Verify full Steward plus safety repository
-        shell: bash
-        run: |
-          set -euo pipefail
-          python run_tests.py
-          npm run verify:intake
-          npm run test:headless
-          find truth-tests -maxdepth 1 -type f \( -name '*.test.js' -o -name '*.test.mjs' \) -print0 | sort -z | xargs -0 node --test
-          npm run test:playable
-          npm run build:playable
-          git diff --exit-code -- playable_3d/dist
-          node tools/generate-public-capability.mjs --check
-          python donor/AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_3_0/scripts/verify_package.py
-      - name: Browser smoke current merged park
-        shell: bash
-        run: |
-          set -euo pipefail
-          npm install --no-save --package-lock=false --ignore-scripts @playwright/test@1.63.0
-          npx playwright install chromium
-          python3 -m http.server 4173 --bind 127.0.0.1 --directory playable_3d/dist > /tmp/theme-park-http.log 2>&1 &
-          server_pid=$!
-          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
-          for attempt in $(seq 1 30); do
-            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then break; fi
-            sleep 0.25
-          done
-          node --input-type=module <<'JS'
-          import { chromium } from '@playwright/test';
-          const browser = await chromium.launch({ headless: true });
-          const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
-          const errors = [];
-          page.on('pageerror', e => errors.push(`page:${e.message}`));
-          page.on('console', m => { if (m.type() === 'error') errors.push(`console:${m.text()}`); });
-          await page.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
-          await page.waitForSelector('canvas', { timeout: 15000 });
-          await page.waitForTimeout(1500);
-          if (errors.length) throw new Error(errors.join('\n'));
-          await browser.close();
-          console.log('browser smoke PASS');
-          JS
-      - name: Commit verified Steward integration
-        shell: bash
-        run: |
-          git add -A
-          git commit -m 'MergeAgent integrate Steward park stack'
-          git push origin HEAD:integration/theme-park-growth-consolidation-20260912
+          grep -R -n -F --exclude-dir=.git 'safe operational actions round-trip through replay while unsafe ones fail closed' .
