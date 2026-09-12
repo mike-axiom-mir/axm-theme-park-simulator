@@ -1,0 +1,32 @@
+name: Event stream continuity
+
+on:
+  push:
+    branches:
+      - automation/state-architect-event-window-continuity-20260910
+  pull_request:
+    paths:
+      - "playable_3d/src/core/eventStream.js"
+      - "truth-tests/event-stream-continuity.test.mjs"
+      - ".github/workflows/event-stream-continuity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  continuity:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Check event-stream source syntax
+        run: node --check playable_3d/src/core/eventStream.js
+      - name: Run retained-window continuity regression
+        run: node --test truth-tests/event-stream-continuity.test.mjs
