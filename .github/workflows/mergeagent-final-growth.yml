@@ -199,6 +199,8 @@ jobs:
         run: |
           set -euo pipefail
           npm run build:playable
+          rm -rf /tmp/axm-theme-park-dist-first
+          cp -a playable_3d/dist /tmp/axm-theme-park-dist-first
           python - <<'PY'
           from pathlib import Path
           import hashlib, json
@@ -240,7 +242,7 @@ jobs:
           npm run test:headless
           npm run test:playable
           npm run build:playable
-          git diff --exit-code -- playable_3d/dist
+          diff -ruN /tmp/axm-theme-park-dist-first playable_3d/dist
           python donor/AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_3_0/scripts/verify_package.py
           test "$(grep -R -l -F 'eventLog.push' playable_3d/src/core runtime | tr '\n' ' ')" = 'playable_3d/src/core/eventStream.js '
 
