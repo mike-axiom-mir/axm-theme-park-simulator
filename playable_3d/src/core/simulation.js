@@ -342,6 +342,71 @@ function perimeterCells(state, entity) {
   return result;
 }
 
+export function getPlacementPreview(state, catalogId, x, z, rotation = 0) {
+  const definition = catalogDefinition(catalogId);
+  const check = canPlace(state, catalogId, x, z, rotation);
+  const base = {
+    ...check,
+    catalogId,
+    label: definition.label,
+    cost: definition.cost,
+    cell: [x, z],
+    rotation,
+    connection: null,
+    newlyReachableTiles: 0
+  };
+  if (!check.ok) {
+    return {
+      ...base,
+      tone: "invalid",
+      title: "Cannot build here",
+      detail: check.reason
+    };
+  }
+
+  const reachableBefore = reachablePathKeys(pathSet(state), state.world.entrance, state.world.size);
+  if (definition.kind === "path") {
+    const proposedPaths = pathSet(state);
+    proposedPaths.add(cellKey(x, z));
+    const reachableAfter = reachablePathKeys(proposedPaths, state.world.entrance, state.world.size);
+    const connection = reachableAfter.has(cellKey(x, z)) ? "connected" : "disconnected";
+    const newlyReachableTiles = Math.max(0, reachableAfter.size - reachableBefore.size);
+    return {
+      ...base,
+      connection,
+      newlyReachableTiles,
+      tone: connection === "connected" ? "connected" : "caution",
+      title: connection === "connected" ? "Joins the entrance network" : "Isolated path segment",
+      detail: connection === "connected"
+        ? `${newlyReachableTiles} path tile${newlyReachableTiles === 1 ? "" : "s"} will become reachable.`
+        : "Guests cannot use this segment until a continuous path reaches it."
+    };
+  }
+
+  if (handlesVisitors(definition)) {
+    const proposed = { catalogId, x, z, rotation };
+    const accessCell = perimeterCells(state, proposed).find((cell) => reachableBefore.has(keyOf(cell))) ?? null;
+    const connection = accessCell ? "connected" : "disconnected";
+    return {
+      ...base,
+      connection,
+      accessCell,
+      tone: connection === "connected" ? "connected" : "caution",
+      title: connection === "connected" ? "Guests can reach this" : "No guest access yet",
+      detail: connection === "connected"
+        ? `Connects through path cell ${accessCell[0]},${accessCell[1]}.`
+        : "Build a continuous path beside its footprint before guests can use it."
+    };
+  }
+
+  return {
+    ...base,
+    tone: "neutral",
+    title: "Legal scenery placement",
+    detail: "Scenery can be placed here and does not require guest access."
+  };
+}
+
 export function refreshConnections(state) {
   const paths = pathSet(state);
   const queuePaths = queuePathSet(state);
@@ -382,21 +447,39 @@ function earn(state, amount, label, entity = null) {
 export function applyAction(state, action) {
   switch (action.type) {
     case "build": {
-      const check = canPlace(state, action.catalogId, action.x, action.z, action.rotation ?? 0);
-      if (!check.ok) return check;
+      const preview = getPlacementPreview(state, action.catalogId, action.x, action.z, action.rotation ?? 0);
+      if (!preview.ok) return preview;
       const definition = catalogDefinition(action.catalogId);
       charge(state, definition.cost, `Build ${definition.label}`);
+      let builtEntity = null;
       if (definition.kind === "path") {
         state.world.paths.push({ x: action.x, z: action.z, type: action.catalogId });
         event(state, "path.built", cellKey(action.x, action.z), { catalogId: action.catalogId });
       } else {
-        const entity = createEntity(state, action.catalogId, action.x, action.z, action.rotation ?? 0);
-        event(state, "entity.built", entity.id, { catalogId: action.catalogId });
+        builtEntity = createEntity(state, action.catalogId, action.x, action.z, action.rotation ?? 0);
+        event(state, "entity.built", builtEntity.id, { catalogId: action.catalogId });
       }
-      refreshConnections(state);
+      const reachable = refreshConnections(state);
       recomputeMetrics(state);
       state.stateHash = stateHash(state);
-      return { ok: true };
+      const connection = definition.kind === "path"
+        ? (reachable.has(cellKey(action.x, action.z)) ? "connected" : "disconnected")
+        : handlesVisitors(definition) ? (builtEntity?.accessCell ? "connected" : "disconnected") : null;
+      return {
+        ok: true,
+        receipt: {
+          catalogId: action.catalogId,
+          label: definition.label,
+          kind: definition.kind,
+          cost: definition.cost,
+          cashAfter: state.economy.cash,
+          x: action.x,
+          z: action.z,
+          rotation: action.rotation ?? 0,
+          connection,
+          dragging: Boolean(action.dragging)
+        }
+      };
     }
     case "removePath": {
       const index = state.world.paths.findIndex((path) => path.x === action.x && path.z === action.z);

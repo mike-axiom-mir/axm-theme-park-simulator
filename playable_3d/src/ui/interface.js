@@ -23,6 +23,7 @@ export class GameInterface {
     this.dayReportShownDay = null;
     this.walkGuideShown = false;
     this.lastBuildSignature = "";
+    this.lastBuildReceipt = null;
     this.renderedNotificationIds = new Set();
     this.endingDialogShown = false;
     this.openingTimer = null;
@@ -115,6 +116,7 @@ export class GameInterface {
     this.activeBuild = null;
     this.removePathActive = false;
     this.lastBuildSignature = "";
+    this.lastBuildReceipt = null;
     this.elements.inspector.classList.add("hidden");
     this.elements["cancel-build"].classList.add("hidden");
     this.elements["remove-path-button"].classList.remove("active");
@@ -268,6 +270,14 @@ export class GameInterface {
       this.elements["remove-path-button"].classList.remove("active");
       this.elements["cancel-build"].classList.remove("hidden");
       this.renderBuildDock();
+      const definition = catalogDefinition(this.activeBuild);
+      this.showBuildStatus({
+        tone: "neutral",
+        title: `${definition.label} selected`,
+        detail: definition.kind === "path"
+          ? "Point at the globe to preview whether this tile joins the entrance network."
+          : "Point at the globe to preview space and guest access before spending cash."
+      }, `${euro(definition.cost)} · ${definition.description}`);
       this.callbacks.onBuildTool(this.activeBuild);
     }));
   }
@@ -290,11 +300,37 @@ export class GameInterface {
   }
 
   showBuildHint(payload) {
-    const { check, definition, cell, rotation } = payload;
-    this.elements["build-hint"].textContent = check.ok
-      ? `${definition.label} · ${euro(definition.cost)} · cell ${cell.x},${cell.z} · rotation ${rotation * 90}°`
-      : check.reason;
-    this.elements["build-hint"].classList.remove("hidden");
+    const { preview, definition, cell, rotation } = payload;
+    const meta = preview.ok
+      ? `${euro(definition.cost)} · cell ${cell.x},${cell.z} · ${rotation * 90}°`
+      : `${definition.label} · cell ${cell.x},${cell.z}`;
+    this.showBuildStatus(preview, meta);
+  }
+
+  showBuildStatus(status, meta = "") {
+    const tone = ["connected", "caution", "invalid", "neutral"].includes(status.tone) ? status.tone : "neutral";
+    this.elements["build-hint"].className = `build-hint game-ui placement-${tone}`;
+    this.elements["build-hint"].innerHTML = `
+      <span class="placement-signal" aria-hidden="true"></span>
+      <span class="placement-copy"><b>${escapeHtml(status.title)}</b><small>${escapeHtml(status.detail)}</small></span>
+      ${meta ? `<span class="placement-meta">${meta}</span>` : ""}
+    `;
+  }
+
+  confirmBuild(receipt) {
+    if (!receipt) return;
+    this.lastBuildReceipt = receipt;
+    const connected = receipt.connection !== "disconnected";
+    const status = {
+      tone: connected ? "connected" : "caution",
+      title: connected ? `${receipt.label} built` : `${receipt.label} built · access pending`,
+      detail: receipt.connection === "disconnected"
+        ? "The placement is saved, but guests need a continuous path beside it."
+        : receipt.connection === "connected"
+          ? "Confirmed on the entrance network and ready for guests."
+          : "Placement confirmed in the live park."
+    };
+    this.showBuildStatus(status, `${euro(receipt.cost)} spent · ${euro(receipt.cashAfter)} remaining`);
   }
 
   openInspector(entityId) {

@@ -10,11 +10,12 @@ test("v0.4.6 interface contains every interactive journey anchor", () => {
     "campaign-button", "sandbox-button", "mode-button", "remove-path-button",
     "progression", "inspector", "day-report-dialog", "next-day-button",
     "quality-select", "save-slots", "touch-controls", "fullscreen-button",
-    "opening-sequence", "skip-opening", "replay-opening-button", "staff-summary", "guest-pulse"
+    "opening-sequence", "skip-opening", "replay-opening-button", "staff-summary", "guest-pulse", "build-hint"
   ]) {
     assert.match(html, new RegExp(`id=["']${id}["']`), `missing #${id}`);
   }
   assert.match(html, /Playable foundation · v0\.4\.6/);
+  assert.match(html, /id="build-hint"[^>]+role="status"[^>]+aria-live="polite"/);
 });
 
 test("production page is offline-local and points to the bundled client", () => {
