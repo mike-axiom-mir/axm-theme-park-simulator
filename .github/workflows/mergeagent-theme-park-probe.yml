@@ -92,6 +92,18 @@ jobs:
               '  assert.match(main, /advanceOneMinuteWithLegacyCareer/);\n  assert.match(legacyRuntime, /advanceOneMinuteWithHistoricalEconomy/);\n  assert.match(historicalRuntime, /advanceOneMinuteWithUpgrades/);\n',
               'upgrade runtime chain assertion')
           upgrades.write_text(text)
+
+          historical_styles = Path('playable_3d/tests/western-medieval-styles.test.js')
+          text = historical_styles.read_text()
+          old_decl = '  const finalStyle = read("../src/render/finalStyleWorldRenderer.js");\n'
+          new_decl = old_decl + '  const legacyStyle = read("../src/render/legacyStyleUpgradeWorldRenderer.js");\n'
+          if new_decl not in text:
+              text = replace_once(text, old_decl, new_decl, 'western medieval legacy seam declaration')
+          text = replace_once(text,
+              '  assert.match(finalStyle, /gildedStyleWorldRenderer/);\n',
+              '  assert.match(finalStyle, /legacyStyleUpgradeWorldRenderer/);\n  assert.match(legacyStyle, /gildedStyleWorldRenderer/);\n',
+              'western medieval final seam assertion')
+          historical_styles.write_text(text)
           PY
           echo '--- remaining direct event writers (only canonical eventStream expected) ---'
           grep -R -n -F 'eventLog.push' playable_3d/src/core runtime || true
