@@ -56,6 +56,12 @@ jobs:
               test_text = test_text.replace(stale, stronger, 1)
           elif stronger not in test_text:
               raise SystemExit('Coaster Studio guard assertion anchor missing')
+          facade = '  const renderer = read("../src/render/contentStudioWorldRenderer.js");\n'
+          implementation = '  const renderer = read("../src/render/specialContentWorldRenderer.js");\n'
+          if facade in test_text:
+              test_text = test_text.replace(facade, implementation, 1)
+          elif implementation not in test_text:
+              raise SystemExit('Coaster Studio renderer assertion anchor missing')
           test_path.write_text(test_text)
           PY
           while IFS= read -r -d '' f; do
