@@ -47,6 +47,16 @@ jobs:
           if 'officeVault:' not in text:
               text = text.replace('      cash: payload.state?.economy?.cash ?? 0\n', '      cash: payload.state?.economy?.cash ?? 0,\n      officeVault: payload.state?.payments?.officeVault ?? 0,\n      legacyFund: payload.state?.legacy?.fund ?? 0\n', 1)
           save.write_text(text)
+
+          test_path = Path('playable_3d/tests/coaster-studio.test.js')
+          test_text = test_path.read_text()
+          stale = '  assert.match(main, /!coasterStudio\\.dialog\\.open/);\n'
+          stronger = '  assert.match(main, /function toolDialogOpen\\(\\)[\\s\\S]*coasterStudio\\.dialog\\.open/);\n  assert.match(main, /speed > 0 && !toolDialogOpen\\(\\)/);\n'
+          if stale in test_text:
+              test_text = test_text.replace(stale, stronger, 1)
+          elif stronger not in test_text:
+              raise SystemExit('Coaster Studio guard assertion anchor missing')
+          test_path.write_text(test_text)
           PY
           while IFS= read -r -d '' f; do
             echo "=== PLAYABLE_TEST_FILE:$f ==="
