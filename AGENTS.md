@@ -40,8 +40,23 @@ successful bundle, or HTTP delivery.
 ## Status and authority
 
 Use `EXPERIMENTAL`, `TEST`, `WORKING`, `CANON`, `SHELL`, or `BROKEN` honestly.
-Work on a review branch. Do not push, merge, promote, release, or label anything
-`CANON` without Mike Tobi's explicit decision.
+Work on a review branch and preserve provenance, evidence, rollback paths, and
+unresolved limits.
+
+The internal constitutional merge gate is the four AXM roots:
+
+1. Truth
+2. Agency / non-domination
+3. Continuity
+4. Wisdom before speed
+
+No human, machine intelligence, role, branch name, or Git permission is itself
+the constitutional merge gate. Technical permission may execute a merge; it does
+not by itself create CANON authority. The default branch records the active
+repository state, not automatic AXM CANON. A CANON claim must remain separately
+grounded in the four roots and the repository's evidence/provenance boundaries.
+For user-facing product choices, the current user remains the default product-level
+merge gate unless that authority is explicitly delegated.
 
 ## Detail-density and composable capability principle
 
