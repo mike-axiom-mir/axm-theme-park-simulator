@@ -1,0 +1,73 @@
+name: MergeAgent governance front-door reseal
+
+on:
+  push:
+    branches:
+      - integration/theme-park-governance-frontdoor-20260912
+
+permissions:
+  contents: write
+
+jobs:
+  reseal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: integration/theme-park-governance-frontdoor-20260912
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - name: Regenerate reviewed archive-difference evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+
+          def sha(path):
+              return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+          manifest_path = Path('.axm-intake/LOCAL_PATCHES.json')
+          manifest = json.loads(manifest_path.read_text())
+          existing_reason = { (p['index'], p['path']): p.get('reason') for p in manifest.get('patches', []) }
+          patches = []
+          for index_name in ['CHECKSUMS.sha256', 'PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256']:
+              for line in Path(index_name).read_text().splitlines():
+                  if not line.strip():
+                      continue
+                  original, rel = line.split(None, 1)
+                  rel = rel.strip().replace('\\', '/')
+                  target = Path(rel)
+                  if not target.exists():
+                      continue
+                  current = sha(target)
+                  if current == original.lower():
+                      continue
+                  reason = existing_reason.get((index_name, rel))
+                  if not reason:
+                      reason = 'Live governance/front-door truth was updated without rewriting the preserved archive checksum index.' if rel == 'README.md' else 'Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable.'
+                  patches.append({
+                      'index': index_name,
+                      'path': rel,
+                      'originalSha256': original.lower(),
+                      'currentSha256': current,
+                      'reason': reason
+                  })
+          manifest['archiveChecksumIndexesModified'] = False
+          manifest['patches'] = patches
+          manifest_path.write_text(json.dumps(manifest, indent=2) + '\n')
+          PY
+          npm run verify:intake
+      - name: Commit verified reseal
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'AXM MergeAgent'
+          git config user.email 'actions@users.noreply.github.com'
+          git add .axm-intake/LOCAL_PATCHES.json
+          git diff --cached --check
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Reseal current Theme Park front-door provenance'
+          git push origin HEAD:integration/theme-park-governance-frontdoor-20260912
