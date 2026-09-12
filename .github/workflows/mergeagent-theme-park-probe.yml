@@ -46,6 +46,8 @@ jobs:
           fi
       - name: Rebuild combined browser projection
         run: npm run build:playable
+      - name: Regenerate public capability evidence
+        run: node tools/generate-public-capability.mjs --write
       - name: Recompute active intake evidence from combined tree
         shell: bash
         run: |
@@ -89,7 +91,7 @@ jobs:
           old['patches'] = refreshed
           patches_path.write_text(json.dumps(old, indent=2) + '\n')
           PY
-          git add .axm-intake/LOCAL_PATCHES.json .axm-intake/SOURCE_ARCHIVES.json playable_3d/dist
+          git add .axm-intake/LOCAL_PATCHES.json .axm-intake/SOURCE_ARCHIVES.json playable_3d/dist registry
       - name: Verify combined repository
         shell: bash
         run: |
@@ -101,6 +103,7 @@ jobs:
           npm run test:playable
           npm run build:playable
           git diff --exit-code -- playable_3d/dist
+          node tools/generate-public-capability.mjs --check
           python donor/AXM_THEME_PARK_SIM_COMPLETE_HANDOFF_v0_3_0/scripts/verify_package.py
       - name: Commit verified integration
         shell: bash
