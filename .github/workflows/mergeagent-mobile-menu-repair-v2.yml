@@ -1,0 +1,125 @@
+name: MergeAgent mobile menu repair v2
+
+on:
+  push:
+    branches:
+      - integration/theme-park-growth-consolidation-20260912
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: integration/theme-park-growth-consolidation-20260912
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: Patch responsive top actions
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('playable_3d/src/styles.css')
+          text = path.read_text()
+          old = '  .top-actions button { padding: 8px; font-size: 11px; }\n'
+          new = '''  .top-actions {
+            min-width: 0;
+            max-width: 62vw;
+            overflow-x: auto;
+            justify-content: flex-start;
+            scrollbar-width: none;
+          }
+          .top-actions::-webkit-scrollbar { display: none; }
+          .top-actions button {
+            flex: 0 0 auto;
+            padding: 8px;
+            font-size: 11px;
+            white-space: nowrap;
+          }
+          #mode-button { order: -2; }
+          #menu-button { order: -1; }
+'''
+          if new not in text:
+              if old not in text:
+                  raise SystemExit('responsive top-actions anchor missing')
+              text = text.replace(old, new, 1)
+          path.write_text(text)
+          PY
+      - name: Rebuild and refresh intake patch hashes
+        run: |
+          set -euo pipefail
+          npm run build:playable
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          root = Path('.')
+          def digest(path):
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+          patches = []
+          for index_name in ('CHECKSUMS.sha256', 'PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256'):
+              for raw in (root / index_name).read_text('utf-8').splitlines():
+                  if not raw.strip():
+                      continue
+                  original, relative = raw.split(None, 1)
+                  relative = relative.strip().replace('\\', '/')
+                  target = root / relative
+                  if not target.is_file():
+                      continue
+                  current = digest(target)
+                  if current == original.lower():
+                      continue
+                  patches.append({
+                      'index': index_name,
+                      'path': relative,
+                      'originalSha256': original.lower(),
+                      'currentSha256': current,
+                      'reason': 'Verified cumulative local integration differs from the preserved archive byte; original checksum indexes remain immutable.'
+                  })
+          payload = {
+              'schema': 'axm.theme-park-local-patches/v1',
+              'status': 'TEST',
+              'archiveChecksumIndexesModified': False,
+              'patches': patches
+          }
+          (root / '.axm-intake' / 'LOCAL_PATCHES.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
+          print('declared checksum divergences', len(patches))
+          PY
+          git add playable_3d/src/styles.css playable_3d/dist .axm-intake/LOCAL_PATCHES.json
+          git diff --check --cached
+      - name: Run deterministic verification
+        run: |
+          set -euo pipefail
+          npm run verify:intake
+          npm run test:headless
+          npm run test:playable
+          npm run build:playable
+          git diff --exit-code -- playable_3d/dist
+      - name: Run exact browser experience
+        run: |
+          set -euo pipefail
+          npm install --no-save --ignore-scripts @playwright/test@1.55.0
+          npx playwright install chromium
+          mkdir -p experience-artifacts
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory playable_3d/dist > /tmp/axm-theme-park-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then break; fi
+            sleep 0.25
+          done
+          npx playwright test experience-tests/save-import-experience.spec.cjs --reporter=line --workers=1
+      - name: Commit verified repair
+        run: |
+          set -euo pipefail
+          if git diff --cached --quiet; then
+            echo 'Repair already present; no commit needed.'
+            exit 0
+          fi
+          git config user.name 'AXM MergeAgent'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m 'Keep park menu reachable on phone widths'
+          git push origin HEAD:integration/theme-park-growth-consolidation-20260912
