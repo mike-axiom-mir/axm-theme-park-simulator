@@ -3,12 +3,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { HeadlessSimulator } from "./headless-simulator.js";
 import { MAX_SAVE_BYTES, readSave, writeNewSave } from "./file-save-store.js";
+import { describeCapability } from "./package-metadata.js";
 
 function usage() {
   return [
     "Theme Park v0.4.6 headless runtime",
     "",
     "Commands:",
+    "  describe",
     "  new <output.json> [seed] [campaign|sandbox] [park name]",
     "  inspect <input.json>",
     "  step <input.json> <output.json> <minutes>",
@@ -37,6 +39,11 @@ function main(argv) {
   const [command, ...args] = argv;
   if (!command || command === "help" || command === "--help" || command === "-h") {
     process.stdout.write(`${usage()}\n`);
+    return;
+  }
+
+  if (command === "describe") {
+    print({ command, capability: describeCapability() });
     return;
   }
 
