@@ -1,6 +1,6 @@
 import * as THREE from "../../vendor/three.module.min.js";
 import { GRID_SIZE, TILE_SIZE, catalogDefinition, rotatedFootprint } from "../core/catalog.js";
-import { canPlace, entityCells } from "../core/simulation.js";
+import { entityCells, getPlacementPreview } from "../core/simulation.js";
 import { LivingGlobeAdapter } from "../world/livingGlobeAdapter.js";
 import { openingCameraPose } from "../presentation/cameraFlight.js";
 import {
@@ -80,6 +80,14 @@ export class WorldRenderer {
     this.selectionRing.visible = false;
     this.selectionRing.renderOrder = 30;
     this.globe.root.add(this.selectionRing);
+    this.placementPulse = new THREE.Mesh(
+      new THREE.RingGeometry(0.7, 1, 24),
+      new THREE.MeshBasicMaterial({ color: 0x75d5ad, side: THREE.DoubleSide, transparent: true, opacity: 0, depthTest: false })
+    );
+    this.placementPulse.visible = false;
+    this.placementPulse.renderOrder = 31;
+    this.placementPulseStartedAt = 0;
+    this.globe.root.add(this.placementPulse);
 
     this.clock = new THREE.Clock();
     this.bindEvents();
@@ -266,6 +274,22 @@ export class WorldRenderer {
     this.buildTool = null;
     this.removePathTool = false;
     this.clearGhost();
+  }
+
+  confirmPlacement(receipt) {
+    if (!receipt) return;
+    const definition = catalogDefinition(receipt.catalogId);
+    const [width, depth] = rotatedFootprint(definition, receipt.rotation);
+    const frame = this.globe.frameAtGrid(receipt.x, receipt.z, width, depth, 0.42);
+    const radius = Math.max(width, depth) * TILE_SIZE * 0.58;
+    this.placementPulse.position.copy(frame.position);
+    this.placementPulse.quaternion.copy(frame.quaternion);
+    this.placementPulse.rotateX(-Math.PI / 2);
+    this.placementPulse.scale.setScalar(radius);
+    this.placementPulse.material.color.setHex(receipt.connection === "disconnected" ? 0xf0c766 : 0x75d5ad);
+    this.placementPulse.material.opacity = 0.95;
+    this.placementPulse.visible = true;
+    this.placementPulseStartedAt = performance.now();
   }
 
   setRemovePathTool(active = true) {
@@ -683,9 +707,9 @@ export class WorldRenderer {
     if (!this.buildTool) return;
     const definition = catalogDefinition(this.buildTool);
     const [width, depth] = rotatedFootprint(definition, this.buildRotation);
-    const check = canPlace(this.state, this.buildTool, this.hoverCell.x, this.hoverCell.z, this.buildRotation);
+    const preview = getPlacementPreview(this.state, this.buildTool, this.hoverCell.x, this.hoverCell.z, this.buildRotation);
     const ghostMaterial = new THREE.MeshBasicMaterial({
-      color: check.ok ? 0x78e08f : 0xe56a72,
+      color: !preview.ok ? 0xe56a72 : preview.connection === "disconnected" ? 0xf0c766 : 0x78e08f,
       transparent: true,
       opacity: 0.48,
       depthTest: false
@@ -701,7 +725,7 @@ export class WorldRenderer {
         this.ghostRoot.add(tile);
       }
     }
-    this.callbacks.onHoverBuild?.({ check, definition, cell: this.hoverCell, rotation: this.buildRotation });
+    this.callbacks.onHoverBuild?.({ preview, definition, cell: this.hoverCell, rotation: this.buildRotation });
   }
 
   clampManageTarget() {
@@ -929,6 +953,22 @@ export class WorldRenderer {
     const dt = Math.min(0.05, this.clock.getDelta());
     const now = performance.now();
     const time = now / 1000;
+    if (this.placementPulse.visible) {
+      const elapsed = now - this.placementPulseStartedAt;
+      const reducedMotion = matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+      const duration = reducedMotion ? 700 : 1150;
+      const progress = Math.min(1, elapsed / duration);
+      this.placementPulse.material.opacity = 0.95 * (1 - progress);
+      if (!reducedMotion) {
+        const scale = 1 + progress * 0.45;
+        this.placementPulse.scale.multiplyScalar(scale / (this.placementPulse.userData.lastScale ?? 1));
+        this.placementPulse.userData.lastScale = scale;
+      }
+      if (progress >= 1) {
+        this.placementPulse.visible = false;
+        this.placementPulse.userData.lastScale = 1;
+      }
+    }
     this.pollGamepad();
     if (!this.openingCamera) {
       if (this.mode === "manage") this.updateManageInput(dt);

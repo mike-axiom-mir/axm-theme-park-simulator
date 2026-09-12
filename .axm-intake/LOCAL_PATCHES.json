@@ -7,85 +7,120 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/dist/game.js",
       "originalSha256": "fc23cf192bfdd41ad163ca3db8f60276a4c55b044026c68f65d981425b1945d8",
-      "currentSha256": "c3149a716fe8b1bb5569c9addc14000e6e4ff76d8c1eb8d7ea1443b7d9338cb7",
-      "reason": "Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable."
+      "currentSha256": "dc5ba43fa74a5f69d665ad2edfb1c78175b17133090d2e0e8a975ed3315a20cd",
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/dist/index.html",
       "originalSha256": "eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5",
-      "currentSha256": "1628e2810864d52ac5d7fc1a69b22b17ff2c6bb2d3921c629f3b20fe067cc996",
-      "reason": "Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable."
+      "currentSha256": "99ec47521bb175d4ffca0794e22e60d937e14ab90a3a02679f256edf5e64542c",
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/dist/styles.css",
+      "originalSha256": "1f5c8e4dae402aa6f9cfdc4355f3cd06a3e65ad3749f2c01f40263692f1b0f08",
+      "currentSha256": "19105c21a0678bd9f6a734f8ad698ef7776f41a37239e2c7883d6cdc3d4b0932",
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/package.json",
       "originalSha256": "1d6927226ac44b4d69e8e392515f8cbaf024b30eabdcb639c67083c51b126e8e",
       "currentSha256": "d64b25faae2c4d80a717df0458ab12bf2d7777fb49b255c0091a51e386a3641e",
-      "reason": "Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable."
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/src/core/catalog.js",
       "originalSha256": "176b2c79ff168dc43d811d838227b92538b553f4a6bb41d1f6173ad87a1c1c15",
       "currentSha256": "e10bc76488855448210352cb150e9b36476709878f6007fa4b96339d541af12a",
-      "reason": "Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable."
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/src/core/save.js",
       "originalSha256": "99c1750c95596e5d34a78035c02bf0e75511e82986773be2db9bd98641840531",
       "currentSha256": "db071db78d3acd758e7060f1d4eb221e9638528de76d8b34fae2ec47b0d6fbe7",
-      "reason": "Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable."
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/src/core/simulation.js",
       "originalSha256": "3a550617f20533a4a6f410ff9f7026f9efbaf564499ca256d5b5e0983b43bffa",
-      "currentSha256": "48873dfb93903c151171ad58e6a6452e06a3a7a8b5bfd46add7e0a54d40596c2",
-      "reason": "Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable."
+      "currentSha256": "43e59eb487069ee1215bb1ed0841bc6f340c3ef7c915362aa0cbd252570112f5",
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/src/core/staff.js",
       "originalSha256": "677956b07780a5881b5ed3e45b3bcce91bd1d8662af49b5a4b2c1fa373aa13f8",
       "currentSha256": "a080aa27f4d052d444a9303e390f76db71baa04e8018aff5965ee5aba7f4227d",
-      "reason": "Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable."
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/src/index.html",
       "originalSha256": "eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5",
-      "currentSha256": "1628e2810864d52ac5d7fc1a69b22b17ff2c6bb2d3921c629f3b20fe067cc996",
-      "reason": "Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable."
+      "currentSha256": "99ec47521bb175d4ffca0794e22e60d937e14ab90a3a02679f256edf5e64542c",
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/src/main.js",
       "originalSha256": "36b9a092a9e57e753b20eaec4328e38e984fe8917c4a47e86da48eb959f4ba99",
-      "currentSha256": "d1565dfeec015db56e75717b5b853437a8f1af899b22ab978322d07ff3ca6204",
-      "reason": "Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable."
+      "currentSha256": "041dd55e227a8bab884b6c34eeb84b05071ae6abffd1a10d8f08b8ad077cfce9",
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/src/render/worldRenderer.js",
+      "originalSha256": "0c70a437d2a0f55e860df634e26531ae67a7a1c312e3432b4a87305868c3f451",
+      "currentSha256": "73f2ea7750dd0f04dcf9858c41507ae57dd97519d0af07dc31f15ebc40ad298b",
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/src/styles.css",
+      "originalSha256": "1f5c8e4dae402aa6f9cfdc4355f3cd06a3e65ad3749f2c01f40263692f1b0f08",
+      "currentSha256": "19105c21a0678bd9f6a734f8ad698ef7776f41a37239e2c7883d6cdc3d4b0932",
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/src/ui/interface.js",
+      "originalSha256": "4712b4ed63a79ffa770a125aff8a7b7aecbc2ac7571d90b361092e9de7c3a016",
+      "currentSha256": "38a7522933c2f0a23632e61ba46c6413cf3633bbc698f814e0c2024fda96ed2e",
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/src/world/livingGlobeAdapter.js",
       "originalSha256": "5dd0c08871c3be623f76ee9ef718626c9648a333c820ed9ba090b4458268f300",
       "currentSha256": "0e319010e9d7f62521aac02edb5eade5b17a31320b72a3020140e00ebc9a24ed",
-      "reason": "Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable."
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/tests/simulation.test.js",
       "originalSha256": "ef64a9e820866a09278bf5ace9e1ef90dd13c8cdb29eefd5af528b52547f16b1",
-      "currentSha256": "4a05b51ab116011f555247ccfc58eb7c932da13ddff3f884ff547860e13a11dc",
-      "reason": "Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable."
+      "currentSha256": "3e2ed3dc26bcf76bb18fabb3493f55afd14e21d2408d0490bdca632e5ea95bfe",
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
+    },
+    {
+      "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
+      "path": "playable_3d/tests/ui-contract.test.js",
+      "originalSha256": "3c653cf1c41a510750703fd7a712138538e63f56764f74dbe75c5718d6577c5a",
+      "currentSha256": "1d0cb2031f385190cf5408c2a8e69b7a7d39c8871a6376c062386134228cfa84",
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
     },
     {
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/tests/visual-animation.test.js",
       "originalSha256": "0fa5ae29c10a46b84219b84001738df8ca0bb00e9ac80db8499ee979926ee715",
       "currentSha256": "06c20429c0fde3ece9a7ada7813f6265d6084a0d5b08a9f612514bcc93a78010",
-      "reason": "Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable."
+      "reason": "Verified current-body growth integration differs from the preserved archive byte while the original checksum index remains immutable."
     }
   ]
 }
