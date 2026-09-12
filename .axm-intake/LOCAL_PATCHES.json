@@ -14,7 +14,7 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/dist/index.html",
       "originalSha256": "eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5",
-      "currentSha256": "7a8e0ab4e32867a388a3caf774a2efb903e4504ef6a46bc498aa590a93b9e773",
+      "currentSha256": "1628e2810864d52ac5d7fc1a69b22b17ff2c6bb2d3921c629f3b20fe067cc996",
       "reason": "Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable."
     },
     {
@@ -56,7 +56,7 @@
       "index": "PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256",
       "path": "playable_3d/src/index.html",
       "originalSha256": "eed3cfe29b958bad51d8d88994e8d5f01730d00f6e9a7ffd01a6ee47e5eb49c5",
-      "currentSha256": "7a8e0ab4e32867a388a3caf774a2efb903e4504ef6a46bc498aa590a93b9e773",
+      "currentSha256": "1628e2810864d52ac5d7fc1a69b22b17ff2c6bb2d3921c629f3b20fe067cc996",
       "reason": "Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable."
     },
     {
