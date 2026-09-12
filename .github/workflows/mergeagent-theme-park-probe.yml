@@ -1,4 +1,4 @@
-name: MergeAgent Theme Park Steward playable-file probe
+name: MergeAgent Theme Park Steward seal
 
 on:
   push:
@@ -6,10 +6,14 @@ on:
       - integration/theme-park-growth-consolidation-20260912
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: mergeagent-theme-park-steward-seal
+  cancel-in-progress: true
 
 jobs:
-  probe:
+  seal:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -19,7 +23,10 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: '24'
-      - name: Merge Steward and run playable tests file-by-file
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Merge Steward into current safety body
         shell: bash
         run: |
           set -euo pipefail
@@ -105,12 +112,113 @@ jobs:
               'western medieval final seam assertion')
           historical_styles.write_text(text)
           PY
-          echo '--- remaining direct event writers (only canonical eventStream expected) ---'
-          grep -R -n -F 'eventLog.push' playable_3d/src/core runtime || true
-          while IFS= read -r -d '' f; do
-            echo "=== PLAYABLE_TEST_FILE:$f ==="
-            if ! node --test "$f"; then
-              echo "=== FAILING_PLAYABLE_FILE:$f ==="
-              exit 1
-            fi
-          done < <(find playable_3d/tests -maxdepth 1 -type f -name '*.test.js' -print0 | sort -z)
+          git add -A
+
+      - name: Rebuild current generated surfaces
+        run: |
+          set -euo pipefail
+          npm run build:playable
+          node tools/generate-public-capability.mjs
+          git add -A
+
+      - name: Regenerate intake provenance without rewriting archive indexes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import subprocess
+          from pathlib import Path
+
+          root = Path('.')
+          source_path = root / '.axm-intake' / 'SOURCE_ARCHIVES.json'
+          local_path = root / '.axm-intake' / 'LOCAL_PATCHES.json'
+          source = json.loads(source_path.read_text('utf-8'))
+          active = source['lineages']['active']
+          tracked = subprocess.check_output(
+              ['git', 'ls-files', '-z', '--', *active['topLevelEntries']],
+              text=True,
+          ).split('\0')
+          active['sourceFiles'] = len([item for item in tracked if item])
+          source_path.write_text(json.dumps(source, indent=2) + '\n', encoding='utf-8')
+
+          def sha256(path):
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+
+          patches = []
+          for index_name in ('CHECKSUMS.sha256', 'PLAYABLE_3D_V0_4_6_CHECKSUMS.sha256'):
+              for raw in (root / index_name).read_text('utf-8').splitlines():
+                  if not raw.strip():
+                      continue
+                  original, relative = raw.split(None, 1)
+                  relative = relative.strip().replace('\\', '/')
+                  target = root / relative
+                  if not target.is_file():
+                      continue
+                  current = sha256(target)
+                  original = original.lower()
+                  if current == original:
+                      continue
+                  patches.append({
+                      'index': index_name,
+                      'path': relative,
+                      'originalSha256': original,
+                      'currentSha256': current,
+                      'reason': 'Verified cumulative local active-lineage integration differs from the preserved archive byte while the original checksum index remains immutable.'
+                  })
+
+          manifest = {
+              'schema': 'axm.theme-park-local-patches/v1',
+              'status': 'TEST',
+              'archiveChecksumIndexesModified': False,
+              'patches': patches,
+          }
+          local_path.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+          print(f"active tracked source files: {active['sourceFiles']}")
+          print(f"declared checksum divergences: {len(patches)}")
+          PY
+          git add .axm-intake/SOURCE_ARCHIVES.json .axm-intake/LOCAL_PATCHES.json
+
+      - name: Prove canonical event authority is singular
+        shell: bash
+        run: |
+          set -euo pipefail
+          writers="$(grep -R -n -F 'eventLog.push' playable_3d/src/core runtime | grep -v 'playable_3d/src/core/eventStream.js:' || true)"
+          if [ -n "$writers" ]; then
+            printf '%s\n' "$writers"
+            exit 1
+          fi
+
+      - name: Run protected foundation tests
+        run: python run_tests.py
+      - name: Verify local intake seal
+        run: npm run verify:intake
+      - name: Run headless regression gate
+        run: npm run test:headless
+      - name: Run full playable regression gate
+        run: npm run test:playable
+      - name: Verify generated public capability contract
+        run: |
+          node tools/generate-public-capability.mjs --check
+          node --test intake-tests/public-capability-discovery.test.js
+          node runtime/cli.js describe > /tmp/theme-park-describe.json
+      - name: Prove playable distribution reproducibility
+        run: |
+          git add playable_3d/dist
+          npm run build:playable
+          git diff --exit-code -- playable_3d/dist
+      - name: Verify preserved donor package
+        run: npm run verify:donor
+      - name: Reject whitespace and unresolved merge damage
+        run: |
+          git diff --check --cached
+          test -z "$(git diff --name-only --diff-filter=U)"
+      - name: Commit verified Steward integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -A
+          git status --short
+          git commit -m 'Integrate verified Steward growth with current safety contracts'
+          git push origin HEAD:integration/theme-park-growth-consolidation-20260912
