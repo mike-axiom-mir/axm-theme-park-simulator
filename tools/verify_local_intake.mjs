@@ -15,9 +15,16 @@ const localPatchManifest = fs.existsSync(localPatchesPath)
 const localPatches = new Map();
 const seenLocalPatches = new Set();
 
+function patchScopeForRoot(root) {
+  const resolved = path.resolve(root);
+  if (resolved === repoRoot) return "active";
+  return path.relative(repoRoot, resolved).replaceAll("\\", "/");
+}
+
 for (const patch of localPatchManifest.patches ?? []) {
-  const key = `${patch.index}\0${patch.path}`;
-  if (localPatches.has(key)) issues.push(`duplicate local patch entry: ${patch.index} ${patch.path}`);
+  const scope = patch.scope ?? "active";
+  const key = `${scope}\0${patch.index}\0${patch.path}`;
+  if (localPatches.has(key)) issues.push(`duplicate local patch entry: ${scope} ${patch.index} ${patch.path}`);
   if (!/^[0-9a-f]{64}$/.test(patch.originalSha256 ?? "")) {
     issues.push(`local patch has invalid original hash: ${patch.path}`);
   }
@@ -51,6 +58,7 @@ function countTrackedFiles(entries) {
 
 function verifyIndex(root, indexName, expectedRows) {
   const indexPath = path.join(root, indexName);
+  const scope = patchScopeForRoot(root);
   const rows = fs.readFileSync(indexPath, "utf8").split(/\r?\n/).filter((line) => line.trim());
   if (rows.length !== expectedRows) issues.push(`${indexName}: expected ${expectedRows} rows, found ${rows.length}`);
   let passed = 0;
@@ -73,7 +81,7 @@ function verifyIndex(root, indexName, expectedRows) {
     }
     const actual = sha256(target);
     const original = match[1].toLowerCase();
-    const patchKey = `${indexName}\0${relative}`;
+    const patchKey = `${scope}\0${indexName}\0${relative}`;
     const patch = localPatches.get(patchKey);
     if (actual === original) {
       if (patch) issues.push(`${indexName}: obsolete local patch entry ${relative}`);
@@ -121,7 +129,7 @@ const indexes = [
 for (const key of localPatches.keys()) {
   if (!seenLocalPatches.has(key)) {
     const patch = localPatches.get(key);
-    issues.push(`local patch does not match an indexed changed file: ${patch.index} ${patch.path}`);
+    issues.push(`local patch does not match an indexed changed file: ${patch.scope ?? "active"} ${patch.index} ${patch.path}`);
   }
 }
 
