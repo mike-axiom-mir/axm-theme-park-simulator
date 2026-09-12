@@ -48,21 +48,30 @@ jobs:
               text = text.replace('      cash: payload.state?.economy?.cash ?? 0\n', '      cash: payload.state?.economy?.cash ?? 0,\n      officeVault: payload.state?.payments?.officeVault ?? 0,\n      legacyFund: payload.state?.legacy?.fund ?? 0\n', 1)
           save.write_text(text)
 
-          test_path = Path('playable_3d/tests/coaster-studio.test.js')
-          test_text = test_path.read_text()
+          coaster = Path('playable_3d/tests/coaster-studio.test.js')
+          ctext = coaster.read_text()
           stale = '  assert.match(main, /!coasterStudio\\.dialog\\.open/);\n'
           stronger = '  assert.match(main, /function toolDialogOpen\\(\\)[\\s\\S]*coasterStudio\\.dialog\\.open/);\n  assert.match(main, /speed > 0 && !toolDialogOpen\\(\\)/);\n'
-          if stale in test_text:
-              test_text = test_text.replace(stale, stronger, 1)
-          elif stronger not in test_text:
-              raise SystemExit('Coaster Studio guard assertion anchor missing')
+          if stale in ctext: ctext = ctext.replace(stale, stronger, 1)
+          elif stronger not in ctext: raise SystemExit('Coaster Studio guard assertion anchor missing')
           facade = '  const renderer = read("../src/render/contentStudioWorldRenderer.js");\n'
           implementation = '  const renderer = read("../src/render/specialContentWorldRenderer.js");\n'
-          if facade in test_text:
-              test_text = test_text.replace(facade, implementation, 1)
-          elif implementation not in test_text:
-              raise SystemExit('Coaster Studio renderer assertion anchor missing')
-          test_path.write_text(test_text)
+          if facade in ctext: ctext = ctext.replace(facade, implementation, 1)
+          elif implementation not in ctext: raise SystemExit('Coaster Studio renderer assertion anchor missing')
+          coaster.write_text(ctext)
+
+          gilded = Path('playable_3d/tests/gilded-style.test.js')
+          gtext = gilded.read_text()
+          final_decl = '  const finalSeam = read("../src/render/finalStyleWorldRenderer.js");\n'
+          legacy_decl = final_decl + '  const legacySeam = read("../src/render/legacyStyleUpgradeWorldRenderer.js");\n'
+          if legacy_decl not in gtext:
+              if final_decl not in gtext: raise SystemExit('Gilded final seam declaration missing')
+              gtext = gtext.replace(final_decl, legacy_decl, 1)
+          stale_gilded = '  assert.match(finalSeam, /gildedStyleWorldRenderer/);\n'
+          stronger_gilded = '  assert.match(finalSeam, /legacyStyleUpgradeWorldRenderer/);\n  assert.match(legacySeam, /gildedStyleWorldRenderer/);\n'
+          if stale_gilded in gtext: gtext = gtext.replace(stale_gilded, stronger_gilded, 1)
+          elif stronger_gilded not in gtext: raise SystemExit('Gilded seam assertion missing')
+          gilded.write_text(gtext)
           PY
           while IFS= read -r -d '' f; do
             echo "=== PLAYABLE_TEST_FILE:$f ==="
