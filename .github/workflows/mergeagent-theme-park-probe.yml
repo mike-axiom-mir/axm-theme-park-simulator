@@ -80,6 +80,18 @@ jobs:
               '  assert.match(finalStyle, /legacyStyleUpgradeWorldRenderer/);\n  assert.match(legacyStyle, /gildedStyleWorldRenderer/);\n  assert.match(gildedStyle, /FestivalTechMotionGuardWorldRenderer/);\n  assert.match(festivalStyle, /MedievalStyleWorldRenderer/);\n',
               'water final style chain assertion')
           water.write_text(text)
+
+          upgrades = Path('playable_3d/tests/upgrades.test.js')
+          text = upgrades.read_text()
+          runtime_decl = '  const upgradeRuntime = read("../src/core/upgradeRuntime.js");\n'
+          chain_decl = runtime_decl + '  const historicalRuntime = read("../src/core/historicalEconomyRuntime.js");\n  const legacyRuntime = read("../src/core/legacyCareerRuntime.js");\n'
+          if chain_decl not in text:
+              text = replace_once(text, runtime_decl, chain_decl, 'upgrade runtime chain declarations')
+          text = replace_once(text,
+              '  assert.match(main, /advanceOneMinuteWithUpgrades/);\n',
+              '  assert.match(main, /advanceOneMinuteWithLegacyCareer/);\n  assert.match(legacyRuntime, /advanceOneMinuteWithHistoricalEconomy/);\n  assert.match(historicalRuntime, /advanceOneMinuteWithUpgrades/);\n',
+              'upgrade runtime chain assertion')
+          upgrades.write_text(text)
           PY
           echo '--- remaining direct event writers (only canonical eventStream expected) ---'
           grep -R -n -F 'eventLog.push' playable_3d/src/core runtime || true
