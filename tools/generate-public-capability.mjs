@@ -51,13 +51,14 @@ function stableJson(value) {
 }
 
 function build() {
+  if (!readRegular("LICENSE").toString("utf8").startsWith("# PolyForm Noncommercial License 1.0.0")) fail("current license evidence drift");
   const packageDocument = JSON.parse(readRegular("package.json").toString("utf8"));
   const capability = packageDocument.axmCapability;
   if (!capability || capability.schema !== "axm.capability/v1") {
     fail("package.json must expose axmCapability using axm.capability/v1");
   }
   if (packageDocument.private !== true) fail("package must remain private to block accidental registry publication");
-  if (packageDocument.license !== "Apache-2.0") fail("public capability license drifted from Apache-2.0");
+  if (packageDocument.license !== "PolyForm-Noncommercial-1.0.0") fail("public capability license drifted from PolyForm-Noncommercial-1.0.0");
   if (capability.id !== "axm.theme-park.headless-simulator") fail("capability id drift");
   if (capability.status !== "WORKING") fail("public status must preserve the provider's WORKING status");
   if (capability.runtime?.kind !== "node" || capability.runtime?.networkRequired !== false) {
